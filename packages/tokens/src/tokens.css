@@ -47,23 +47,29 @@
      Semantic state colors
      -------------------------------------------------------------------------- */
 
-  /* Success — emerald */
+  /* Success — emerald (Tailwind emerald ramp) */
   --success-50: #ecfdf5;
   --success-100: #d1fae5;
   --success-200: #a7f3d0;
+  --success-300: #6ee7b7;
   --success-500: #10b981;
   --success-600: #059669;
   --success-700: #047857;
+  --success-800: #065f46;
+  --success-950: #022c22;
 
-  /* Warning — amber */
+  /* Warning — amber (Tailwind amber ramp) */
   --warning-50: #fffbeb;
   --warning-100: #fef3c7;
   --warning-200: #fde68a;
+  --warning-300: #fcd34d;
   --warning-500: #f59e0b;
   --warning-600: #d97706;
   --warning-700: #b45309;
+  --warning-800: #92400e;
+  --warning-950: #451a03;
 
-  /* Error — red */
+  /* Error — red (Tailwind red ramp) */
   --error-25: #fffbfa;
   --error-50: #fef2f2;
   --error-100: #fee2e2;
@@ -72,6 +78,8 @@
   --error-500: #ef4444;
   --error-600: #dc2626;
   --error-700: #b91c1c;
+  --error-800: #991b1b;
+  --error-950: #450a0a;
 
   /* --------------------------------------------------------------------------
      Semantic aliases — light mode defaults
@@ -90,6 +98,24 @@
   --color-border-secondary: var(--gray-200);
   --color-border-brand: var(--brand-300);
   --color-ring: var(--brand-500);
+  --color-fg-error: var(--error-600);
+  --color-border-error: var(--error-200);
+
+  /* Status subtle surfaces — light */
+  --color-info-bg: var(--brand-50);
+  --color-info-border: var(--brand-200);
+  --color-info-fg: var(--brand-700);
+  --color-success-bg: var(--success-50);
+  --color-success-border: var(--success-200);
+  --color-success-fg: var(--success-700);
+  --color-warning-bg: var(--warning-50);
+  --color-warning-border: var(--warning-200);
+  --color-warning-fg: var(--warning-700);
+  --color-error-bg: var(--error-50);
+  --color-error-border: var(--error-200);
+  --color-error-fg: var(--error-700);
+  --color-neutral-bg: var(--gray-100);
+  --color-neutral-border: var(--gray-200);
 
   /* --------------------------------------------------------------------------
      Spacing — 4pt base scale, named by semantic size
@@ -158,4 +184,73 @@
   --fw-medium: 500;
   --fw-semibold: 600;
   --fw-bold: 700;
+}
+
+/* ==========================================================================
+   Dark mode — semantic alias overrides
+   Scoped to any [data-theme="dark"] subtree (not :root only), so a single
+   wrapper can render a dark surface inside an otherwise light page. CSS
+   custom properties inherit, so descendants resolve the nearest value.
+
+   Values mirror the Untitled UI "Dark mode" color collection
+   (resources/figma-export-all-variables.css). Only semantic aliases flip;
+   the raw brand/gray/state ramps are mode-independent.
+   ========================================================================== */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces — figma bg-primary/secondary/tertiary (dark) */
+  --color-bg: var(--gray-950);
+  --color-bg-secondary: var(--gray-900);
+  --color-bg-tertiary: var(--gray-800);
+
+  /* Foreground — figma text-primary/secondary/tertiary/quaternary (dark) */
+  --color-fg: var(--gray-25);
+  --color-fg-secondary: var(--gray-300);
+  --color-fg-tertiary: var(--gray-400);
+  --color-muted-fg: var(--gray-500);
+  --color-fg-disabled: var(--gray-600);
+  --color-fg-brand: var(--brand-400);
+  --color-fg-on-brand: #ffffff;
+
+  /* Borders — figma border-primary/secondary/brand (dark) */
+  --color-border: var(--gray-700);
+  --color-border-secondary: var(--gray-800);
+  --color-border-brand: var(--brand-400);
+
+  /* Destructive — figma text/border-error (dark) brightens to keep
+     secondary/tertiary destructive as vivid as the filled variant. */
+  --color-fg-error: var(--error-500);
+  --color-border-error: var(--error-500);
+
+  /* Status subtle surfaces — dark: bg -50→-950, border -200→-800,
+     fg -700→-300 (Untitled dark utility mapping). */
+  --color-info-bg: var(--brand-950);
+  --color-info-border: var(--brand-800);
+  --color-info-fg: var(--brand-300);
+  --color-success-bg: var(--success-950);
+  --color-success-border: var(--success-800);
+  --color-success-fg: var(--success-300);
+  --color-warning-bg: var(--warning-950);
+  --color-warning-border: var(--warning-800);
+  --color-warning-fg: var(--warning-300);
+  --color-error-bg: var(--error-950);
+  --color-error-border: var(--error-800);
+  --color-error-fg: var(--error-300);
+  --color-neutral-bg: var(--gray-800);
+  --color-neutral-border: var(--gray-700);
+
+  /* Brand action — figma bg-brand-solid keeps brand-600;
+     bg-brand-solid_hover (dark) = brand-500. Focus ring unchanged. */
+  --color-primary: var(--brand-600);
+  --color-primary-hover: var(--brand-500);
+  --color-primary-active: var(--brand-400);
+  --color-ring: var(--brand-500);
+
+  /* Elevation — black halos read on dark surfaces (figma shadow alphas) */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.30);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.30), 0 1px 3px 0 rgba(0, 0, 0, 0.40);
+  --shadow-md: 0 2px 4px -2px rgba(0, 0, 0, 0.30), 0 4px 8px -2px rgba(0, 0, 0, 0.40);
+  --shadow-lg: 0 4px 6px -2px rgba(0, 0, 0, 0.24), 0 12px 16px -4px rgba(0, 0, 0, 0.44);
+  --shadow-xl: 0 8px 8px -4px rgba(0, 0, 0, 0.24), 0 20px 24px -4px rgba(0, 0, 0, 0.44);
 }

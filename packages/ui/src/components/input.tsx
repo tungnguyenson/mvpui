@@ -11,11 +11,11 @@ import { cn } from "../lib/cn.js";
 
 const inputVariants = cva(
   [
-    "flex h-11 w-full rounded-md border bg-white px-3.5",
+    "flex h-11 w-full rounded-md border bg-bg px-3.5",
     "text-sm text-fg placeholder:text-fg-tertiary",
-    "transition-all duration-[250ms] ease-[cubic-bezier(0.2,0,0,1)]",
-    "focus-visible:outline-none focus-visible:border-brand-300 focus-visible:ring-4 focus-visible:ring-brand-500/22",
-    "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-gray-50",
+    "transition-all duration-250 ease-[cubic-bezier(0.2,0,0,1)]",
+    "focus-visible:outline-none focus-visible:border-border-brand focus-visible:ring-4 focus-visible:ring-brand-500/22",
+    "disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-bg-secondary",
     "[&:not(:disabled)]:cursor-text",
   ],
   {

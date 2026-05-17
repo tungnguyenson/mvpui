@@ -1,216 +1,316 @@
+/**
+ * Copyright (c) 2026 TungMVP
+ * Licensed under MIT
+ */
+
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Mail, Trash2 } from "lucide-react";
+import { ArrowRight, Download, Mail, Plus, Settings, Trash2 } from "lucide-react";
 import { Button } from "@mvp-ui/ui";
+import {
+  ComponentDocLayout,
+  type DocExample,
+} from "../../_components/docs/ComponentDocLayout";
 
-function Section({
-  title,
-  description,
-  children,
-}: {
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <section className="py-10 border-b border-border last:border-0">
-      <div className="mb-6">
-        <h2 className="text-lg font-semibold text-fg">{title}</h2>
-        {description && (
-          <p className="mt-1 text-sm text-fg-tertiary">{description}</p>
-        )}
-      </div>
-      {children}
-    </section>
-  );
-}
+/* Snippets are authored by hand next to each preview. Keep them in sync —
+   there is no auto-derivation (asChild/Slot makes element-to-string lossy). */
 
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div className="flex items-center gap-2 min-h-12">
-      <span className="w-28 shrink-0 text-xs text-fg-tertiary font-medium uppercase tracking-wide">
-        {label}
-      </span>
-      <div className="flex items-center gap-3 flex-wrap">{children}</div>
-    </div>
-  );
-}
+const SECTIONS: DocExample[] = [
+  {
+    id: "primary-buttons",
+    title: "Primary buttons",
+    description:
+      "Brand-filled. The single highest-priority action on a surface. Shown across all four sizes.",
+    preview: (
+      <>
+        <Button size="sm">Button sm</Button>
+        <Button size="md">Button md</Button>
+        <Button size="lg">Button lg</Button>
+        <Button size="xl">Button xl</Button>
+      </>
+    ),
+    code: `<Button size="sm">Button sm</Button>
+<Button size="md">Button md</Button>
+<Button size="lg">Button lg</Button>
+<Button size="xl">Button xl</Button>`,
+  },
+  {
+    id: "secondary-buttons",
+    title: "Secondary buttons",
+    description: "Bordered, white background. Sits next to a primary action.",
+    preview: (
+      <>
+        <Button color="secondary" size="sm">Button sm</Button>
+        <Button color="secondary" size="md">Button md</Button>
+        <Button color="secondary" size="lg">Button lg</Button>
+        <Button color="secondary" size="xl">Button xl</Button>
+      </>
+    ),
+    code: `<Button color="secondary" size="sm">Button sm</Button>
+<Button color="secondary" size="md">Button md</Button>
+<Button color="secondary" size="lg">Button lg</Button>
+<Button color="secondary" size="xl">Button xl</Button>`,
+  },
+  {
+    id: "tertiary-buttons",
+    title: "Tertiary buttons",
+    description: "No border or fill until hover. Low-emphasis inline actions.",
+    preview: (
+      <>
+        <Button color="tertiary" size="sm">Button sm</Button>
+        <Button color="tertiary" size="md">Button md</Button>
+        <Button color="tertiary" size="lg">Button lg</Button>
+        <Button color="tertiary" size="xl">Button xl</Button>
+      </>
+    ),
+    code: `<Button color="tertiary" size="sm">Button sm</Button>
+<Button color="tertiary" size="md">Button md</Button>
+<Button color="tertiary" size="lg">Button lg</Button>
+<Button color="tertiary" size="xl">Button xl</Button>`,
+  },
+  {
+    id: "link-color-buttons",
+    title: "Link color buttons",
+    description: "Inline brand link. No padding, underlines on hover.",
+    preview: (
+      <>
+        <Button color="link-color" size="sm">Link sm</Button>
+        <Button color="link-color" size="md">Link md</Button>
+        <Button color="link-color" size="lg">Link lg</Button>
+        <Button color="link-color" size="xl">Link xl</Button>
+      </>
+    ),
+    code: `<Button color="link-color" size="sm">Link sm</Button>
+<Button color="link-color" size="md">Link md</Button>
+<Button color="link-color" size="lg">Link lg</Button>
+<Button color="link-color" size="xl">Link xl</Button>`,
+  },
+  {
+    id: "link-gray-buttons",
+    title: "Link gray buttons",
+    description: "Inline neutral link. Quiet navigation inside body text.",
+    preview: (
+      <>
+        <Button color="link-gray" size="sm">Link sm</Button>
+        <Button color="link-gray" size="md">Link md</Button>
+        <Button color="link-gray" size="lg">Link lg</Button>
+        <Button color="link-gray" size="xl">Link xl</Button>
+      </>
+    ),
+    code: `<Button color="link-gray" size="sm">Link sm</Button>
+<Button color="link-gray" size="md">Link md</Button>
+<Button color="link-gray" size="lg">Link lg</Button>
+<Button color="link-gray" size="xl">Link xl</Button>`,
+  },
+  {
+    id: "icon-leading-buttons",
+    title: "Icon leading buttons",
+    description:
+      "Pass an element (or component) to iconLeading. Sized to 16px before the label.",
+    preview: (
+      <>
+        <Button iconLeading={<Mail />}>Send email</Button>
+        <Button color="secondary" iconLeading={<Download />}>Download</Button>
+        <Button color="primary-destructive" iconLeading={<Trash2 />}>
+          Delete project
+        </Button>
+      </>
+    ),
+    code: `<Button iconLeading={<Mail />}>Send email</Button>
+<Button color="secondary" iconLeading={<Download />}>Download</Button>
+<Button color="primary-destructive" iconLeading={<Trash2 />}>
+  Delete project
+</Button>`,
+  },
+  {
+    id: "icon-trailing-buttons",
+    title: "Icon trailing buttons",
+    description: "Pass an element (or component) to iconTrailing. Rendered after the label.",
+    preview: (
+      <>
+        <Button iconTrailing={<ArrowRight />}>Continue</Button>
+        <Button color="secondary" iconTrailing={<ArrowRight />}>Next step</Button>
+        <Button color="link-color" iconTrailing={<ArrowRight />}>Learn more</Button>
+      </>
+    ),
+    code: `<Button iconTrailing={<ArrowRight />}>Continue</Button>
+<Button color="secondary" iconTrailing={<ArrowRight />}>Next step</Button>
+<Button color="link-color" iconTrailing={<ArrowRight />}>Learn more</Button>`,
+  },
+  {
+    id: "icon-only-buttons",
+    title: "Icon only buttons",
+    description:
+      "Omit children and pass an icon — padding becomes square. Always pass aria-label.",
+    preview: (
+      <>
+        <Button size="sm" iconLeading={<Settings />} aria-label="Settings" />
+        <Button size="md" color="secondary" iconLeading={<Plus />} aria-label="Add item" />
+        <Button size="lg" color="tertiary" iconLeading={<Settings />} aria-label="Settings" />
+        <Button
+          size="xl"
+          color="primary-destructive"
+          iconLeading={<Trash2 />}
+          aria-label="Delete"
+        />
+      </>
+    ),
+    code: `<Button size="sm" iconLeading={<Settings />} aria-label="Settings" />
+<Button size="md" color="secondary" iconLeading={<Plus />} aria-label="Add item" />
+<Button size="lg" color="tertiary" iconLeading={<Settings />} aria-label="Settings" />
+<Button
+  size="xl"
+  color="primary-destructive"
+  iconLeading={<Trash2 />}
+  aria-label="Delete"
+/>`,
+  },
+  {
+    id: "loading-buttons",
+    title: "Loading buttons",
+    description:
+      "isLoading shows a spinner and blocks interaction. showTextWhileLoading keeps the label visible.",
+    preview: (
+      <>
+        <Button isLoading>Save changes</Button>
+        <Button color="secondary" isLoading showTextWhileLoading>
+          Saving…
+        </Button>
+        <Button isLoading iconLeading={<Settings />} aria-label="Saving" />
+      </>
+    ),
+    code: `<Button isLoading>Save changes</Button>
+<Button color="secondary" isLoading showTextWhileLoading>
+  Saving…
+</Button>
+<Button isLoading iconLeading={<Settings />} aria-label="Saving" />`,
+  },
+  {
+    id: "disabled-buttons",
+    title: "Disabled buttons",
+    description: "Disabled drops opacity to 50% and blocks pointer events.",
+    preview: (
+      <>
+        <Button disabled>Primary</Button>
+        <Button color="secondary" disabled>Secondary</Button>
+        <Button color="tertiary" disabled>Tertiary</Button>
+        <Button color="primary-destructive" disabled iconLeading={<Trash2 />}>
+          Delete
+        </Button>
+      </>
+    ),
+    code: `<Button disabled>Primary</Button>
+<Button color="secondary" disabled>Secondary</Button>
+<Button color="tertiary" disabled>Tertiary</Button>
+<Button color="primary-destructive" disabled iconLeading={<Trash2 />}>
+  Delete
+</Button>`,
+  },
+  {
+    id: "primary-buttons-destructive",
+    title: "Primary buttons destructive",
+    description:
+      "Filled error. Confirms an irreversible, destructive action.",
+    preview: (
+      <>
+        <Button color="primary-destructive" size="sm">Button sm</Button>
+        <Button color="primary-destructive" size="md">Button md</Button>
+        <Button color="primary-destructive" size="lg">Button lg</Button>
+        <Button color="primary-destructive" size="xl">Button xl</Button>
+      </>
+    ),
+    code: `<Button color="primary-destructive" size="sm">Button sm</Button>
+<Button color="primary-destructive" size="md">Button md</Button>
+<Button color="primary-destructive" size="lg">Button lg</Button>
+<Button color="primary-destructive" size="xl">Button xl</Button>`,
+  },
+  {
+    id: "secondary-buttons-destructive",
+    title: "Secondary buttons destructive",
+    description: "Bordered error. Destructive action that isn't the primary CTA.",
+    preview: (
+      <>
+        <Button color="secondary-destructive" size="sm">Button sm</Button>
+        <Button color="secondary-destructive" size="md">Button md</Button>
+        <Button color="secondary-destructive" size="lg">Button lg</Button>
+        <Button color="secondary-destructive" size="xl">Button xl</Button>
+      </>
+    ),
+    code: `<Button color="secondary-destructive" size="sm">Button sm</Button>
+<Button color="secondary-destructive" size="md">Button md</Button>
+<Button color="secondary-destructive" size="lg">Button lg</Button>
+<Button color="secondary-destructive" size="xl">Button xl</Button>`,
+  },
+  {
+    id: "tertiary-buttons-destructive",
+    title: "Tertiary buttons destructive",
+    description: "Borderless error. Inline destructive action in dense UI.",
+    preview: (
+      <>
+        <Button color="tertiary-destructive" size="sm">Button sm</Button>
+        <Button color="tertiary-destructive" size="md">Button md</Button>
+        <Button color="tertiary-destructive" size="lg">Button lg</Button>
+        <Button color="tertiary-destructive" size="xl">Button xl</Button>
+      </>
+    ),
+    code: `<Button color="tertiary-destructive" size="sm">Button sm</Button>
+<Button color="tertiary-destructive" size="md">Button md</Button>
+<Button color="tertiary-destructive" size="lg">Button lg</Button>
+<Button color="tertiary-destructive" size="xl">Button xl</Button>`,
+  },
+  {
+    id: "as-child-polymorphic",
+    title: "asChild (polymorphic)",
+    description:
+      "asChild renders button styles onto the child via Radix Slot — these are <a> tags. Leading/trailing icons still compose through Slottable.",
+    preview: (
+      <>
+        <Button asChild>
+          <Link href="/">Go home</Link>
+        </Button>
+        <Button color="secondary" asChild>
+          <Link href="/">Go home</Link>
+        </Button>
+        <Button asChild iconTrailing={<ArrowRight />}>
+          <Link href="/">Continue</Link>
+        </Button>
+      </>
+    ),
+    code: `<Button asChild>
+  <Link href="/">Go home</Link>
+</Button>
+<Button color="secondary" asChild>
+  <Link href="/">Go home</Link>
+</Button>
+<Button asChild iconTrailing={<ArrowRight />}>
+  <Link href="/">Continue</Link>
+</Button>`,
+  },
+];
 
 export default function ButtonPage() {
   return (
-    <div className="max-w-4xl mx-auto px-8 py-16">
-        <h1 className="text-4xl font-semibold text-fg tracking-tight mb-1">Button</h1>
-        <p className="text-md text-fg-tertiary mb-8">
-          Triggers an action or event. Four variants, three sizes.
-        </p>
-
-        <div className="rounded-2xl border border-border bg-bg p-8 shadow-xs">
-          {/* Variants */}
-          <Section
-            title="Variants"
-            description="Four semantic roles: primary action, secondary, ghost (no border), and destructive."
-          >
-            <div className="flex flex-col gap-2">
-              <Row label="Primary">
-                <Button variant="primary">Save changes</Button>
-              </Row>
-              <Row label="Secondary">
-                <Button variant="secondary">Cancel</Button>
-              </Row>
-              <Row label="Ghost">
-                <Button variant="ghost">Learn more</Button>
-              </Row>
-              <Row label="Destructive">
-                <Button variant="destructive">Delete project</Button>
-              </Row>
-            </div>
-          </Section>
-
-          {/* Sizes */}
-          <Section
-            title="Sizes"
-            description="Three heights: sm (36px), md (44px, default), lg (48px)."
-          >
-            <div className="flex flex-col gap-2">
-              <Row label="sm — 36px">
-                <Button size="sm">Save changes</Button>
-                <Button size="sm" variant="secondary">Cancel</Button>
-                <Button size="sm" variant="ghost">Learn more</Button>
-              </Row>
-              <Row label="md — 44px">
-                <Button size="md">Save changes</Button>
-                <Button size="md" variant="secondary">Cancel</Button>
-                <Button size="md" variant="ghost">Learn more</Button>
-              </Row>
-              <Row label="lg — 48px">
-                <Button size="lg">Save changes</Button>
-                <Button size="lg" variant="secondary">Cancel</Button>
-                <Button size="lg" variant="ghost">Learn more</Button>
-              </Row>
-            </div>
-          </Section>
-
-          {/* States */}
-          <Section
-            title="States"
-            description="Disabled reduces opacity to 50% and blocks pointer events."
-          >
-            <div className="flex flex-col gap-2">
-              <Row label="Default">
-                <Button>Save changes</Button>
-                <Button variant="secondary">Cancel</Button>
-                <Button variant="ghost">Learn more</Button>
-                <Button variant="destructive">Delete</Button>
-              </Row>
-              <Row label="Disabled">
-                <Button disabled>Save changes</Button>
-                <Button variant="secondary" disabled>Cancel</Button>
-                <Button variant="ghost" disabled>Learn more</Button>
-                <Button variant="destructive" disabled>Delete</Button>
-              </Row>
-            </div>
-          </Section>
-
-          {/* With icons */}
-          <Section
-            title="With icons"
-            description="Icons use currentColor at 16px. Gap between icon and label is 8px."
-          >
-            <div className="flex flex-col gap-2">
-              <Row label="Icon left">
-                <Button>
-                  <Mail size={16} />
-                  Send email
-                </Button>
-                <Button variant="secondary">
-                  <Mail size={16} />
-                  Send email
-                </Button>
-              </Row>
-              <Row label="Icon right">
-                <Button>
-                  Continue
-                  <ArrowRight size={16} />
-                </Button>
-                <Button variant="secondary">
-                  Continue
-                  <ArrowRight size={16} />
-                </Button>
-              </Row>
-              <Row label="Destructive">
-                <Button variant="destructive">
-                  <Trash2 size={16} />
-                  Delete project
-                </Button>
-                <Button variant="destructive" size="sm">
-                  <Trash2 size={14} />
-                  Delete
-                </Button>
-              </Row>
-            </div>
-          </Section>
-
-          {/* asChild */}
-          <Section
-            title="asChild (polymorphic)"
-            description={
-              "asChild renders the button styles on the child element via Radix Slot. " +
-              "Inspect the DOM — these are <a> tags with button styling."
-            }
-          >
-            <div className="flex flex-col gap-2">
-              <Row label="as Link">
-                <Button asChild>
-                  <Link href="/">Go home</Link>
-                </Button>
-                <Button variant="secondary" asChild>
-                  <Link href="/">Go home</Link>
-                </Button>
-                <Button variant="ghost" asChild>
-                  <Link href="/">Go home</Link>
-                </Button>
-              </Row>
-              <Row label="with icon">
-                <Button asChild>
-                  <Link href="/">
-                    <ArrowLeft size={16} />
-                    Back
-                  </Link>
-                </Button>
-              </Row>
-            </div>
-          </Section>
-        </div>
-
-        {/* Token reference */}
-        <div className="mt-8 rounded-xl border border-border bg-bg p-6">
-          <h3 className="text-sm font-semibold text-fg mb-3">Token reference</h3>
-          <dl className="grid grid-cols-2 gap-x-8 gap-y-1 text-xs text-fg-tertiary">
-            <div className="flex justify-between">
-              <dt>Primary bg</dt>
-              <dd className="font-mono text-fg-secondary">--brand-600</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt>Primary hover</dt>
-              <dd className="font-mono text-fg-secondary">--brand-700</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt>Radius</dt>
-              <dd className="font-mono text-fg-secondary">--radius-md (8px)</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt>Focus ring</dt>
-              <dd className="font-mono text-fg-secondary">--brand-500 / 22%</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt>Transition</dt>
-              <dd className="font-mono text-fg-secondary">250ms cubic(0.2,0,0,1)</dd>
-            </div>
-            <div className="flex justify-between">
-              <dt>Font weight</dt>
-              <dd className="font-mono text-fg-secondary">600 (semibold)</dd>
-            </div>
-          </dl>
-        </div>
-    </div>
+    <ComponentDocLayout
+      name="Button"
+      tagline={
+        <>
+          Triggers an action. Nine color variants &times; four sizes, with
+          leading/trailing icons, icon-only, and loading states. API mirrors
+          Untitled UI; polymorphism is Radix <code>asChild</code>. Toggle any
+          example to dark with the moon.
+        </>
+      }
+      install={{
+        usage: `import { Button } from "@mvp-ui/ui";`,
+      }}
+      sections={SECTIONS}
+      tokenReference={[
+        { label: "Primary bg / hover", value: "--brand-600 / 700·500" },
+        { label: "Destructive bg / hover", value: "--error-600 / 700" },
+        { label: "Secondary border", value: "--color-border" },
+        { label: "Radius", value: "--radius-md / lg" },
+        { label: "Focus ring", value: "brand-500/22 · error-500/24" },
+        { label: "Transition", value: "100ms linear" },
+      ]}
+    />
   );
 }

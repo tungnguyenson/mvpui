@@ -13,17 +13,17 @@ export const badgeVariants = cva(
   [
     "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5",
     "text-xs font-medium whitespace-nowrap",
-    "transition-colors duration-[250ms] ease-[cubic-bezier(0.2,0,0,1)]",
+    "transition-colors duration-250 ease-[cubic-bezier(0.2,0,0,1)]",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0",
   ],
   {
     variants: {
       variant: {
-        default: "bg-brand-50 text-brand-700 border-brand-200",
-        secondary: "bg-gray-100 text-fg-secondary border-gray-200",
-        success: "bg-success-50 text-success-700 border-success-200",
-        warning: "bg-warning-50 text-warning-700 border-warning-200",
-        error: "bg-error-50 text-error-700 border-error-200",
+        default: "bg-info-bg text-info-fg border-info-border",
+        secondary: "bg-neutral-bg text-fg-secondary border-neutral-border",
+        success: "bg-success-bg text-success-fg border-success-border",
+        warning: "bg-warning-bg text-warning-fg border-warning-border",
+        error: "bg-error-bg text-error-fg border-error-border",
       },
     },
     defaultVariants: { variant: "default" },

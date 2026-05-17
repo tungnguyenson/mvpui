@@ -50,6 +50,7 @@
   /* Semantic action colors → bg-primary, text-primary, border-primary */
   --color-primary: var(--brand-600);
   --color-primary-hover: var(--brand-700);
+  --color-primary-active: var(--brand-800);
   --color-primary-fg: #ffffff;
 
   /* Semantic state colors */
@@ -97,6 +98,28 @@
   --color-border-secondary: var(--gray-200);
   --color-border-brand: var(--brand-300);
   --color-ring: var(--brand-500);
+
+  /* Destructive semantic — flips in dark so secondary/tertiary destructive
+     stay as vivid as the filled primary-destructive. */
+  --color-fg-error: var(--error-600);
+  --color-border-error: var(--error-200);
+
+  /* Status subtle surfaces (Alert/Badge). Each triad flips in dark:
+     bg -50→-950, border -200→-800, fg -700→-300. "info" = brand. */
+  --color-info-bg: var(--brand-50);
+  --color-info-border: var(--brand-200);
+  --color-info-fg: var(--brand-700);
+  --color-success-bg: var(--success-50);
+  --color-success-border: var(--success-200);
+  --color-success-fg: var(--success-700);
+  --color-warning-bg: var(--warning-50);
+  --color-warning-border: var(--warning-200);
+  --color-warning-fg: var(--warning-700);
+  --color-error-bg: var(--error-50);
+  --color-error-border: var(--error-200);
+  --color-error-fg: var(--error-700);
+  --color-neutral-bg: var(--gray-100);
+  --color-neutral-border: var(--gray-200);
 
   /* --------------------------------------------------------------------------
      Radii — literal values (avoids circular ref with tokens.css --radius-*)

@@ -14,10 +14,10 @@ const alertVariants = cva(
   {
     variants: {
       variant: {
-        info: "bg-brand-50 border-brand-200 text-brand-700",
-        success: "bg-success-50 border-success-200 text-success-700",
-        warning: "bg-warning-50 border-warning-200 text-warning-700",
-        error: "bg-error-50 border-error-200 text-error-700",
+        info: "bg-info-bg border-info-border text-info-fg",
+        success: "bg-success-bg border-success-border text-success-fg",
+        warning: "bg-warning-bg border-warning-border text-warning-fg",
+        error: "bg-error-bg border-error-border text-error-fg",
       },
     },
     defaultVariants: { variant: "info" },

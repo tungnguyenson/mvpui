@@ -16,3 +16,34 @@
     color: var(--color-fg);
   }
 }
+
+/* --------------------------------------------------------------------------
+   Shiki dual-theme code panels.
+   Snippets are rendered with `defaultColor: false` — tokens only carry
+   `--shiki-light` / `--shiki-dark` vars. Pick light by default; swap to
+   dark inside any `[data-theme="dark"]` subtree (same toggle the preview
+   canvas uses), so a code panel re-themes with its example.
+   -------------------------------------------------------------------------- */
+.code-panel .shiki {
+  margin: 0;
+  padding: 1.25rem 1.5rem;
+  background-color: var(--shiki-light-bg) !important;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.code-panel .shiki,
+.code-panel .shiki span {
+  color: var(--shiki-light);
+}
+
+.code-panel[data-theme="dark"] .shiki {
+  background-color: var(--shiki-dark-bg) !important;
+}
+
+.code-panel[data-theme="dark"] .shiki,
+.code-panel[data-theme="dark"] .shiki span {
+  color: var(--shiki-dark) !important;
+}
