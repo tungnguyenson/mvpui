@@ -100,6 +100,8 @@
   --color-ring: var(--brand-500);
   --color-fg-error: var(--error-600);
   --color-border-error: var(--error-200);
+  --color-fg-success: var(--success-600);
+  --color-border-success: var(--success-200);
 
   /* Status subtle surfaces — light */
   --color-info-bg: var(--brand-50);
@@ -222,6 +224,8 @@
      secondary/tertiary destructive as vivid as the filled variant. */
   --color-fg-error: var(--error-500);
   --color-border-error: var(--error-500);
+  --color-fg-success: var(--success-500);
+  --color-border-success: var(--success-500);
 
   /* Status subtle surfaces — dark: bg -50→-950, border -200→-800,
      fg -700→-300 (Untitled dark utility mapping). */

@@ -104,6 +104,11 @@
   --color-fg-error: var(--error-600);
   --color-border-error: var(--error-200);
 
+  /* Success semantic — mirrors fg-error/border-error; flips in dark so
+     Input/Field success state stays vivid (see tokens.css dark block). */
+  --color-fg-success: var(--success-600);
+  --color-border-success: var(--success-200);
+
   /* Status subtle surfaces (Alert/Badge). Each triad flips in dark:
      bg -50→-950, border -200→-800, fg -700→-300. "info" = brand. */
   --color-info-bg: var(--brand-50);
