@@ -23,7 +23,7 @@ const inputVariants = cva(
       variant: {
         default: "border-border shadow-xs",
         error:
-          "border-error-500 focus-visible:border-error-500 focus-visible:ring-error-500/22",
+          "border-error-500 focus-visible:border-error-500 focus-visible:ring-error-500/22", // dark-ok: vivid red error border, both modes
       },
     },
     defaultVariants: { variant: "default" },

@@ -53,8 +53,8 @@ export const buttonVariants = cva(
           "focus-visible:ring-brand-500/22",
         ],
         "primary-destructive": [
-          "bg-error-600 text-white ring-1 ring-transparent shadow-xs",
-          "hover:enabled:bg-error-700 active:enabled:bg-error-700",
+          "bg-error-600 text-white ring-1 ring-transparent shadow-xs", // dark-ok: solid destructive fill, vivid both modes
+          "hover:enabled:bg-error-700 active:enabled:bg-error-700", // dark-ok: solid destructive fill, vivid both modes
           "focus-visible:ring-error-500/24",
         ],
         "secondary-destructive": [
