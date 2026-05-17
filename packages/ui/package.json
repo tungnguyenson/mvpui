@@ -1,0 +1,78 @@
+{
+  "name": "@mvp-ui/ui",
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./alert": {
+      "types": "./dist/alert.d.ts",
+      "import": "./dist/alert.js",
+      "require": "./dist/alert.cjs"
+    },
+    "./badge": {
+      "types": "./dist/badge.d.ts",
+      "import": "./dist/badge.js",
+      "require": "./dist/badge.cjs"
+    },
+    "./button": {
+      "types": "./dist/button.d.ts",
+      "import": "./dist/button.js",
+      "require": "./dist/button.cjs"
+    },
+    "./card": {
+      "types": "./dist/card.d.ts",
+      "import": "./dist/card.js",
+      "require": "./dist/card.cjs"
+    },
+    "./input": {
+      "types": "./dist/input.d.ts",
+      "import": "./dist/input.js",
+      "require": "./dist/input.cjs"
+    },
+    "./label": {
+      "types": "./dist/label.d.ts",
+      "import": "./dist/label.js",
+      "require": "./dist/label.cjs"
+    },
+    "./section": {
+      "types": "./dist/section.d.ts",
+      "import": "./dist/section.js",
+      "require": "./dist/section.cjs"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup && tailwindcss -i src/styles.css -o dist/styles.css --minify",
+    "build:css": "tailwindcss -i src/styles.css -o dist/styles.css --minify",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@mvp-ui/tokens": "workspace:*",
+    "@radix-ui/react-slot": "latest",
+    "class-variance-authority": "latest",
+    "clsx": "latest",
+    "tailwind-merge": "latest"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwindcss": "^4"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "lucide-react": "latest",
+    "react": "^19",
+    "react-dom": "^19",
+    "tailwindcss": "^4",
+    "tsup": "latest",
+    "typescript": "^5.6.0"
+  }
+}

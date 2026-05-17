@@ -1,0 +1,24 @@
+{
+  "name": "@mvp-ui/tokens",
+  "version": "0.0.0",
+  "type": "module",
+  "license": "MIT",
+  "exports": {
+    "./tokens.css": "./src/tokens.css",
+    "./theme.css": "./src/theme.css",
+    "./tokens": {
+      "types": "./dist/tokens.d.ts",
+      "import": "./dist/tokens.js",
+      "require": "./dist/tokens.cjs"
+    }
+  },
+  "files": ["dist", "src/tokens.css", "src/theme.css", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "devDependencies": {
+    "tsup": "latest",
+    "typescript": "^5.6.0"
+  }
+}

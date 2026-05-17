@@ -1,0 +1,18 @@
+@import "tailwindcss";
+@import "@mvp-ui/tokens/theme.css";
+
+/* Scan UI package source so Tailwind generates utilities for CVA class strings */
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+  }
+}

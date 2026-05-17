@@ -1,0 +1,140 @@
+/**
+ * Copyright (c) 2026 TungMVP
+ * Licensed under MIT
+ */
+
+/* ==========================================================================
+   MVP UI — Tailwind v4 Theme
+   Maps design tokens to Tailwind utilities.
+   Import this file instead of tokens.css when using Tailwind.
+
+   Usage in globals.css:
+     @import "tailwindcss";
+     @import "@mvp-ui/tokens/theme.css";
+   ========================================================================== */
+
+@import "./tokens.css";
+
+@theme {
+  /* --------------------------------------------------------------------------
+     Brand color scale → bg-brand-*, text-brand-*, border-brand-* etc.
+     References tokens.css vars (no circular ref — different names).
+     -------------------------------------------------------------------------- */
+  --color-brand-25: var(--brand-25);
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+
+  /* Gray scale → bg-gray-*, text-gray-* etc. */
+  --color-gray-25: var(--gray-25);
+  --color-gray-50: var(--gray-50);
+  --color-gray-100: var(--gray-100);
+  --color-gray-200: var(--gray-200);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --color-gray-600: var(--gray-600);
+  --color-gray-700: var(--gray-700);
+  --color-gray-800: var(--gray-800);
+  --color-gray-900: var(--gray-900);
+  --color-gray-950: var(--gray-950);
+
+  /* Semantic action colors → bg-primary, text-primary, border-primary */
+  --color-primary: var(--brand-600);
+  --color-primary-hover: var(--brand-700);
+  --color-primary-fg: #ffffff;
+
+  /* Semantic state colors */
+  --color-success: var(--success-600);
+  --color-warning: var(--warning-600);
+  --color-error: var(--error-600);
+
+  /* Success scale */
+  --color-success-50: var(--success-50);
+  --color-success-100: var(--success-100);
+  --color-success-200: var(--success-200);
+  --color-success-500: var(--success-500);
+  --color-success-600: var(--success-600);
+  --color-success-700: var(--success-700);
+
+  /* Warning scale */
+  --color-warning-50: var(--warning-50);
+  --color-warning-100: var(--warning-100);
+  --color-warning-200: var(--warning-200);
+  --color-warning-500: var(--warning-500);
+  --color-warning-600: var(--warning-600);
+  --color-warning-700: var(--warning-700);
+
+  /* Error scale */
+  --color-error-50: var(--error-50);
+  --color-error-100: var(--error-100);
+  --color-error-200: var(--error-200);
+  --color-error-300: var(--error-300);
+  --color-error-500: var(--error-500);
+  --color-error-600: var(--error-600);
+  --color-error-700: var(--error-700);
+
+  /* Surface / foreground semantic colors */
+  --color-bg: #ffffff;
+  --color-bg-secondary: var(--gray-25);
+  --color-bg-tertiary: var(--gray-50);
+  --color-fg: var(--gray-900);
+  --color-fg-secondary: var(--gray-700);
+  --color-fg-tertiary: var(--gray-500);
+  --color-muted-fg: var(--gray-400);
+  --color-fg-disabled: var(--gray-300);
+  --color-fg-brand: var(--brand-600);
+  --color-fg-on-brand: #ffffff;
+  --color-border: var(--gray-300);
+  --color-border-secondary: var(--gray-200);
+  --color-border-brand: var(--brand-300);
+  --color-ring: var(--brand-500);
+
+  /* --------------------------------------------------------------------------
+     Radii — literal values (avoids circular ref with tokens.css --radius-*)
+     Generates: rounded-sm, rounded-md, rounded-lg, rounded-xl, rounded-2xl, rounded-full
+     -------------------------------------------------------------------------- */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.625rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-full: 9999px;
+
+  /* --------------------------------------------------------------------------
+     Shadows — literal values
+     Generates: shadow-xs, shadow-sm, shadow-md, shadow-lg, shadow-xl
+     -------------------------------------------------------------------------- */
+  --shadow-xs: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+  --shadow-sm: 0 1px 2px 0 rgba(16, 24, 40, 0.06), 0 1px 3px 0 rgba(16, 24, 40, 0.10);
+  --shadow-md: 0 2px 4px -2px rgba(16, 24, 40, 0.06), 0 4px 8px -2px rgba(16, 24, 40, 0.10);
+  --shadow-lg: 0 4px 6px -2px rgba(16, 24, 40, 0.03), 0 12px 16px -4px rgba(16, 24, 40, 0.08);
+  --shadow-xl: 0 8px 8px -4px rgba(16, 24, 40, 0.03), 0 20px 24px -4px rgba(16, 24, 40, 0.08);
+
+  /* --------------------------------------------------------------------------
+     Typography — literal values
+     -------------------------------------------------------------------------- */
+  --font-sans: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Text sizes — generates text-xs, text-sm, text-md, text-lg, text-xl */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+
+}
