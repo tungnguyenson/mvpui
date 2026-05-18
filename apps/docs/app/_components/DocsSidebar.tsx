@@ -7,7 +7,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { components, examples, type NavItem } from "../nav";
+import { componentSections, examples, type NavItem } from "../nav";
 
 function NavGroup({
   title,
@@ -19,8 +19,8 @@ function NavGroup({
   pathname: string;
 }) {
   return (
-    <div className="mb-8 last:mb-0">
-      <h2 className="px-3 mb-2 text-xs font-semibold uppercase tracking-widest text-fg-tertiary">
+    <div className="mb-6 last:mb-0">
+      <h2 className="px-3 mb-1 text-xs font-semibold uppercase tracking-widest text-fg-tertiary">
         {title}
       </h2>
       <ul className="flex flex-col gap-0.5">
@@ -31,7 +31,7 @@ function NavGroup({
               <Link
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`block px-3 py-2 rounded-lg text-sm font-medium
+                className={`block px-3 py-1.5 rounded-lg text-sm font-medium
                   transition-colors duration-150 ease-[cubic-bezier(0.2,0,0,1)]
                   ${
                     active
@@ -65,7 +65,23 @@ export function DocsSidebar() {
       >
         MVP UI
       </Link>
-      <NavGroup title="Components" items={components} pathname={pathname} />
+
+      <div className="mb-8">
+        <h2 className="px-3 mb-1 text-xs font-semibold uppercase tracking-widest text-fg-tertiary">
+          Components
+        </h2>
+        <div className="flex flex-col gap-4 mt-3">
+          {componentSections.map((section) => (
+            <NavGroup
+              key={section.title}
+              title={section.title}
+              items={section.items}
+              pathname={pathname}
+            />
+          ))}
+        </div>
+      </div>
+
       <NavGroup title="Examples" items={examples} pathname={pathname} />
     </nav>
   );

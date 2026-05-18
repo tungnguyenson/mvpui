@@ -11,8 +11,8 @@ Per component:
 
 Output per component: `.tsx` source + docs page in `apps/docs/` + skill entry post-push.
 
-**Total scope**: 25 components (Button done + 24 new) — see mapping table.
-**Estimated**: 22-28 working days (~5 weeks).
+**Total scope**: ~32 components (Button + Label done; full Input family promoted from v0.2) — see mapping table.
+**Estimated**: 28-36 working days (~6-7 weeks).
 
 ---
 
@@ -29,9 +29,20 @@ Output per component: `.tsx` source + docs page in `apps/docs/` + skill entry po
 | Select, Slider | React Aria | Source uses it, richer than Radix variants |
 | Checkbox, Radio, Toggle | React Aria | Matches source, consistency with Select |
 | Combobox, Multi-select (v0.2+) | React Aria | Coverage |
-| Card, Alert, Badge, Progress, Avatar, Input, Textarea, Tags, Label, HintText | Native HTML + cva | No primitive needed |
+| Input, Label, HintText, InputGroup, InputFile, InputPayment | **Native HTML + cva** | Existing `input.tsx`/`label.tsx` deliberately reject RA (documented in file). Keep codebase pattern. Source ported structurally, not its RA layer. |
+| InputDate, InputNumber, PinInput, InputTags | React Aria | Headless unavoidable: date segments, locale number stepping, OTP focus nav, tag-list a11y — not hand-rollable correctly |
+| Card, Alert, Badge, Progress, Avatar, Textarea, Tags | Native HTML + cva | No primitive needed |
 
-Add `react-aria-components ^1.16` to `@mvp-ui/ui` deps before Wave 2 (Checkbox is first React Aria component).
+> **A1 correction note:** an earlier edit flipped the whole Input family to React
+> Aria on source-fidelity grounds. Reverted — existing `input.tsx` + `label.tsx`
+> are native+cva by deliberate, documented design. Decision (Tung): **hybrid** —
+> native+cva keeps the codebase pattern; RA only where headless behavior is
+> genuinely unavoidable (Date/Number/Pin/Tags). Source is ported for *structure
+> and API*, not its RA primitive.
+
+Add `react-aria-components ^1.16` to `@mvp-ui/ui` deps **before Wave Input family**
+(InputDate is the first RA component). Pull **Tooltip (Radix, A1)** ahead into
+this wave — Input/Label slot in a help-icon Tooltip; do not stub.
 
 ### A2. Token translation
 
@@ -99,6 +110,12 @@ Render via `renderIcon` helper from `button.tsx`. All components with icon slots
 Flat (match shadcn): `import { Avatar, AvatarLabelGroup } from "@mvp-ui/ui"`
 Not namespace: ~~`Avatar.LabelGroup`~~
 
+**A8 exception — PinInput (Tung-approved):** `PinInput` keeps the `input-otp`
+compound API (`PinInput.Slot`, `PinInput.Group`, `PinInput.Label`,
+`PinInput.Separator`, `PinInput.Description`). OTP is inherently compositional;
+this is the shadcn/`input-otp` idiom. Slot-level styling needs sub-components.
+Single documented exception — does not loosen A8 for other components.
+
 ### A9. CloseButton
 
 Separate component (not Button variant). Built early (Wave 1.5) because Alert, Modal, Tags depend on it.
@@ -165,18 +182,42 @@ Reference path is absolute: `/Volumes/DATA/dev/test_repos/untitledui-react/`.
 |---|---|---|---|---|
 | Button | master | `components/base/buttons/button.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=3287-427074&t=IBBRr0Kw7tFu3vyP-4 | ✅ |
 | Button | destructive | same | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=6218-85578&t=IBBRr0Kw7tFu3vyP-4 | ✅ |
-| CloseButton | master | `components/base/buttons/close-button.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=2763-420129&t=IBBRr0Kw7tFu3vyP-4 | ⬜ |
-| ButtonUtility | master | `components/base/buttons/button-utility.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=8003-526508&t=IBBRr0Kw7tFu3vyP-4 | ⬜ |
+| CloseButton | master | `components/base/buttons/close-button.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=2763-420129&t=IBBRr0Kw7tFu3vyP-4 | ✅ |
+| ButtonUtility | master | `components/base/buttons/button-utility.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=8003-526508&t=IBBRr0Kw7tFu3vyP-4 | ✅|
 | Button loading icon | master | | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=8993-429278&t=IBBRr0Kw7tFu3vyP-4 | ✅ |
-| SocialButton | master | `components/base/buttons/social-button.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=1256-130788&t=IBBRr0Kw7tFu3vyP-4 | ⬜ |
-| SocialLogoButton | master | `components/base/buttons/social-logos.tsx` | | ⬜ |
+| SocialButton | master | `components/base/buttons/social-button.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=1256-130788&t=IBBRr0Kw7tFu3vyP-4 | ✅ |
+| SocialLogoButton | master | `components/base/buttons/social-logos.tsx` | | ✅ |
+| App Store Buttons | master | `components/base/buttons/app-store-buttons.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=1303-2162&t=IBBRr0Kw7tFu3vyP-4 | ⬜ |
 
-### Wave Finishing (3 components — single session)
-| Component | View | Source path | Figma URL | Status |
+### Wave Input family (~17 components — single session, source-driven)
+
+> **Primitive (hybrid — see A1 correction note):** native+cva for Input / Label /
+> HintText / InputGroup / InputFile / InputPayment (keeps existing codebase
+> pattern; source ported for structure + API only). React Aria for InputDate /
+> InputNumber / InputTags. `input-otp` for PinInput (A8 exception). **Tooltip
+> (Radix) + Tags family (React Aria) pulled ahead** — Input/Label need Tooltip;
+> InputTags/InputTagsOuter hard-depend on Tags. Read the whole input folder
+> together (see Multi-file source notes).
+>
+> **Decisions (Tung):** Tags family pulled forward from Wave 3 (InputTags blocker).
+> PinInput keeps `input-otp` compound API — A8 exception (recorded in A8).
+> New deps: `react-aria-components ^1.16`, `input-otp`.
+
+| Component | View | Source path | Primitive | Status |
 |---|---|---|---|---|
-| Input | master | `components/base/input/input.tsx` | _paste_ | 🚧 |
-| Label | master | `components/base/input/label.tsx` | _paste_ | ⬜ |
-| HintText | master | `components/base/input/hint-text.tsx` | _paste_ | ⬜ |
+| Tooltip (pulled from Wave 1A) | master | `components/base/tooltip/tooltip.tsx` | Radix | ✅ |
+| Tags family (pulled from Wave 3) | master | `components/base/tags/tags.tsx` + `base-components/{tag-checkbox,tag-close-x}.tsx` + `foundations/dot-icon` | React Aria | ✅ |
+| Input (TextField/InputBase) | master | `components/base/input/input.tsx` | native+cva | ✅ updated |
+| Label | master | `components/base/input/label.tsx` | native+cva | ✅ updated |
+| HintText | master | `components/base/input/hint-text.tsx` | native+cva | ✅ |
+| InputGroup | master | `components/base/input/input-group.tsx` | native+cva | ✅ |
+| InputFile | master | `components/base/input/input-file.tsx` | native+cva | ✅ |
+| InputPayment | master | `components/base/input/input-payment.tsx` | native+cva | ✅ |
+| InputDate | master | `components/base/input/input-date.tsx` | React Aria | ✅ |
+| InputNumber | master | `components/base/input/input-number.tsx` | React Aria | ✅ |
+| InputTags | master | `components/base/input/input-tags.tsx` | React Aria | ✅ |
+| InputTags | subcomp-outer | `components/base/input/input-tags-outer.tsx` | React Aria | ✅ |
+| PinInput (A8 exception) | master | `components/base/input/pin-input.tsx` | input-otp | ✅ |
 
 
 ### Wave 1A — Standalone visuals, source-driven (7 components)
@@ -255,10 +296,28 @@ components/base/avatar/
 ```
 Deferred: avatar-profile-photo.tsx.
 
+**Input family** (read all together — every variant composes `input.tsx`):
+```
+components/base/input/
+├── input.tsx              ← main: InputBase + TextField + Input (React Aria)
+├── label.tsx              ← ✅ done (packages/ui/src/components/label.tsx)
+├── hint-text.tsx          ← helper text / error
+├── input-group.tsx        ← leading/trailing prefix + suffix
+├── input-date.tsx         ← React Aria DateField
+├── input-file.tsx         ← file input
+├── input-number.tsx       ← React Aria NumberField
+├── input-payment.tsx      ← card number formatting
+├── input-tags.tsx         ← tag input main
+├── input-tags-outer.tsx   ← InputTagsOuter (tags rendered outside field)
+└── pin-input.tsx          ← OTP / PIN segments (usePinInputContext)
+```
+Already in `packages/ui/src/components/`: `input.tsx`, `label.tsx` — **update
+in place, don't rebuild** (commit `9c1a5a4 update input ui`). Match source family
+API while keeping existing token wiring.
+
 ### Deferred to v0.2+
 - Combobox, MultiSelect, TagSelect (in `base/select/`)
 - AvatarProfilePhoto
-- PinInput, InputDate, InputFile, InputNumber, InputPayment, InputTags, InputGroup
 - Tabs, Sidebar nav, Page header, Breadcrumb, Pagination, Table, Empty state
 - Date picker, File upload (full version), Loading indicator
 - Toast/Notification (uses Sonner), Command menu
@@ -270,7 +329,8 @@ Deferred: avatar-profile-photo.tsx.
 ## Build order
 
 ### Dependency constraints (hard)
-- Input + Label + HintText → before any form control (Wave 2 needs Label)
+- Input family (Input + Label + HintText at minimum) → before any form control (Wave 2 needs Label)
+- React Aria dep needed at Wave Input family (input.tsx uses it), not deferred to Wave 2
 - CloseButton → before Alert, Modal, Tags
 - Button (done) → blocks nothing
 - Checkbox → anchor for Radio/Toggle pattern
@@ -279,7 +339,9 @@ Deferred: avatar-profile-photo.tsx.
 ### Sequence
 
 ```
-1&2. Wave Finishing       Button + Input + Label + HintText (single session)
+1&2. Wave Input family    Button done. Input(update) + Label(done) + HintText
+                          + InputGroup + InputDate + InputFile + InputNumber
+                          + InputPayment + InputTags(+outer) + PinInput
                          ↓
 3. Wave 1A              Avatar + AvatarLabelGroup
                         Badge + BadgeGroup
@@ -306,7 +368,7 @@ Safe to parallel:
 - Within Wave 2 (after Checkbox done): Radio + Toggle + Textarea
 
 NOT safe to parallel:
-- Wave Finishing components (single session — share context)
+- Wave Input family (single session — all variants compose input.tsx, share context)
 - Wave 1B before Wave 1.5 (Alert needs CloseButton)
 - Wave 2 anchor (Checkbox) — must be sequential
 - Wave 3 components with each other (Select sets pattern, then others follow)
@@ -318,7 +380,7 @@ Tung decides sequential vs parallel per wave based on availability/energy.
 
 ## Per-component workflow
 
-### Source-driven components (23 of 25)
+### Source-driven components (all except Card, Alert)
 
 Phase 1 — Source analysis:
 - Read source files from `/Volumes/DATA/dev/test_repos/untitledui-react/`
@@ -385,14 +447,14 @@ Same workflow except:
 
 | Wave | Components | Days |
 |---|---|---|
-| Wave Finishing | 3 (Input, Label, HintText) | 1-2 |
+| Wave Input family | 10 (Input update, Label done, HintText, InputGroup, InputDate, InputFile, InputNumber, InputPayment, InputTags+outer, PinInput) | 5-7 |
 | Wave 1.5 | 2 (CloseButton, ButtonUtility) | 1 |
 | Wave 1A | 7 (Avatar family, Badge family, Progress family, Tooltip) | 3-4 |
 | Wave 1B | 2 (Card, Alert) | 2 |
 | Wave 2 | 4 (Checkbox anchor + Radio + Toggle + Textarea) | 3-4 |
 | Wave 3 | 7 (Select, Modal, Dropdown, Slider, Tags, FileUploadTrigger, ButtonGroup) | 8-10 |
 | Polish | Demo pages + skill + tag | 3-5 |
-| **Total** | **24 new + Button done = 25** | **22-28 days** |
+| **Total** | **~31 new + Button/Label done** | **28-36 days** |
 
 ---
 
@@ -417,7 +479,7 @@ Same workflow except:
 
 ## Post-push: ship v0.1.0
 
-After 25 components done:
+After all ~32 components done:
 
 Demo pages (3-5 days):
 - `/examples/auth-form` — Button, Input, Label, HintText, Checkbox, Alert
@@ -425,7 +487,7 @@ Demo pages (3-5 days):
 - `/examples/dashboard-lite` — Card + Avatar + Badge + Tooltip + ProgressCircle + Tag + Dropdown
 
 Skill consolidation (3-5 days):
-- system.md, tokens.md (link to TOKEN_REGISTRY), components.md (all 25), patterns.md, responsive.md
+- system.md, tokens.md (link to TOKEN_REGISTRY), components.md (all ~32), patterns.md, responsive.md
 
 Distribution (1-2 days):
 - README + quickstart
@@ -438,16 +500,17 @@ Total to ship: ~6-7 weeks from kickoff.
 
 ## Kickoff checklist
 
-Before Wave Finishing starts:
+Before Wave Input family starts:
 
 - [ ] A1-A12 decisions in CLAUDE.md
 - [ ] Source SHA pinned in CLAUDE.md (`untitledui-react/` checkout at SHA)
 - [ ] TOKEN_REGISTRY.md created in `packages/tokens/`
 - [ ] TOKEN_TRANSLATION.md created with initial seed (A2)
-- [ ] `react-aria-components ^1.16` added to `@mvp-ui/ui` deps
+- [ ] `react-aria-components ^1.16` added to `@mvp-ui/ui` deps (now needed at Wave Input family)
+- [ ] Diff existing `input.tsx` / `label.tsx` vs source family — plan update, not rebuild
 - [ ] Figma MCP tested on Button (verify `get_design_context` works)
 - [ ] License attribution templates in CLAUDE.md (A11)
-- [ ] Family audit run (verify scope final for all 25 components)
-- [ ] Figma URLs filled for at least Wave Finishing + Wave 1.5 (5 components)
+- [ ] Family audit run (verify scope final — count grew with Input family)
+- [ ] Figma URLs filled for at least Wave Input family + Wave 1.5
 
-Once checked, kick off Wave Finishing.
+Once checked, kick off Wave Input family.

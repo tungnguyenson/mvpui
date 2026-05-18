@@ -11,7 +11,7 @@
 
 import { Slot } from "@radix-ui/react-slot";
 import { forwardRef, type ButtonHTMLAttributes } from "react";
-import { cn } from "../lib/cn.js";
+import { cn } from "../../lib/cn.js";
 import {
   AppleLogo,
   DribbleLogo,

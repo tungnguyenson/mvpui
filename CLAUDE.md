@@ -35,6 +35,20 @@ Brand color: Untitled UI default purple (`--colors-brand-600: #7f56d9`). Resourc
 - Use Radix Primitives for any component with complex interaction (Dialog, Popover, Tabs, etc.)
 - Use `forwardRef` for components wrapping DOM elements
 
+## Tailwind v4 data variant syntax (enforced)
+
+Use canonical boolean data variants — **no square brackets for bare attribute names**:
+
+| Wrong (v3 arbitrary) | Correct (v4 canonical) |
+|---|---|
+| `data-[disabled]:opacity-50` | `data-disabled:opacity-50` |
+| `data-[invalid]:border-border-error` | `data-invalid:border-border-error` |
+| `data-[focus-within]:ring-4` | `data-focus-within:ring-4` |
+| `data-[focused]:bg-primary` | `data-focused:bg-primary` |
+| `data-[placeholder]:text-fg-tertiary` | `data-placeholder:text-fg-tertiary` |
+
+Keep `data-[attr=value]:` syntax only for attributes that carry a value (e.g. `data-[state=open]:`, `data-[icon-only=true]:`). Negative arbitrary values belong inside the brackets: `-outline-offset-[0.5px]` → `outline-offset-[-0.5px]`.
+
 ## Dark-safe styling (enforced)
 
 Component variant/class strings must use the **semantic flipping aliases**, never raw numbered color scales. Raw scales are token-backed but do NOT flip under `[data-theme="dark"]` — they look right in light and wash out (or vanish) in dark. This is checked: `pnpm lint:dark` (in `pnpm lint` and CI) fails the build on a violation.
@@ -89,6 +103,33 @@ Figma-only components (Card, Alert):
  * Licensed under MIT
  */
 ```
+
+## Client component hard rules (RSC safety)
+
+**Error this prevents:** `You're importing a module that depends on createContext into a React Server Component module.`
+
+### tsup config (LOCKED — never change)
+
+`packages/ui/tsup.config.ts` must always have:
+```ts
+splitting: false,
+banner: { js: '"use client";' },
+```
+`splitting: false` keeps every entry as its own file. Without it, tsup merges client components into shared chunks that lose `"use client"`, making the whole library unusable in RSC apps. The `banner` stamps the directive on every output file including the barrel.
+
+### Docs pages with compound client components
+
+RSC client-reference proxies do **not** carry namespace statics (e.g. `PinInput.Slot`, `PinInput.Group`). Accessing them from a server page module returns `undefined` at runtime.
+
+**Rule:** Any docs page that needs compound statics or passes function props to client components must delegate to a `"use client"` island file:
+
+```
+apps/docs/app/components/<name>/
+  page.tsx           ← Server Component — imports island, never accesses .Slot etc.
+  <Name>Examples.tsx ← "use client" island — accesses compound statics safely
+```
+
+Never access `ComponentName.SubComponent` directly in a `page.tsx` that is not itself a client component.
 
 ## Stack
 

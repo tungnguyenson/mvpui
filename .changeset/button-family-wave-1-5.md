@@ -8,7 +8,9 @@ Add Button family (Wave 1.5), adapted from Untitled UI React (MIT, pinned `b857a
 - **`ButtonUtility`** — compact icon-only control. `color` `secondary`/`tertiary`, sizes `xs`/`sm`. `icon` (component or element), `asChild` for link rendering. `tooltip` maps to native `title` for now (real Tooltip lands Wave 1A).
 - **`SocialButton`** — OAuth sign-in. `social` (google/facebook/apple/twitter/figma/dribble) × `theme` (brand/color/gray) × `size` (md/lg), icon-only when no children, `asChild`. Provider brand fills are mode-independent by design.
 - **Social logo set** — `GoogleLogo`, `FacebookLogo`, `AppleLogo`, `TwitterLogo`, `FigmaLogo`, `FigmaLogoOutlined`, `DribbleLogo` (each takes `colorful`). Exported flat for standalone use.
+- **App store badges** — Brand: `GooglePlayButton`, `AppStoreButton`, `GalaxyStoreButton`, `AppGalleryButton`. Outline (theme-adaptive, follows `text-fg`): `GooglePlayOutlineButton`, `AppStoreOutlineButton`, `GalaxyStoreOutlineButton`, `AppGalleryOutlineButton`. Native `<a>` + `forwardRef`, sizes `md`/`lg`. Official brand artwork, ported verbatim. Names follow the Figma `Style=Brand|Outline` taxonomy — Untitled's mislabeled `GooglePlayWhiteButton` is **not** shipped. Untitled's placeholder `href="#"` default dropped; consumer supplies the store URL.
+- **Mac App Store** — `MacAppStoreButton` (Brand, solid black) + `MacAppStoreOutlineButton` (Outline, theme-adaptive). No MIT source in untitledui-react; built from the licensed Untitled UI Figma reference (node `1303:2162`), vector paths inlined, layout mirrors the Figma composition.
 
-All colors map to `@mvp-ui/tokens` via `TOKEN_TRANSLATION.md` — zero new tokens. New subpath exports: `@mvp-ui/ui/{close-button,button-utility,social-button,social-logos}`.
+All colors map to `@mvp-ui/tokens` via `TOKEN_TRANSLATION.md` — zero new tokens. New subpath exports: `@mvp-ui/ui/{close-button,button-utility,social-button,social-logos,app-store-buttons,app-store-buttons-outline,mac-app-store-buttons}`.
 
 Note: `packages/skill` does not exist in this repo, so no skill doc entry was added despite the CLAUDE.md workflow step.

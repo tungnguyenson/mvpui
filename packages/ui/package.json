@@ -44,6 +44,21 @@
       "import": "./dist/social-logos.js",
       "require": "./dist/social-logos.cjs"
     },
+    "./app-store-buttons": {
+      "types": "./dist/app-store-buttons.d.ts",
+      "import": "./dist/app-store-buttons.js",
+      "require": "./dist/app-store-buttons.cjs"
+    },
+    "./app-store-buttons-outline": {
+      "types": "./dist/app-store-buttons-outline.d.ts",
+      "import": "./dist/app-store-buttons-outline.js",
+      "require": "./dist/app-store-buttons-outline.cjs"
+    },
+    "./mac-app-store-buttons": {
+      "types": "./dist/mac-app-store-buttons.d.ts",
+      "import": "./dist/mac-app-store-buttons.js",
+      "require": "./dist/mac-app-store-buttons.cjs"
+    },
     "./card": {
       "types": "./dist/card.d.ts",
       "import": "./dist/card.js",
@@ -64,6 +79,61 @@
       "import": "./dist/section.js",
       "require": "./dist/section.cjs"
     },
+    "./hint-text": {
+      "types": "./dist/hint-text.d.ts",
+      "import": "./dist/hint-text.js",
+      "require": "./dist/hint-text.cjs"
+    },
+    "./input-group": {
+      "types": "./dist/input-group.d.ts",
+      "import": "./dist/input-group.js",
+      "require": "./dist/input-group.cjs"
+    },
+    "./input-file": {
+      "types": "./dist/input-file.d.ts",
+      "import": "./dist/input-file.js",
+      "require": "./dist/input-file.cjs"
+    },
+    "./input-payment": {
+      "types": "./dist/input-payment.d.ts",
+      "import": "./dist/input-payment.js",
+      "require": "./dist/input-payment.cjs"
+    },
+    "./input-number": {
+      "types": "./dist/input-number.d.ts",
+      "import": "./dist/input-number.js",
+      "require": "./dist/input-number.cjs"
+    },
+    "./input-date": {
+      "types": "./dist/input-date.d.ts",
+      "import": "./dist/input-date.js",
+      "require": "./dist/input-date.cjs"
+    },
+    "./input-tags": {
+      "types": "./dist/input-tags.d.ts",
+      "import": "./dist/input-tags.js",
+      "require": "./dist/input-tags.cjs"
+    },
+    "./pin-input": {
+      "types": "./dist/pin-input.d.ts",
+      "import": "./dist/pin-input.js",
+      "require": "./dist/pin-input.cjs"
+    },
+    "./payment-icons": {
+      "types": "./dist/payment-icons.d.ts",
+      "import": "./dist/payment-icons.js",
+      "require": "./dist/payment-icons.cjs"
+    },
+    "./tooltip": {
+      "types": "./dist/tooltip.d.ts",
+      "import": "./dist/tooltip.js",
+      "require": "./dist/tooltip.cjs"
+    },
+    "./tags": {
+      "types": "./dist/tags.d.ts",
+      "import": "./dist/tags.js",
+      "require": "./dist/tags.cjs"
+    },
     "./styles.css": "./dist/styles.css"
   },
   "files": ["dist", "README.md"],
@@ -75,8 +145,11 @@
   "dependencies": {
     "@mvp-ui/tokens": "workspace:*",
     "@radix-ui/react-slot": "latest",
+    "@radix-ui/react-tooltip": "latest",
     "class-variance-authority": "latest",
     "clsx": "latest",
+    "input-otp": "latest",
+    "react-aria-components": "^1.16",
     "tailwind-merge": "latest"
   },
   "peerDependencies": {

@@ -18,7 +18,7 @@ import {
   type FC,
   type ReactNode,
 } from "react";
-import { cn } from "../lib/cn.js";
+import { cn } from "../../lib/cn.js";
 
 /* ==========================================================================
    ButtonUtility — compact icon-only control (table row actions, toolbars).

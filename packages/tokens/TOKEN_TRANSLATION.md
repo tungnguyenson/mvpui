@@ -67,3 +67,39 @@ flip with theme. Keep the raw value, annotate with `dark-ok` on the same line:
 | `bg-[#EA4C89]` / `hover:bg-[#E62872]` | Dribbble | brand hex |
 
 These are A11-style allowed exceptions under CLAUDE.md "Dark-safe styling".
+
+## Wave Input family (Input, Label, HintText, InputGroup, InputFile, InputPayment, InputDate, InputNumber, InputTags, PinInput, Tooltip, Tags)
+
+| Untitled | MVP UI | Note |
+|---|---|---|
+| bg-primary (surface) | bg-bg | field / tag / slot surface — **inversion** |
+| bg-primary_hover | bg-bg-tertiary | hover surface |
+| text-primary (text) | text-fg | input text — **inversion** |
+| text-secondary | text-fg-secondary | label text |
+| text-tertiary | text-fg-tertiary | hint / prefix / suffix |
+| text-placeholder | text-fg-tertiary | placeholder (no distinct token) |
+| text-quaternary / text-fg-quaternary | text-muted-fg | lowest-emphasis icon |
+| text-fg-quaternary_hover | text-fg-tertiary | hover lift one step |
+| text-brand-tertiary / text-brand-tertiary_alt | text-fg-brand | required `*`, filled PIN slot |
+| text-error-primary / text-fg-error-secondary | text-fg-error | invalid text / icon |
+| text-success-primary / text-fg-success-secondary | text-fg-success | tag dot |
+| text-fg-white | text-fg-on-brand | checkbox tick on brand fill |
+| ring-primary | ring-border | inset 1px field/tag ring |
+| ring-brand (focus) | ring-brand-500/22 + border-border-brand | MVP focus = box-shadow ring, not outline |
+| ring-error_subtle / outline-error_subtle | border-border-error | invalid border |
+| bg-brand-solid (checkbox/segment) | bg-primary | brand fill |
+| ring-brand-solid | ring-primary | brand fill ring |
+| bg-fg-brand-primary (PIN caret) | bg-primary | caret fill |
+| text-utility-neutral-300 (PIN separator) | text-fg-tertiary | separator dash |
+| text-display-lg | text-4xl | no `display-*` scale in MVP |
+| text-display-xl / text-display-2xl | text-5xl | clamp to largest MVP step |
+| outline-focus-ring (Tag/TagCloseX) | ring-brand-500/22 | focus ring, box-shadow |
+| bg-primary-solid (Tooltip surface, always-dark) | bg-fg / text-bg | **divergence:** theme-following tooltip (dark in light, light in dark) — avoids a new always-dark token; dark-safe via flipping aliases |
+| outline-black/16 (TagAvatar contrast) | outline-border-secondary | dark-safe contrast ring |
+| animate-caret-blink (PinInput) | animate-pulse | **divergence:** no `caret-blink` keyframe in MVP; pulse approximates |
+
+### New MVP tokens proposed (A3)
+
+**None.** Every Untitled token resolved to an existing MVP flipping alias.
+The two visual divergences (Tooltip theme-following surface, PinInput caret
+animation) avoid needing new tokens. No `tokens.css` change required.
