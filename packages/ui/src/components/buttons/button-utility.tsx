@@ -45,11 +45,11 @@ const buttonUtilityVariants = cva(
     variants: {
       color: {
         secondary: [
-          "bg-bg text-muted-fg ring-1 ring-border ring-inset shadow-xs",
+          "bg-bg text-fg-tertiary ring-1 ring-border ring-inset shadow-xs",
           "hover:enabled:bg-bg-tertiary hover:enabled:text-fg-tertiary",
         ],
         tertiary: [
-          "text-muted-fg",
+          "text-fg-tertiary",
           "hover:enabled:bg-bg-tertiary hover:enabled:text-fg-tertiary",
         ],
       },

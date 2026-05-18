@@ -233,7 +233,7 @@ export const Avatar = ({
         "relative inline-flex shrink-0",
         rounded ? "rounded-full" : "rounded-[7px]",
         focusable &&
-          "outline-transparent group-focus-visible:ring-2 group-focus-visible:ring-offset-2 group-focus-visible:ring-ring",
+        "outline-transparent group-focus-visible:ring-2 group-focus-visible:ring-offset-2 group-focus-visible:ring-ring",
         border && ["ring-1 ring-border", s.borderPad],
         s.root,
         className,
@@ -242,7 +242,7 @@ export const Avatar = ({
       <div
         className={cn(
           "relative inline-flex size-full shrink-0 items-center justify-center overflow-hidden bg-bg-tertiary",
-          "outline-[0.5px] -outline-offset-[0.5px] outline-black/10",
+          "outline-[0.5px] outline-offset-[-0.5px] outline-black/10",
           rounded ? "rounded-full" : "rounded-md",
         )}
       >

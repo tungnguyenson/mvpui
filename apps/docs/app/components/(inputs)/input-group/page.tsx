@@ -1,3 +1,5 @@
+"use client";
+
 /**
  * Copyright (c) 2026 TungMVP
  * Licensed under MIT

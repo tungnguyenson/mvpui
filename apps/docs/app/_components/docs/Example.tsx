@@ -176,7 +176,7 @@ export function Example({
           className="flex min-h-64 items-center justify-center rounded-xl
             border border-border bg-bg p-10 transition-colors duration-200"
         >
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex w-full flex-wrap items-center justify-center gap-4">
             {children}
           </div>
         </div>

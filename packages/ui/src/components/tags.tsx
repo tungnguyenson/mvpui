@@ -127,7 +127,7 @@ export const TagAvatar = ({
 					onError={() => setIsFailed(true)}
 				/>
 			) : (
-				<UserIcon className="size-3 text-muted-fg" />
+				<UserIcon className="size-3 text-fg-tertiary" />
 			)}
 		</div>
 	);
@@ -196,7 +196,7 @@ const TagCloseX = ({ size = "md", className, ...otherProps }: TagCloseXProps) =>
 		slot="remove"
 		aria-label="Remove this tag"
 		className={cn(
-			"flex cursor-pointer rounded-[3px] text-muted-fg outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary focus-visible:ring-2 focus-visible:ring-brand-500/22 disabled:cursor-not-allowed",
+			"flex cursor-pointer rounded-[3px] text-fg-tertiary outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary focus-visible:ring-2 focus-visible:ring-brand-500/22 disabled:cursor-not-allowed",
 			closeStyles[size].root,
 			className
 		)}

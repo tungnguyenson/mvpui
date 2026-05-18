@@ -1,5 +1,14 @@
 # CLAUDE.md — MVP UI
 
+## MANDATORY: Before any component or demo work
+
+1. Read `docs/agent/memory/demo-status.md` — current ✅/❌ status of every demo page.
+2. Read `docs/agent/memory/recreating-untitled-components-and-demo.md` — workflow rules.
+3. Confirm full scope with the user before writing a single line of code.
+4. Update `docs/agent/memory/demo-status.md` at the end of every session.
+
+Skipping these steps caused sessions to miss 15+ components while working on 2. Do not skip.
+
 ## What this repo is
 
 Shared design system for personal SaaS projects: tokens, React components, AI skill files, and a docs workbench. Consumed via git deps + git submodule.

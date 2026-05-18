@@ -1,0 +1,130 @@
+# Demo Page Status
+
+**Rule**: Read this file before any component/demo work. Update it at the end of every session.
+
+Source demos: `/Volumes/DATA/dev/test_repos/untitledui-react/components/base/`
+Demo pages: `apps/docs/app/components/(components)/`
+Nav registration: `apps/docs/app/nav.ts`
+
+---
+
+## Buttons
+
+| Page | Source demo | Source exports | Page sections | Status |
+|---|---|---|---|---|
+| `/components/button` | `buttons/buttons.demo.tsx` | 20 | 20 | ✅ complete |
+| `/components/button-utility` | no source demo | — | 5 | ✅ complete |
+| `/components/close-button` | no source demo | — | 6 | ✅ complete |
+| `/components/social-button` | `buttons/social-buttons.demo.tsx` | 15 | 15 | ✅ complete |
+| `/components/app-store-buttons` | `buttons/app-store-buttons.demo.tsx` | 11 | 11 | ✅ complete |
+
+## Inputs
+
+| Page | Source demo | Source exports | Page sections | Status |
+|---|---|---|---|---|
+| `/components/input` | `input/inputs.demo.tsx` | 31 total (shared) | 9 | ✅ complete |
+| `/components/label` | derived | — | 6 | ✅ complete |
+| `/components/hint-text` | derived | — | 5 | ✅ complete |
+| `/components/input-group` | `input/inputs.demo.tsx` | (shared) | 8 | ✅ complete |
+| `/components/input-file` | `input/inputs.demo.tsx` | (shared) | 2 | ✅ complete |
+| `/components/input-payment` | `input/inputs.demo.tsx` | (shared) | 2 | ✅ complete |
+| `/components/input-number` | `input/inputs.demo.tsx` | (shared) | 4 | ✅ complete |
+| `/components/input-date` | `input/inputs.demo.tsx` | (shared) | 2 | ✅ complete |
+| `/components/input-tags` | `input/inputs.demo.tsx` | (shared) | 4 | ✅ complete |
+| `/components/pin-input` | `input/pin-input.demo.tsx` | 9 | 9 | ✅ complete |
+
+> Note: `inputs.demo.tsx` covers all input variants in one file. Map each export to its component page when building demos.
+
+## Components
+
+| Page | Source demo | Source exports | Page sections | Status |
+|---|---|---|---|---|
+| `/components/avatar` | `avatar/avatar.demo.tsx` | 17 | 17 | ✅ complete |
+| `/components/badge` | `badges/badges.demo.tsx` | 25 | 25 | ✅ complete |
+| `/components/progress` | `progress-indicators/progress-indicators.demo.tsx` | 9 | 9 | ✅ complete |
+| `/components/tooltip` | `tooltip/tooltip.demo.tsx` | 6 | 6 | ✅ complete |
+| `/components/featured-icon` | no source demo (Figma-only) | — | 9 | ✅ complete |
+| `/components/tags` | `tags/tags.demo.tsx` | 13 | 13 | ✅ complete |
+| `/components/card` | no source demo (Figma-only) | — | 4 | ✅ complete |
+| `/components/alert` | no source demo (Figma-only) | — | 4 | ✅ complete |
+| `/components/section` | no source demo | — | 3 | ✅ complete |
+
+## Form Controls (Wave 2) — components built + demos
+
+| Page | Source demo | Source exports | Page sections | Status |
+|---|---|---|---|---|
+| `/components/checkbox` | `checkbox/checkbox.demo.tsx` | 8 | 8 | ✅ complete |
+| `/components/radio` | `radio-buttons/radio-buttons.demo.tsx` | 6 | 6 | ✅ complete |
+| `/components/toggle` | `toggle/toggle.demo.tsx` | 12 | 12 | ✅ complete |
+| `/components/textarea` | `textarea/textarea.demo.tsx` | 4 | 4 | ✅ complete |
+
+> Wave 2 component files: `packages/ui/src/components/{checkbox,radio,toggle,textarea}.tsx`
+> Demo pages in: `apps/docs/app/components/(inputs)/`
+
+## Wave 3 — partial
+
+| Component | Source demo | Source exports | Page sections | Status |
+|---|---|---|---|---|
+| Select | `select/select.demo.tsx` | 19 | 10 (core exports; skipped MultiSelect/TagSelect/Native — require separate components) | ✅ complete |
+| Slider | `slider/slider.demo.tsx` | 4 | 4 | ✅ complete |
+| ButtonGroup | `button-group/button-group.demo.tsx` | 9 | 9 | ✅ complete |
+| BadgeGroup | `badges/badge-groups.demo.tsx` | 24 | 24 | ✅ complete |
+| Dropdown | no source demo (built from source component) | — | 8 | ✅ complete |
+| FileUploadTrigger | no source demo (built from source component) | — | 6 | ✅ complete |
+| Modal | no source demo found | — | — | ⏭ skipped (out of scope) |
+
+> Wave 3 leftovers (index.ts, tsup.config.ts, package.json, nav.ts additions): `/tmp/wave3-leftovers-shared.md`
+
+## Wave 4a — complete
+
+| Component | Status | Notes |
+|---|---|---|
+| Tabs | ✅ complete | react-aria Tabs; underline/pill variants, sm/md sizes |
+| Pagination | ✅ complete | custom buildRange(); compact prop; lucide chevrons |
+| EmptyState | ✅ complete | presentational; icon/title/description/actions props |
+| LoadingIndicator | ✅ complete | SVG spinner + dot-pulse; sm/md/lg; primary/secondary |
+
+## Wave 4b — complete
+
+| Component | Status | Notes |
+|---|---|---|
+| Drawer | ✅ complete | react-aria Dialog/Modal; side (left/right); sm/md/lg; title/description wired with aria-labelledby |
+| DatePicker | ✅ complete | react-aria DatePicker/Calendar; light + dark safe |
+| AppNav | ✅ complete | presentational sidebar nav; items/logo/footer props |
+
+## Wave 4 — remaining
+
+| Component | Status |
+|---|---|
+| DateRangePicker | ❌ not started |
+| Carousel | ❌ not started |
+
+## Foundations — complete
+
+| Component | Status | Notes |
+|---|---|---|
+| IntegrationIcons (16 icons) | ✅ complete | grayscale prop; fill-fg-quaternary alias |
+| SocialIcons (7→14 logos) | ✅ complete | extended social-logos.tsx |
+| PaymentIcons (5→56 icons) | ✅ complete | extended payment-icons.tsx |
+
+## Deferred
+
+*(BadgeGroup was deferred to Wave 3 — now complete)*
+
+---
+
+## Session log
+
+| Date | Work done |
+|---|---|
+| 2026-05-18 | Avatar (17), Badge (25), Shiki→highlight.js migration |
+| 2026-05-18 | Button (20), ButtonUtility (5), CloseButton (6), SocialButton (15), AppStoreButtons (11), Tags fix (4→13) |
+| 2026-05-18 | Wave 2: Checkbox (8), Radio (6), Toggle (12), Textarea (4) — built + demo'd |
+| 2026-05-18 | Input family: Input (9), Label (6), HintText (5), InputGroup (8), InputFile (2), InputPayment (2), InputNumber (4), InputDate (2), InputTags (4), PinInput (9) — all demo pages written, tsc clean |
+| 2026-05-18 | Wave 3: Select (10 sections), Slider (4 sections), ButtonGroup (9 sections) — built + demo'd, tsc clean |
+| 2026-05-18 | Wave 3 continued: BadgeGroup (24 sections), Dropdown (8 sections), FileUploadTrigger (6 sections) — built + demo'd, tsc clean. Leftovers in /tmp/wave3-leftovers-shared.md |
+| 2026-05-18 | Foundations: IntegrationIcons (16), SocialIcons (7→14), PaymentIcons (5→56) — all built |
+| 2026-05-18 | Route collision fix: deleted 15 duplicate page dirs from (components) group |
+| 2026-05-18 | Wave 4a: Tabs, Pagination, EmptyState, LoadingIndicator — built + exported + nav'd |
+| 2026-05-18 | Wave 4b: Drawer, DatePicker, AppNav — built + exported + nav'd; tsc clean (both packages) |
+| 2026-05-18 | Dropdown: added SubmenuTrigger to Dropdown namespace; fixed DropdownExamples direct react-aria-components import |

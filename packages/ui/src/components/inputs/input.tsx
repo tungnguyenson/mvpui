@@ -50,7 +50,7 @@ export const inputFieldVariants = cva(
 		"transition-shadow duration-100 ease-linear",
 		"has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50 has-[input:disabled]:bg-bg-secondary",
 		"has-[input:read-only]:bg-bg-secondary",
-		"[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:text-muted-fg",
+		"[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:text-fg-tertiary",
 	],
 	{
 		variants: {
@@ -245,7 +245,7 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(
 					<Tooltip title={tooltip} placement="top">
 						<TooltipTrigger
 							tabIndex={0}
-							className="shrink-0 cursor-pointer text-muted-fg transition duration-100 ease-linear hover:text-fg-tertiary focus:text-fg-tertiary"
+							className="shrink-0 cursor-pointer text-fg-tertiary transition duration-100 ease-linear hover:text-fg-tertiary focus:text-fg-tertiary"
 						>
 							<HelpCircleIcon className="size-4" />
 						</TooltipTrigger>
@@ -264,7 +264,7 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(
 						type="button"
 						aria-label="Toggle password visibility"
 						onClick={() => setIsPasswordVisible((v) => !v)}
-						className="flex shrink-0 cursor-pointer items-center justify-center text-muted-fg outline-none transition duration-100 ease-linear hover:text-fg-tertiary focus-visible:text-fg-tertiary"
+						className="flex shrink-0 cursor-pointer items-center justify-center text-fg-tertiary outline-none transition duration-100 ease-linear hover:text-fg-tertiary focus-visible:text-fg-tertiary"
 					>
 						{isPasswordVisible ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
 					</button>

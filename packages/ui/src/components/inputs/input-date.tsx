@@ -95,8 +95,8 @@ export const InputDate = ({
 									className={cn(
 										"rounded-sm px-0.5 text-fg tabular-nums caret-transparent outline-none",
 										"data-focused:bg-primary data-focused:font-medium data-focused:text-primary-fg",
-										"data-placeholder:text-fg-tertiary data-placeholder:uppercase",
-										"data-[type=literal]:text-muted-fg"
+										"data-placeholder:text-fg-secondary data-placeholder:uppercase data-focused:data-placeholder:text-primary-fg",
+										"data-[type=literal]:text-fg-tertiary"
 									)}
 								/>
 							)}

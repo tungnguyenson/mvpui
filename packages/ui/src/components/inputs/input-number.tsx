@@ -125,7 +125,7 @@ export const InputNumber = ({
 							<AriaButton
 								slot="decrement"
 								aria-label="Decrease"
-								className="flex shrink-0 cursor-pointer items-center justify-center border-r border-border px-3 text-muted-fg outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary disabled:cursor-not-allowed disabled:opacity-50"
+								className="flex shrink-0 cursor-pointer items-center justify-center border-r border-border px-3 text-fg-tertiary outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								<ChevronDownIcon className="size-4" />
 							</AriaButton>
@@ -143,7 +143,7 @@ export const InputNumber = ({
 							<AriaButton
 								slot="increment"
 								aria-label="Increase"
-								className="flex shrink-0 cursor-pointer items-center justify-center border-l border-border px-3 text-muted-fg outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary disabled:cursor-not-allowed disabled:opacity-50"
+								className="flex shrink-0 cursor-pointer items-center justify-center border-l border-border px-3 text-fg-tertiary outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary disabled:cursor-not-allowed disabled:opacity-50"
 							>
 								<ChevronUpIcon className="size-4" />
 							</AriaButton>
@@ -154,14 +154,14 @@ export const InputNumber = ({
 								<AriaButton
 									slot="increment"
 									aria-label="Increase"
-									className="flex flex-1 cursor-pointer items-center justify-center text-muted-fg outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary disabled:cursor-not-allowed disabled:opacity-50"
+									className="flex flex-1 cursor-pointer items-center justify-center text-fg-tertiary outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary disabled:cursor-not-allowed disabled:opacity-50"
 								>
 									<ChevronUpIcon className="size-3" />
 								</AriaButton>
 								<AriaButton
 									slot="decrement"
 									aria-label="Decrease"
-									className="flex flex-1 cursor-pointer items-center justify-center border-t border-border text-muted-fg outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary disabled:cursor-not-allowed disabled:opacity-50"
+									className="flex flex-1 cursor-pointer items-center justify-center border-t border-border text-fg-tertiary outline-none transition duration-100 ease-linear hover:bg-bg-tertiary hover:text-fg-tertiary disabled:cursor-not-allowed disabled:opacity-50"
 								>
 									<ChevronDownIcon className="size-3" />
 								</AriaButton>

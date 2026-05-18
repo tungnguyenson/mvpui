@@ -22,6 +22,7 @@ export const componentSections: NavSection[] = [
       { name: "Close Button", href: "/components/close-button" },
       { name: "Social Button", href: "/components/social-button" },
       { name: "App Store Buttons", href: "/components/app-store-buttons" },
+      { name: "Button Group", href: "/components/button-group" },
     ],
   },
   {
@@ -40,6 +41,15 @@ export const componentSections: NavSection[] = [
     ],
   },
   {
+    title: "Form Controls",
+    items: [
+      { name: "Checkbox", href: "/components/checkbox" },
+      { name: "Radio", href: "/components/radio" },
+      { name: "Toggle", href: "/components/toggle" },
+      { name: "Textarea", href: "/components/textarea" },
+    ],
+  },
+  {
     title: "Components",
     items: [
       { name: "Avatar", href: "/components/avatar" },
@@ -51,6 +61,29 @@ export const componentSections: NavSection[] = [
       { name: "Badge", href: "/components/badge" },
       { name: "Alert", href: "/components/alert" },
       { name: "Section", href: "/components/section" },
+      { name: "Select", href: "/components/select" },
+      { name: "Slider", href: "/components/slider" },
+      { name: "Tabs", href: "/components/tabs" },
+      { name: "Pagination", href: "/components/pagination" },
+      { name: "Empty State", href: "/components/empty-state" },
+      { name: "Loading Indicator", href: "/components/loading-indicator" },
+      { name: "Badge Group", href: "/components/badge-group" },
+      { name: "Dropdown", href: "/components/dropdown" },
+      { name: "File Upload Trigger", href: "/components/file-upload-trigger" },
+      { name: "Drawer", href: "/components/drawer" },
+      { name: "Date Picker", href: "/components/date-picker" },
+    ],
+  },
+  {
+    title: "Navigation",
+    items: [
+      { name: "App Nav", href: "/components/app-nav" },
+    ],
+  },
+  {
+    title: "Icons",
+    items: [
+      { name: "Integration Icons", href: "/components/integration-icons" },
     ],
   },
 ];

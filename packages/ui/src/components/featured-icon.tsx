@@ -21,7 +21,7 @@ export interface FeaturedIconProps {
   icon?: IconProp;
   size?: "sm" | "md" | "lg" | "xl";
   color?: "brand" | "gray" | "error" | "warning" | "success";
-  theme?: "light" | "dark" | "outline" | "modern";
+  theme?: "light" | "gradient" | "dark" | "outline" | "modern" | "modern-neue";
 }
 
 const ICON_SIZE: Record<string, string> = {
@@ -60,6 +60,23 @@ const DARK_SOLID = {
   },
 } as const;
 
+const GRADIENT = {
+  base: "rounded-full text-white before:absolute before:inset-0 before:size-full before:rounded-full before:border after:absolute after:top-1/2 after:left-1/2 after:-translate-x-1/2 after:-translate-y-1/2 after:rounded-full",
+  size: {
+    sm: "size-8 after:size-6",
+    md: "size-10 after:size-7",
+    lg: "size-12 after:size-8",
+    xl: "size-14 after:size-10",
+  },
+  color: {
+    brand:   "before:bg-info-bg   before:border-fg-brand/20   after:bg-primary",   // dark-ok after: solid brand fill
+    gray:    "before:bg-neutral-bg before:border-border        after:bg-gray-600",  // dark-ok after: solid gray fill
+    error:   "before:bg-error-bg   before:border-error-fg/20  after:bg-error-600", // dark-ok after: solid error fill
+    warning: "before:bg-warning-bg before:border-warning-fg/20 after:bg-warning-600", // dark-ok after: solid warning fill
+    success: "before:bg-success-bg before:border-success-fg/20 after:bg-success-600", // dark-ok after: solid success fill
+  },
+} as const;
+
 const MODERN = {
   base: "bg-bg shadow-xs ring-1 ring-inset ring-border",
   size: {
@@ -72,6 +89,23 @@ const MODERN = {
     brand: "text-fg-brand",
     gray: "text-fg-secondary",
     error: "text-error-fg",
+    warning: "text-warning-fg",
+    success: "text-success-fg",
+  },
+} as const;
+
+const MODERN_NEUE = {
+  base: "bg-bg ring-1 ring-inset ring-border before:absolute before:inset-1 before:bg-bg-secondary before:shadow-sm before:ring-1 before:ring-border-secondary",
+  size: {
+    sm: "size-8 rounded-[8px] before:rounded-[4px]",
+    md: "size-10 rounded-[10px] before:rounded-[6px]",
+    lg: "size-12 rounded-[12px] before:rounded-[8px]",
+    xl: "size-14 rounded-[14px] before:rounded-[10px]",
+  },
+  color: {
+    brand:   "text-fg-brand",
+    gray:    "text-fg-secondary",
+    error:   "text-error-fg",
     warning: "text-warning-fg",
     success: "text-success-fg",
   },
@@ -96,8 +130,10 @@ const OUTLINE = {
 
 const THEMES = {
   light: LIGHT,
+  gradient: GRADIENT,
   dark: DARK_SOLID,
   modern: MODERN,
+  "modern-neue": MODERN_NEUE,
   outline: OUTLINE,
 } as const;
 

@@ -36,7 +36,7 @@ const closeButtonVariants = cva(
     variants: {
       tone: {
         default: [
-          "text-muted-fg",
+          "text-fg-tertiary",
           "hover:enabled:bg-bg-tertiary hover:enabled:text-fg-tertiary",
           "focus-visible:ring-brand-500/22",
         ],

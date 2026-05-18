@@ -97,18 +97,16 @@ export const Tooltip = ({
 	onOpenChange,
 	children,
 }: TooltipProps) => {
-	if (isDisabled) return <>{children}</>;
-
 	const { side, align } = resolvePlacement(placement);
 
 	return (
 		<RadixTooltip.Provider delayDuration={delay} skipDelayDuration={closeDelay}>
 			<RadixTooltip.Root
-				{...(isOpen !== undefined ? { open: isOpen } : {})}
-				{...(defaultOpen !== undefined ? { defaultOpen } : {})}
+				{...(isDisabled ? { open: false } : isOpen !== undefined ? { open: isOpen } : {})}
+				{...(defaultOpen !== undefined && !isDisabled ? { defaultOpen } : {})}
 				{...(onOpenChange ? { onOpenChange } : {})}
 			>
-				<RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
+				{children}
 				<RadixTooltip.Portal>
 					<RadixTooltip.Content
 						side={side}
@@ -142,14 +140,16 @@ export interface TooltipTriggerProps extends ButtonHTMLAttributes<HTMLButtonElem
  */
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>(
 	({ className, type, children, ...props }, ref) => (
-		<button
-			ref={ref}
-			type={type ?? "button"}
-			className={cn("h-max w-max outline-none", className)}
-			{...props}
-		>
-			{children}
-		</button>
+		<RadixTooltip.Trigger asChild>
+			<button
+				ref={ref}
+				type={type ?? "button"}
+				className={cn("h-max w-max outline-none", className)}
+				{...props}
+			>
+				{children}
+			</button>
+		</RadixTooltip.Trigger>
 	)
 );
 

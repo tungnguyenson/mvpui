@@ -149,6 +149,36 @@
       "import": "./dist/featured-icon.js",
       "require": "./dist/featured-icon.cjs"
     },
+    "./select": {
+      "types": "./dist/select.d.ts",
+      "import": "./dist/select.js",
+      "require": "./dist/select.cjs"
+    },
+    "./slider": {
+      "types": "./dist/slider.d.ts",
+      "import": "./dist/slider.js",
+      "require": "./dist/slider.cjs"
+    },
+    "./button-group": {
+      "types": "./dist/button-group.d.ts",
+      "import": "./dist/button-group.js",
+      "require": "./dist/button-group.cjs"
+    },
+    "./badge-group": {
+      "types": "./dist/badge-group.d.ts",
+      "import": "./dist/badge-group.js",
+      "require": "./dist/badge-group.cjs"
+    },
+    "./dropdown": {
+      "types": "./dist/dropdown.d.ts",
+      "import": "./dist/dropdown.js",
+      "require": "./dist/dropdown.cjs"
+    },
+    "./file-upload-trigger": {
+      "types": "./dist/file-upload-trigger.d.ts",
+      "import": "./dist/file-upload-trigger.js",
+      "require": "./dist/file-upload-trigger.cjs"
+    },
     "./styles.css": "./dist/styles.css"
   },
   "files": ["dist", "README.md"],

@@ -57,7 +57,7 @@ const SKEUO_BORDER =
 const COLORS = {
   gray: {
     root: "bg-bg text-fg-secondary shadow-xs ring-1 ring-border ring-inset hover:enabled:bg-bg-tertiary hover:enabled:text-fg focus-visible:ring-brand-500/22",
-    icon: "text-muted-fg group-hover:text-fg-tertiary",
+    icon: "text-fg-tertiary group-hover:text-fg-tertiary",
   },
   black: {
     root: `bg-black text-white shadow-xs ring-1 ring-transparent ring-inset focus-visible:ring-brand-500/22 ${SKEUO_BORDER}`, // dark-ok: brand-mandated solid (Apple/Twitter/Figma)

@@ -67,7 +67,7 @@ export const Label = forwardRef<HTMLLabelElement, LabelProps>(
 				<Tooltip title={tooltip} description={tooltipDescription} placement="top">
 					<TooltipTrigger
 						tabIndex={0}
-						className="cursor-pointer text-muted-fg transition duration-200 hover:text-fg-tertiary focus:text-fg-tertiary"
+						className="cursor-pointer text-fg-tertiary transition duration-200 hover:text-fg-tertiary focus:text-fg-tertiary"
 					>
 						<HelpCircleIcon className="size-4" />
 					</TooltipTrigger>

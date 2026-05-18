@@ -298,7 +298,7 @@ export const InputTags = ({
 					<Tooltip title={tooltip} placement="top">
 						<TooltipTrigger
 							tabIndex={0}
-							className="absolute right-3 cursor-pointer text-muted-fg transition duration-100 ease-linear hover:text-fg-tertiary focus:text-fg-tertiary"
+							className="absolute right-3 cursor-pointer text-fg-tertiary transition duration-100 ease-linear hover:text-fg-tertiary focus:text-fg-tertiary"
 						>
 							<HelpCircleIcon className="size-4" />
 						</TooltipTrigger>

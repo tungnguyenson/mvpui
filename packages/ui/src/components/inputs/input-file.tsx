@@ -140,7 +140,7 @@ export const InputFile = forwardRef<HTMLInputElement, InputFileProps>(
 							className="cursor-pointer"
 						/>
 						{isLoading && (
-							<SpinnerIcon className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-muted-fg" />
+							<SpinnerIcon className="pointer-events-none absolute top-1/2 right-3 size-4 -translate-y-1/2 text-fg-tertiary" />
 						)}
 					</div>
 

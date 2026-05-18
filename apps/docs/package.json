@@ -11,11 +11,11 @@
   "dependencies": {
     "@mvp-ui/tokens": "workspace:*",
     "@mvp-ui/ui": "workspace:*",
+    "highlight.js": "^11.11.1",
     "lucide-react": "latest",
     "next": "^16",
     "react": "^19",
-    "react-dom": "^19",
-    "shiki": "^4.0.2"
+    "react-dom": "^19"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

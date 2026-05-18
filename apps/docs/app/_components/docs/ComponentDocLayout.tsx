@@ -3,23 +3,14 @@
  * Licensed under MIT
  */
 
+"use client";
+
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { Example } from "./Example";
 import { InstallBlock } from "./InstallBlock";
 import { TableOfContents, type TocItem } from "./TableOfContents";
 import { highlight } from "./highlight";
-
-/* ==========================================================================
-   ComponentDocLayout — one shell for every component docs page.
-
-   Async Server Component: shiki runs here (server-only, zero client JS for
-   highlighting). Each page passes a `sections` array; this builds the
-   Installation block, the example cards, the "On this page" rail, and the
-   optional token-reference table. Snippet strings are authored by hand
-   alongside the preview JSX — keep them in sync, there is no auto-derivation
-   (Slot/asChild makes element-to-string lossy).
-   ========================================================================== */
 
 export interface DocExample {
   /** Anchor id, kebab-case, unique on the page. */
@@ -40,11 +31,6 @@ export interface TokenRef {
 interface ComponentDocLayoutProps {
   name: string;
   tagline: React.ReactNode;
-  /**
-   * Installation. `add` defaults to the standard pnpm command (bash);
-   * `usage` is the per-component import line (tsx). Rendered as two
-   * separate, individually-copyable panels under one "Installation" anchor.
-   */
   install: { add?: string; usage: string };
   sections: DocExample[];
   tokenReference?: TokenRef[];
@@ -52,7 +38,7 @@ interface ComponentDocLayoutProps {
 
 const DEFAULT_ADD = "pnpm add @mvp-ui/ui @mvp-ui/tokens";
 
-export async function ComponentDocLayout({
+export function ComponentDocLayout({
   name,
   tagline,
   install,
@@ -62,17 +48,12 @@ export async function ComponentDocLayout({
   const addCode = install.add ?? DEFAULT_ADD;
   const usageCode = install.usage;
 
-  // Highlight every snippet on the server, in parallel.
-  const [addHtml, usageHtml, renderedSections] = await Promise.all([
-    highlight(addCode, "bash"),
-    highlight(usageCode, "tsx"),
-    Promise.all(
-      sections.map(async (section) => ({
-        section,
-        codeHtml: await highlight(section.code, "tsx"),
-      }))
-    ),
-  ]);
+  const addHtml = highlight(addCode, "bash");
+  const usageHtml = highlight(usageCode, "tsx");
+  const renderedSections = sections.map((section) => ({
+    section,
+    codeHtml: highlight(section.code, "tsx"),
+  }));
 
   const tocItems: TocItem[] = [
     { id: "installation", title: "Installation" },

@@ -1,13 +1,12 @@
+"use client";
+
 /**
  * Copyright (c) 2026 TungMVP
  * Licensed under MIT
  */
 
-"use client"
-
 import {
   ProgressBar,
-  ProgressBarBase,
   ProgressBarCircle,
   ProgressBarHalfCircle,
 } from "@mvp-ui/ui";
@@ -18,133 +17,119 @@ import {
 
 const SECTIONS: DocExample[] = [
   {
-    id: "basic",
-    title: "Basic bar",
-    description: "ProgressBarBase with no label. Pass value 0–100.",
+    id: "default",
+    title: "Default",
+    description: "Progress bar with no label.",
     preview: (
-      <div className="flex flex-col gap-4 w-full max-w-md">
-        <ProgressBarBase value={25} />
-        <ProgressBarBase value={60} />
-        <ProgressBarBase value={90} />
+      <div className="w-96">
+        <ProgressBar min={0} max={100} value={40} />
       </div>
     ),
-    code: `<ProgressBarBase value={25} />
-<ProgressBarBase value={60} />
-<ProgressBarBase value={90} />`,
+    code: `<ProgressBar min={0} max={100} value={40} />`,
   },
   {
     id: "label-right",
     title: "Label right",
     description: "Percentage label displayed to the right.",
     preview: (
-      <div className="flex flex-col gap-4 w-full max-w-md">
-        <ProgressBar value={40} labelPosition="right" />
-        <ProgressBar value={75} labelPosition="right" />
+      <div className="w-96">
+        <ProgressBar labelPosition="right" min={0} max={100} value={40} />
       </div>
     ),
-    code: `<ProgressBar value={40} labelPosition="right" />
-<ProgressBar value={75} labelPosition="right" />`,
+    code: `<ProgressBar labelPosition="right" min={0} max={100} value={40} />`,
   },
   {
     id: "label-bottom",
     title: "Label bottom",
     description: "Percentage label below the bar, right-aligned.",
     preview: (
-      <div className="flex flex-col gap-6 w-full max-w-md">
-        <ProgressBar value={55} labelPosition="bottom" />
+      <div className="w-96">
+        <ProgressBar labelPosition="bottom" min={0} max={100} value={40} />
       </div>
     ),
-    code: `<ProgressBar value={55} labelPosition="bottom" />`,
+    code: `<ProgressBar labelPosition="bottom" min={0} max={100} value={40} />`,
   },
   {
-    id: "floating",
-    title: "Floating tooltip",
-    description: "Tooltip that tracks the progress position.",
+    id: "top-floating",
+    title: "Floating top",
+    description: "Tooltip above the bar that tracks the progress position.",
     preview: (
-      <div className="flex flex-col gap-12 w-full max-w-md pt-8 pb-4">
-        <ProgressBar value={35} labelPosition="top-floating" />
-        <ProgressBar value={70} labelPosition="bottom-floating" />
+      <div className="w-96 pt-8 pb-4">
+        <ProgressBar labelPosition="top-floating" min={0} max={100} value={40} />
       </div>
     ),
-    code: `<ProgressBar value={35} labelPosition="top-floating" />
-<ProgressBar value={70} labelPosition="bottom-floating" />`,
+    code: `<ProgressBar labelPosition="top-floating" min={0} max={100} value={40} />`,
   },
   {
-    id: "custom-formatter",
-    title: "Custom formatter",
-    description: "Override the label with a custom valueFormatter.",
+    id: "bottom-floating",
+    title: "Floating bottom",
+    description: "Tooltip below the bar that tracks the progress position.",
     preview: (
-      <div className="flex flex-col gap-4 w-full max-w-md">
-        <ProgressBar
-          value={4}
-          max={10}
-          labelPosition="right"
-          valueFormatter={(v, _pct) => `${v} / 10 tasks`}
-        />
-        <ProgressBar
-          value={128}
-          max={512}
-          labelPosition="right"
-          valueFormatter={(v) => `${v} MB`}
-        />
+      <div className="w-96 pt-4 pb-8">
+        <ProgressBar labelPosition="bottom-floating" min={0} max={100} value={40} />
       </div>
     ),
-    code: `<ProgressBar
-  value={4}
-  max={10}
-  labelPosition="right"
-  valueFormatter={(v) => \`\${v} / 10 tasks\`}
-/>`,
+    code: `<ProgressBar labelPosition="bottom-floating" min={0} max={100} value={40} />`,
   },
   {
     id: "circle",
     title: "Circle",
-    description:
-      "Full-circle SVG indicator. Five sizes: xxs → lg, shown across a range of values.",
+    description: "Full-circle SVG indicator. Three sizes: xxs, xs, sm.",
     preview: (
-      <div className="flex flex-col items-start gap-8">
-        <div className="flex flex-wrap items-end gap-8">
-          {(["xxs", "xs", "sm", "md", "lg"] as const).map((size) => (
-            <ProgressBarCircle key={size} size={size} value={65} label="65%" />
-          ))}
-        </div>
-        <div className="flex flex-wrap items-end gap-8">
-          {([20, 40, 60, 80, 100] as const).map((v) => (
-            <ProgressBarCircle key={v} size="sm" value={v} label={`${v}%`} />
-          ))}
-        </div>
+      <div className="flex flex-col items-start gap-10 md:flex-row">
+        <ProgressBarCircle size="xxs" min={0} max={100} value={40} />
+        <ProgressBarCircle size="xs"  min={0} max={100} value={40} />
+        <ProgressBarCircle size="sm"  min={0} max={100} value={40} />
       </div>
     ),
-    code: `{["xxs","xs","sm","md","lg"].map((size) => (
-  <ProgressBarCircle key={size} size={size} value={65} label="65%" />
-))}
-
-{[20, 40, 60, 80, 100].map((v) => (
-  <ProgressBarCircle key={v} size="sm" value={v} label={\`\${v}%\`} />
-))}`,
+    code: `<ProgressBarCircle size="xxs" min={0} max={100} value={40} />
+<ProgressBarCircle size="xs"  min={0} max={100} value={40} />
+<ProgressBarCircle size="sm"  min={0} max={100} value={40} />`,
+  },
+  {
+    id: "circle-label",
+    title: "Circle with label",
+    description: "Circle indicator with an inner label.",
+    preview: (
+      <div className="flex flex-col items-start gap-10 md:flex-row">
+        <ProgressBarCircle size="xxs" label="Users"        min={0} max={100} value={40} />
+        <ProgressBarCircle size="xs"  label="Active users" min={0} max={100} value={40} />
+        <ProgressBarCircle size="sm"  label="Active users" min={0} max={100} value={40} />
+      </div>
+    ),
+    code: `<ProgressBarCircle size="xxs" label="Users"        min={0} max={100} value={40} />
+<ProgressBarCircle size="xs"  label="Active users" min={0} max={100} value={40} />
+<ProgressBarCircle size="sm"  label="Active users" min={0} max={100} value={40} />`,
   },
   {
     id: "half-circle",
     title: "Half circle",
-    description:
-      "Gauge-style half-circle. Five sizes, then a row of values.",
+    description: "Gauge-style half-circle. Three sizes: xxs, xs, sm.",
     preview: (
-      <div className="flex flex-col items-start gap-8">
-        <div className="flex flex-wrap items-end gap-8">
-          {(["xxs", "xs", "sm", "md", "lg"] as const).map((size) => (
-            <ProgressBarHalfCircle key={size} size={size} value={72} label="72%" />
-          ))}
-        </div>
-        <div className="flex flex-wrap items-end gap-8">
-          {([20, 40, 60, 80, 100] as const).map((v) => (
-            <ProgressBarHalfCircle key={v} size="sm" value={v} label={`${v}%`} />
-          ))}
-        </div>
+      <div className="flex flex-col items-start gap-10 md:flex-row">
+        <ProgressBarHalfCircle size="xxs" min={0} max={100} value={40} />
+        <ProgressBarHalfCircle size="xs"  min={0} max={100} value={40} />
+        <ProgressBarHalfCircle size="sm"  min={0} max={100} value={40} />
       </div>
     ),
-    code: `{["xxs","xs","sm","md","lg"].map((size) => (
-  <ProgressBarHalfCircle key={size} size={size} value={72} label="72%" />
-))}`,
+    code: `<ProgressBarHalfCircle size="xxs" min={0} max={100} value={40} />
+<ProgressBarHalfCircle size="xs"  min={0} max={100} value={40} />
+<ProgressBarHalfCircle size="sm"  min={0} max={100} value={40} />`,
+  },
+  {
+    id: "half-circle-label",
+    title: "Half circle with label",
+    description: "Half-circle indicator with an inner label.",
+    preview: (
+      <div className="flex flex-col items-start gap-10 md:flex-row">
+        <ProgressBarHalfCircle size="xxs" label="Users"        min={0} max={100} value={40} />
+        <ProgressBarHalfCircle size="xs"  label="Active users" min={0} max={100} value={40} />
+        <ProgressBarHalfCircle size="sm"  label="Active users" min={0} max={100} value={40} />
+      </div>
+    ),
+    code: `<ProgressBarHalfCircle size="xxs" label="Users"        min={0} max={100} value={40} />
+<ProgressBarHalfCircle size="xs"  label="Active users" min={0} max={100} value={40} />
+<ProgressBarHalfCircle size="sm"  label="Active users" min={0} max={100} value={40} />`,
   },
 ];
 
@@ -154,7 +139,7 @@ export default function ProgressPage() {
       name="Progress"
       tagline="Linear progress bars and circular progress indicators. Supports custom value formatters and four label positions."
       install={{
-        usage: `import { ProgressBar, ProgressBarBase, ProgressBarCircle, ProgressBarHalfCircle } from "@mvp-ui/ui";`,
+        usage: `import { ProgressBar, ProgressBarCircle, ProgressBarHalfCircle } from "@mvp-ui/ui";`,
       }}
       sections={SECTIONS}
       tokenReference={[
