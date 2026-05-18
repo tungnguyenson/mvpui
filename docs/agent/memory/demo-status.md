@@ -107,6 +107,17 @@ Nav registration: `apps/docs/app/nav.ts`
 | SocialIcons (7→14 logos) | ✅ complete | extended social-logos.tsx |
 | PaymentIcons (5→56 icons) | ✅ complete | extended payment-icons.tsx |
 
+## Shared Assets — complete
+
+| Component | Status | Notes |
+|---|---|---|
+| SectionDivider | ✅ complete | max-w-7xl HR; border-secondary token |
+| IPhoneMockup | ✅ complete | SVG phone shell; light/dark/auto theme; scale via CSS width |
+| BackgroundPattern | ✅ complete | circle/square/grid/grid-check; sm/md/lg; currentColor |
+| Illustration | ✅ complete | box/cloud/documents/credit-card; sm/md/lg |
+| CreditCard | ✅ complete | 13 themes (normal/strip/vertical-strip); scalable width |
+| QRCode + GradientScan | ✅ complete | qr-code-styling backed; md/lg; branded corner handles |
+
 ## Deferred
 
 *(BadgeGroup was deferred to Wave 3 — now complete)*
@@ -128,3 +139,5 @@ Nav registration: `apps/docs/app/nav.ts`
 | 2026-05-18 | Wave 4a: Tabs, Pagination, EmptyState, LoadingIndicator — built + exported + nav'd |
 | 2026-05-18 | Wave 4b: Drawer, DatePicker, AppNav — built + exported + nav'd; tsc clean (both packages) |
 | 2026-05-18 | Dropdown: added SubmenuTrigger to Dropdown namespace; fixed DropdownExamples direct react-aria-components import |
+| 2026-05-18 | InputDate focused-segment contrast fix: chained data-focused:data-placeholder:text-primary-fg (0,2,0 specificity) |
+| 2026-05-18 | Shared assets: SectionDivider, IPhoneMockup, BackgroundPattern (4 patterns), Illustration (4 types), CreditCard (13 themes), QRCode+GradientScan — all source files, exports, tsup entries, package.json exports, nav entries, docs pages; build clean |

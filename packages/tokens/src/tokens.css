@@ -91,6 +91,7 @@
   --color-fg: var(--gray-900);
   --color-fg-secondary: var(--gray-700);
   --color-fg-tertiary: var(--gray-500);
+  --color-fg-quaternary: var(--gray-400);
   --color-muted-fg: var(--gray-400);
   --color-fg-disabled: var(--gray-300);
   --color-fg-brand: var(--brand-600);
@@ -211,6 +212,7 @@
   --color-fg: var(--gray-25);
   --color-fg-secondary: var(--gray-300);
   --color-fg-tertiary: var(--gray-400);
+  --color-fg-quaternary: var(--gray-500);
   --color-muted-fg: var(--gray-500);
   --color-fg-disabled: var(--gray-600);
   --color-fg-brand: var(--brand-400);

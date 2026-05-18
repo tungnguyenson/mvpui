@@ -18,8 +18,7 @@ export const componentSections: NavSection[] = [
     title: "Buttons",
     items: [
       { name: "Button", href: "/components/button" },
-      { name: "Button Utility", href: "/components/button-utility" },
-      { name: "Close Button", href: "/components/close-button" },
+      { name: "Utility Buttons", href: "/components/utility-buttons" },
       { name: "Social Button", href: "/components/social-button" },
       { name: "App Store Buttons", href: "/components/app-store-buttons" },
       { name: "Button Group", href: "/components/button-group" },
@@ -32,11 +31,6 @@ export const componentSections: NavSection[] = [
       { name: "Label", href: "/components/label" },
       { name: "Hint Text", href: "/components/hint-text" },
       { name: "Input Group", href: "/components/input-group" },
-      { name: "Input File", href: "/components/input-file" },
-      { name: "Input Payment", href: "/components/input-payment" },
-      { name: "Input Number", href: "/components/input-number" },
-      { name: "Input Date", href: "/components/input-date" },
-      { name: "Input Tags", href: "/components/input-tags" },
       { name: "Pin Input", href: "/components/pin-input" },
     ],
   },
@@ -84,6 +78,17 @@ export const componentSections: NavSection[] = [
     title: "Icons",
     items: [
       { name: "Integration Icons", href: "/components/integration-icons" },
+    ],
+  },
+  {
+    title: "Shared Assets",
+    items: [
+      { name: "Section Divider", href: "/components/section-divider" },
+      { name: "iPhone Mockup", href: "/components/iphone-mockup" },
+      { name: "Background Pattern", href: "/components/background-pattern" },
+      { name: "Illustration", href: "/components/illustration" },
+      { name: "Credit Card", href: "/components/credit-card" },
+      { name: "QR Code", href: "/components/qr-code" },
     ],
   },
 ];

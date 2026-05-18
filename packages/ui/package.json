@@ -179,9 +179,42 @@
       "import": "./dist/file-upload-trigger.js",
       "require": "./dist/file-upload-trigger.cjs"
     },
+    "./section-divider": {
+      "types": "./dist/section-divider.d.ts",
+      "import": "./dist/section-divider.js",
+      "require": "./dist/section-divider.cjs"
+    },
+    "./iphone-mockup": {
+      "types": "./dist/iphone-mockup.d.ts",
+      "import": "./dist/iphone-mockup.js",
+      "require": "./dist/iphone-mockup.cjs"
+    },
+    "./background-pattern": {
+      "types": "./dist/background-pattern.d.ts",
+      "import": "./dist/background-pattern.js",
+      "require": "./dist/background-pattern.cjs"
+    },
+    "./illustration": {
+      "types": "./dist/illustration.d.ts",
+      "import": "./dist/illustration.js",
+      "require": "./dist/illustration.cjs"
+    },
+    "./credit-card": {
+      "types": "./dist/credit-card.d.ts",
+      "import": "./dist/credit-card.js",
+      "require": "./dist/credit-card.cjs"
+    },
+    "./qr-code": {
+      "types": "./dist/qr-code.d.ts",
+      "import": "./dist/qr-code.js",
+      "require": "./dist/qr-code.cjs"
+    },
     "./styles.css": "./dist/styles.css"
   },
-  "files": ["dist", "README.md"],
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsup && tailwindcss -i src/styles.css -o dist/styles.css --minify",
     "build:css": "tailwindcss -i src/styles.css -o dist/styles.css --minify",
@@ -194,6 +227,7 @@
     "class-variance-authority": "latest",
     "clsx": "latest",
     "input-otp": "latest",
+    "qr-code-styling": "^1.9.2",
     "react-aria-components": "^1.16",
     "tailwind-merge": "latest"
   },

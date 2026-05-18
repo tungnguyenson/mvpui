@@ -89,6 +89,9 @@ importers:
       input-otp:
         specifier: latest
         version: 1.4.2(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      qr-code-styling:
+        specifier: ^1.9.2
+        version: 1.9.2
       react-aria-components:
         specifier: ^1.16
         version: 1.17.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -1741,6 +1744,13 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
+  qr-code-styling@1.9.2:
+    resolution: {integrity: sha512-RgJaZJ1/RrXJ6N0j7a+pdw3zMBmzZU4VN2dtAZf8ZggCfRB5stEQ3IoDNGaNhYY3nnZKYlYSLl5YkfWN5dPutg==}
+    engines: {node: '>=18.18.0'}
+
+  qrcode-generator@1.5.2:
+    resolution: {integrity: sha512-pItrW0Z9HnDBnFmgiNrY1uxRdri32Uh9EjNYLPVC2zZ3ZRIIEqBoDgm4DkvDwNNDHTK7FNkmr8zAa77BYc9xNw==}
+
   quansync@0.2.11:
     resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
 
@@ -3268,6 +3278,12 @@ snapshots:
       source-map-js: 1.2.1
 
   prettier@2.8.8: {}
+
+  qr-code-styling@1.9.2:
+    dependencies:
+      qrcode-generator: 1.5.2
+
+  qrcode-generator@1.5.2: {}
 
   quansync@0.2.11: {}
 
