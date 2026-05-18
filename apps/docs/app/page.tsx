@@ -26,7 +26,7 @@ export default function Home() {
                 className="flex items-center gap-2 px-4 py-3 rounded-xl border border-border bg-bg
                   text-sm font-medium text-fg-secondary
                   hover:border-brand-300 hover:text-fg hover:bg-brand-25
-                  transition-all duration-[250ms] ease-[cubic-bezier(0.2,0,0,1)]"
+                  transition-all duration-250 ease-[cubic-bezier(0.2,0,0,1)]"
               >
                 {c.name}
               </Link>
@@ -46,7 +46,7 @@ export default function Home() {
                 className="flex items-center gap-2 px-4 py-3 rounded-xl border border-border bg-bg
                   text-sm font-medium text-fg-secondary
                   hover:border-brand-300 hover:text-fg hover:bg-brand-25
-                  transition-all duration-[250ms] ease-[cubic-bezier(0.2,0,0,1)]"
+                  transition-all duration-250 ease-[cubic-bezier(0.2,0,0,1)]"
               >
                 {e.name}
               </Link>

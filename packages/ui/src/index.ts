@@ -21,7 +21,7 @@ export {
   CardFooter,
 } from "./components/card.js";
 
-export { Input } from "./components/input.js";
+export { Input, inputVariants } from "./components/input.js";
 export type { InputProps } from "./components/input.js";
 
 export { Label } from "./components/label.js";

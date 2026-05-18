@@ -3,7 +3,7 @@
  * Licensed under MIT
  */
 
-import { Mail, Search, Eye, AlertCircle } from "lucide-react";
+import { AtSign, Lock, Mail, Search, User } from "lucide-react";
 import { Input, Label } from "@mvp-ui/ui";
 import {
   ComponentDocLayout,
@@ -14,125 +14,191 @@ import {
 
 const SECTIONS: DocExample[] = [
   {
-    id: "variants",
-    title: "Variants",
-    description: "Default and error states.",
+    id: "sizes",
+    title: "Sizes",
+    description: "Two sizes — sm (default) and md. Mirrors Button's rhythm.",
     preview: (
       <div className="flex w-full max-w-sm flex-col gap-4">
-        <Input placeholder="Enter your email" />
-        <div className="flex flex-col gap-1.5">
-          <Input
-            variant="error"
-            placeholder="Enter your email"
-            defaultValue="invalid-email"
-          />
-          <p className="flex items-center gap-1 text-xs text-fg-error">
-            <AlertCircle size={12} />
-            Please enter a valid email address.
-          </p>
-        </div>
+        <Input size="sm" placeholder="Size sm" />
+        <Input size="md" placeholder="Size md" />
       </div>
     ),
-    code: `<Input placeholder="Enter your email" />
-
-<Input
-  variant="error"
-  placeholder="Enter your email"
-  defaultValue="invalid-email"
-/>`,
+    code: `<Input size="sm" placeholder="Size sm" />
+<Input size="md" placeholder="Size md" />`,
   },
   {
     id: "states",
     title: "States",
-    description: "Disabled and read-only.",
+    description:
+      "Default, error (isInvalid / aria-invalid), success, disabled, read-only.",
     preview: (
       <div className="flex w-full max-w-sm flex-col gap-4">
-        <Input placeholder="Disabled input" disabled />
-        <Input
-          defaultValue="Read-only value"
-          readOnly
-          className="cursor-default"
-        />
+        <Input placeholder="Default" />
+        <div className="flex flex-col gap-1.5">
+          <Input isInvalid defaultValue="invalid-email" />
+          <p className="text-xs text-fg-error">
+            Please enter a valid email address.
+          </p>
+        </div>
+        <Input isSuccess defaultValue="you@example.com" />
+        <Input placeholder="Disabled" disabled />
+        <Input defaultValue="Read-only value" readOnly />
       </div>
     ),
-    code: `<Input placeholder="Disabled input" disabled />
-<Input defaultValue="Read-only value" readOnly className="cursor-default" />`,
+    code: `<Input placeholder="Default" />
+
+<Input isInvalid defaultValue="invalid-email" />
+{/* aria-invalid alone also triggers the error visual */}
+
+<Input isSuccess defaultValue="you@example.com" />
+
+<Input placeholder="Disabled" disabled />
+
+<Input defaultValue="Read-only value" readOnly />`,
   },
   {
-    id: "with-icons",
-    title: "With icons",
-    description: "Start and end icon slots accept any ReactNode at 16px.",
+    id: "icon-leading",
+    title: "Icon leading",
+    description:
+      "iconLeading takes a component or element (FC | ReactNode), like Button.",
     preview: (
       <div className="flex w-full max-w-sm flex-col gap-4">
-        <Input placeholder="Search..." startIcon={<Search size={16} />} />
+        <Input iconLeading={<Search />} placeholder="Search" type="search" />
         <Input
+          size="md"
+          iconLeading={<Mail />}
           type="email"
           placeholder="you@example.com"
-          endIcon={<Mail size={16} />}
-        />
-        <Input
-          type="password"
-          placeholder="Enter password"
-          startIcon={<Mail size={16} />}
-          endIcon={<Eye size={16} />}
         />
       </div>
     ),
-    code: `<Input placeholder="Search..." startIcon={<Search size={16} />} />
-<Input type="email" placeholder="you@example.com" endIcon={<Mail size={16} />} />
-<Input
-  type="password"
-  placeholder="Enter password"
-  startIcon={<Mail size={16} />}
-  endIcon={<Eye size={16} />}
-/>`,
+    code: `<Input iconLeading={<Search />} placeholder="Search" type="search" />
+<Input size="md" iconLeading={<Mail />} type="email" placeholder="you@example.com" />`,
+  },
+  {
+    id: "icon-trailing",
+    title: "Icon trailing",
+    description: "iconTrailing renders after the input.",
+    preview: (
+      <div className="flex w-full max-w-sm flex-col gap-4">
+        <Input iconTrailing={<User />} placeholder="Username" />
+        <Input
+          isInvalid
+          iconTrailing={<Mail />}
+          type="email"
+          defaultValue="not-an-email"
+        />
+      </div>
+    ),
+    code: `<Input iconTrailing={<User />} placeholder="Username" />
+<Input isInvalid iconTrailing={<Mail />} type="email" defaultValue="not-an-email" />`,
+  },
+  {
+    id: "prefix",
+    title: "Prefix text",
+    description: "Inline text before the input — currency, protocol, etc.",
+    preview: (
+      <div className="flex w-full max-w-sm flex-col gap-4">
+        <Input prefix="$" placeholder="0.00" type="number" />
+        <Input prefix="https://" placeholder="yoursite.com" />
+      </div>
+    ),
+    code: `<Input prefix="$" placeholder="0.00" type="number" />
+<Input prefix="https://" placeholder="yoursite.com" />`,
+  },
+  {
+    id: "suffix",
+    title: "Suffix text",
+    description: "Inline text after the input — unit, domain, etc.",
+    preview: (
+      <div className="flex w-full max-w-sm flex-col gap-4">
+        <Input suffix="USD" placeholder="0.00" type="number" />
+        <Input suffix=".com" placeholder="yoursite" />
+      </div>
+    ),
+    code: `<Input suffix="USD" placeholder="0.00" type="number" />
+<Input suffix=".com" placeholder="yoursite" />`,
+  },
+  {
+    id: "shortcut",
+    title: "Keyboard shortcut",
+    description: "Muted trailing hint for command-palette style inputs.",
+    preview: (
+      <div className="flex w-full max-w-sm flex-col gap-4">
+        <Input iconLeading={<Search />} placeholder="Search" shortcut="⌘K" />
+        <Input size="md" placeholder="Quick jump" shortcut="Ctrl J" />
+      </div>
+    ),
+    code: `<Input iconLeading={<Search />} placeholder="Search" shortcut="⌘K" />
+<Input size="md" placeholder="Quick jump" shortcut="Ctrl J" />`,
+  },
+  {
+    id: "placeholder",
+    title: "Placeholder",
+    description: "Placeholder uses fg-tertiary; value uses fg.",
+    preview: (
+      <div className="flex w-full max-w-sm flex-col gap-4">
+        <Input placeholder="Empty — placeholder shown" />
+        <Input defaultValue="Filled — value shown" />
+      </div>
+    ),
+    code: `<Input placeholder="Empty — placeholder shown" />
+<Input defaultValue="Filled — value shown" />`,
+  },
+  {
+    id: "types",
+    title: "Input types",
+    description: "Native HTML types pass straight through the type prop.",
+    preview: (
+      <div className="flex w-full max-w-sm flex-col gap-4">
+        <Input type="text" placeholder="text" />
+        <Input type="email" iconLeading={<AtSign />} placeholder="email" />
+        <Input type="password" iconLeading={<Lock />} placeholder="password" />
+        <Input type="search" iconLeading={<Search />} placeholder="search" />
+        <Input type="number" prefix="$" placeholder="number" />
+        <Input type="url" prefix="https://" placeholder="url" />
+        <Input type="tel" placeholder="tel" />
+      </div>
+    ),
+    code: `<Input type="text" placeholder="text" />
+<Input type="email" iconLeading={<AtSign />} placeholder="email" />
+<Input type="password" iconLeading={<Lock />} placeholder="password" />
+<Input type="search" iconLeading={<Search />} placeholder="search" />
+<Input type="number" prefix="$" placeholder="number" />
+<Input type="url" prefix="https://" placeholder="url" />
+<Input type="tel" placeholder="tel" />`,
   },
   {
     id: "with-label",
     title: "With Label",
     description:
-      "Compose Label + Input + hint text for a complete form field.",
+      "Input is just the control — compose Label + hint externally (FormField lands in v0.2.0).",
     preview: (
-      <div className="flex w-full max-w-sm flex-col gap-5">
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="email-full">Email address</Label>
-          <Input
-            id="email-full"
-            type="email"
-            placeholder="you@example.com"
-            startIcon={<Mail size={16} />}
-          />
-          <p className="text-xs text-fg-tertiary">
-            We&apos;ll never share your email.
-          </p>
-        </div>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="email-err">
-            Email address <span className="text-error-500">*</span>
-          </Label>
-          <Input
-            id="email-err"
-            variant="error"
-            type="email"
-            defaultValue="not-an-email"
-            endIcon={<AlertCircle size={16} className="text-error-500" />}
-          />
-          <p className="text-xs text-fg-error">
-            Please enter a valid email address.
-          </p>
-        </div>
+      <div className="flex w-full max-w-sm flex-col gap-1.5">
+        <Label htmlFor="email-field">Email address</Label>
+        <Input
+          id="email-field"
+          type="email"
+          iconLeading={<Mail />}
+          placeholder="you@example.com"
+          aria-describedby="email-hint"
+        />
+        <p id="email-hint" className="text-xs text-fg-tertiary">
+          We&apos;ll never share your email.
+        </p>
       </div>
     ),
-    code: `<div className="flex flex-col gap-1.5">
-  <Label htmlFor="email-full">Email address</Label>
-  <Input
-    id="email-full"
-    type="email"
-    placeholder="you@example.com"
-    startIcon={<Mail size={16} />}
-  />
-  <p className="text-xs text-fg-tertiary">We'll never share your email.</p>
-</div>`,
+    code: `<Label htmlFor="email-field">Email address</Label>
+<Input
+  id="email-field"
+  type="email"
+  iconLeading={<Mail />}
+  placeholder="you@example.com"
+  aria-describedby="email-hint"
+/>
+<p id="email-hint" className="text-xs text-fg-tertiary">
+  We'll never share your email.
+</p>`,
   },
 ];
 
@@ -140,18 +206,25 @@ export default function InputPage() {
   return (
     <ComponentDocLayout
       name="Input"
-      tagline="Text input with focus ring, error state, and optional icon slots. Toggle any example to dark with the moon."
+      tagline={
+        <>
+          Text input with focus-within ring, error/success states, and
+          icon/prefix/suffix/shortcut slots. API mirrors Untitled UI; native{" "}
+          <code>&lt;input&gt;</code> in an always-on field wrapper. Toggle any
+          example to dark with the moon.
+        </>
+      }
       install={{
         usage: `import { Input } from "@mvp-ui/ui";`,
       }}
       sections={SECTIONS}
       tokenReference={[
-        { label: "Height", value: "h-11 (44px)" },
         { label: "Border", value: "--color-border" },
-        { label: "Focus ring", value: "--brand-500 / 22%" },
-        { label: "Error border", value: "--color-error-500" },
+        { label: "Focus border", value: "--color-border-brand" },
+        { label: "Error border", value: "--color-border-error" },
+        { label: "Success border", value: "--color-border-success" },
+        { label: "Focus ring", value: "brand-500/22 · error-500/24" },
         { label: "Radius", value: "--radius-md (8px)" },
-        { label: "Padding x", value: "px-3.5 (14px)" },
       ]}
     />
   );
