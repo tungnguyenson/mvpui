@@ -42,6 +42,9 @@ export const componentSections: NavSection[] = [
   {
     title: "Components",
     items: [
+      { name: "Avatar", href: "/components/avatar" },
+      { name: "Progress", href: "/components/progress" },
+      { name: "Featured Icon", href: "/components/featured-icon" },
       { name: "Tooltip", href: "/components/tooltip" },
       { name: "Tags", href: "/components/tags" },
       { name: "Card", href: "/components/card" },

@@ -7,7 +7,7 @@ import { Label, Input } from "@mvp-ui/ui";
 import {
   ComponentDocLayout,
   type DocExample,
-} from "../../_components/docs/ComponentDocLayout";
+} from "../../../_components/docs/ComponentDocLayout";
 
 /* Snippets authored by hand next to each preview — keep in sync. */
 

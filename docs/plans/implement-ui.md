@@ -32,6 +32,15 @@ Output per component: `.tsx` source + docs page in `apps/docs/` + skill entry po
 | Input, Label, HintText, InputGroup, InputFile, InputPayment | **Native HTML + cva** | Existing `input.tsx`/`label.tsx` deliberately reject RA (documented in file). Keep codebase pattern. Source ported structurally, not its RA layer. |
 | InputDate, InputNumber, PinInput, InputTags | React Aria | Headless unavoidable: date segments, locale number stepping, OTP focus nav, tag-list a11y — not hand-rollable correctly |
 | Card, Alert, Badge, Progress, Avatar, Textarea, Tags | Native HTML + cva | No primitive needed |
+| FeaturedIcon | Native HTML + cva | Styled div — no interaction |
+| EmptyState, Pagination, LoadingIndicator | Native HTML + cva | Layout/display only |
+| AppNavigation (sidebar + header) | Native HTML + cva | No complex headless behavior needed |
+| Form (react-hook-form wrapper) | react-hook-form + zod | Shadcn standard — wraps controlled form controls |
+| Tabs | Radix Tabs | Shadcn standard |
+| Slideout / Drawer | Radix Dialog | Sheet variant — same primitive as Modal |
+| DatePicker (full calendar) | React Aria | CalendarGrid/CalendarCell — consistent with InputDate RA layer |
+| Carousel | Embla Carousel | Shadcn standard |
+| IntegrationIcons, SocialIcons (full), PaymentIcons (full) | Native SVG | Icon-only — no interaction |
 
 > **A1 correction note:** an earlier edit flipped the whole Input family to React
 > Aria on source-fidelity grounds. Reverted — existing `input.tsx` + `label.tsx`
@@ -220,31 +229,33 @@ Reference path is absolute: `/Volumes/DATA/dev/test_repos/untitledui-react/`.
 | PinInput (A8 exception) | master | `components/base/input/pin-input.tsx` | input-otp | ✅ |
 
 
-### Wave 1A — Standalone visuals, source-driven (7 components)
+### Wave 1A — Standalone visuals, source-driven (8 components)
 | Component | View | Source path | Figma URL | Status |
 |---|---|---|---|---|
-| Avatar | master | `components/base/avatar/avatar.tsx` | _paste_ | ⬜ |
-| Avatar | subcomp-indicators | `components/base/avatar/base-components/` | _paste if separate frame_ | ⬜ |
-| AvatarLabelGroup | master | `components/base/avatar/avatar-label-group.tsx` | _paste_ | ⬜ |
-| Badge | master | `components/base/badges/badges.tsx` | _paste_ | ⬜ |
-| BadgeGroup | master | `components/base/badges/badge-groups.tsx` | _paste_ | ⬜ |
-| ProgressIndicator | master | `components/base/progress-indicators/progress-indicators.tsx` | _paste_ | ⬜ |
-| ProgressCircle | master | `components/base/progress-indicators/progress-circles.tsx` | _paste_ | ⬜ |
-| Tooltip | master | `components/base/tooltip/tooltip.tsx` | _paste_ | ⬜ |
+| Avatar | master | `components/base/avatar/avatar.tsx` | _paste_ | ✅ |
+| Avatar | subcomp-indicators | `components/base/avatar/base-components/` | _paste if separate frame_ | ✅ (inlined) |
+| AvatarLabelGroup | master | `components/base/avatar/avatar-label-group.tsx` | _paste_ | ✅ |
+| Badge | master | `components/base/badges/badges.tsx` | _paste_ | ✅ (v2, breaking: color+type API) |
+| BadgeGroup | master | `components/base/badges/badge-groups.tsx` | _paste_ | ❌ deferred to Wave 3 |
+| FeaturedIcon | master | `components/foundations/featured-icon/featured-icon.tsx` | _paste_ | ✅ |
+| ProgressIndicator | master | `components/base/progress-indicators/progress-indicators.tsx` | _paste_ | ✅ |
+| ProgressCircle | master | `components/base/progress-indicators/progress-circles.tsx` | _paste_ | ✅ |
+| Tooltip | master | `components/base/tooltip/tooltip.tsx` | _paste_ | ✅ (pulled ahead to Wave Input family) |
 
 ### Wave 1B — Figma-only, no MIT source (2 components)
 | Component | View | Source path | Figma URL | Status |
 |---|---|---|---|---|
-| Card | master | NONE | _paste_ | ⬜ |
-| Alert | master | NONE | _paste_ | ⬜ |
+| Card | master | NONE | _paste_ | ✅ |
+| Alert | master | NONE | _paste_ | ✅ |
 
-### Wave 2 — Form controls (4 components, anchor + parallel)
+### Wave 2 — Form controls (5 components, anchor + parallel)
 | Component | View | Source path | Figma URL | Status |
 |---|---|---|---|---|
 | Checkbox | master | `components/base/checkbox/checkbox.tsx` | _paste_ | ⬜ |
 | Radio | master | `components/base/radio-buttons/radio-buttons.tsx` | _paste_ | ⬜ |
 | Toggle | master | `components/base/toggle/toggle.tsx` | _paste_ | ⬜ |
 | Textarea | master | `components/base/textarea/textarea.tsx` | _paste_ | ⬜ |
+| Form | react-hook-form wrapper | `components/base/form/form.tsx` | n/a | ⬜ |
 
 ### Wave 3 — Complex + composition (7 components, mostly sequential)
 | Component | View | Source path | Figma URL | Status |
@@ -254,8 +265,7 @@ Reference path is absolute: `/Volumes/DATA/dev/test_repos/untitledui-react/`.
 | Modal | master | `components/application/modals/modal.tsx` | _paste_ | ⬜ |
 | Dropdown | master | `components/base/dropdown/dropdown.tsx` | _paste_ | ⬜ |
 | Slider | master | `components/base/slider/slider.tsx` | _paste_ | ⬜ |
-| Tags | master | `components/base/tags/tags.tsx` | _paste_ | ⬜ |
-| Tags | subcomp-checkbox-close | `components/base/tags/base-components/` | _paste if separate_ | ⬜ |
+| Tags | master | `components/base/tags/tags.tsx` | _paste_ | ✅ (pulled ahead to Wave Input family) |
 | FileUploadTrigger | master | `components/base/file-upload-trigger/file-upload-trigger.tsx` | _paste_ | ⬜ |
 | ButtonGroup | master | `components/base/button-group/button-group.tsx` | _paste_ | ⬜ |
 
@@ -315,14 +325,45 @@ Already in `packages/ui/src/components/`: `input.tsx`, `label.tsx` — **update
 in place, don't rebuild** (commit `9c1a5a4 update input ui`). Match source family
 API while keeping existing token wiring.
 
+### Wave 4 — Navigation & layout (6 components, complex + sequential)
+| Component | View | Source path | Primitive | Status |
+|---|---|---|---|---|
+| Tabs | master | `components/application/tabs/tabs.tsx` | Radix Tabs | ⬜ |
+| Slideout / Drawer | master | `components/application/slideout-menus/slideout-menus.tsx` | Radix Dialog (sheet) | ⬜ |
+| Pagination | master | `components/application/pagination/pagination.tsx` | native+cva | ⬜ |
+| EmptyState | master | `components/application/empty-state/empty-state.tsx` | native+cva | ⬜ |
+| LoadingIndicator | master | `components/application/loading-indicator/loading-indicator.tsx` | native+cva | ⬜ |
+| DatePicker | master | `components/application/date-picker/date-picker.tsx` | React Aria | ⬜ |
+| DateRangePicker | master | `components/application/date-picker/date-range-picker.tsx` | React Aria | ⬜ |
+| Carousel | master | `components/application/carousel/carousel.tsx` | Embla Carousel | ⬜ |
+| AppNavigation (sidebar) | master | `components/application/app-navigation/sidebar-navigation.tsx` | native+cva | ⬜ |
+| AppNavigation (header) | master | `components/application/app-navigation/header-navigation.tsx` | native+cva | ⬜ |
+
+> **Wave 4 multi-file notes:**
+> - DatePicker: read `date-picker.tsx`, `date-range-picker.tsx`, `calendar.tsx`, `range-calendar.tsx`, `cell.tsx` together
+> - AppNavigation sidebar has 5 variants: simple, slim, dual-tier, section-dividers, section-subheadings — ship 2 (simple + slim) in v0.1, rest deferred
+> - Pagination: read `pagination.tsx`, `pagination-dot.tsx`, `pagination-line.tsx`
+
+### Wave Foundations — Icons (3 icon sets)
+| Component | Source path | Notes | Status |
+|---|---|---|---|
+| IntegrationIcons | `components/foundations/integration-icons/` | 18 SVG icons (ChatGPT, Claude, Figma, Gemini, GitHub, Grok, Lovable, Next.js, Perplexity, React, Replit, Tailwind, V0, Vite) | ⬜ |
+| SocialIcons (full) | `components/foundations/social-icons/` | 14 SVGs — extend / replace existing `social-logos.tsx` (7 partial) | ⬜ |
+| PaymentIcons (full) | `components/foundations/payment-icons/` | 58 SVGs — extend existing `payment-icons.tsx` (5 partial) | ⬜ |
+
+> Ship as separate tsup entries: `./integration-icons`, `./social-icons`, `./payment-icons`.
+> All `aria-hidden="true"` + optional `className`. No dark-safe risk (SVG fill attrs, not Tailwind classes).
+
 ### Deferred to v0.2+
 - Combobox, MultiSelect, TagSelect (in `base/select/`)
 - AvatarProfilePhoto
-- Tabs, Sidebar nav, Page header, Breadcrumb, Pagination, Table, Empty state
-- Date picker, File upload (full version), Loading indicator
+- Table (`components/application/table/`) + Breadcrumb, Page header
+- File upload full drag-drop (`components/application/file-upload/`)
 - Toast/Notification (uses Sonner), Command menu
+- AppNavigation sidebar variants: dual-tier, section-dividers, section-subheadings
 - Charts → separate package `@mvp-ui/charts`
 - Marketing components → never (build per-project)
+- Shared assets (BackgroundPatterns, IphoneMockup, QrCode, CreditCard mockup, Illustrations, SectionDivider) → build per-project
 
 ---
 
@@ -341,22 +382,29 @@ API while keeping existing token wiring.
 ```
 1&2. Wave Input family    Button done. Input(update) + Label(done) + HintText
                           + InputGroup + InputDate + InputFile + InputNumber
-                          + InputPayment + InputTags(+outer) + PinInput
+                          + InputPayment + InputTags(+outer) + PinInput       ✅
                          ↓
 3. Wave 1A              Avatar + AvatarLabelGroup
                         Badge + BadgeGroup
+                        FeaturedIcon
                         ProgressIndicator + ProgressCircle
-                        Tooltip
+                        Tooltip                                                ✅ done early
                          ↓
 4. Wave 1B              Card + Alert
                          ↓
 5. Wave 2 anchor        Checkbox
                          ↓
-6. Wave 2 follow        Radio + Toggle + Textarea
+6. Wave 2 follow        Radio + Toggle + Textarea + Form
                          ↓
-7. Wave 3 sequential    Select → Modal → Dropdown → Slider → Tags → FileUploadTrigger → ButtonGroup
+7. Wave 3 sequential    Select → Modal → Dropdown → Slider → FileUploadTrigger → ButtonGroup
                          ↓
-8. Polish               Demo pages + skill consolidation + tag v0.1.0
+8. Wave 4               Tabs → Slideout → DatePicker → Carousel
+                        Pagination + EmptyState + LoadingIndicator (parallel)
+                        AppNavigation (simple + slim)
+                         ↓
+9. Wave Foundations     IntegrationIcons + SocialIcons (full) + PaymentIcons (full)
+                         ↓
+10. Polish              Demo pages + skill consolidation + tag v0.1.0
 ```
 
 ### Parallelization safety
@@ -447,14 +495,16 @@ Same workflow except:
 
 | Wave | Components | Days |
 |---|---|---|
-| Wave Input family | 10 (Input update, Label done, HintText, InputGroup, InputDate, InputFile, InputNumber, InputPayment, InputTags+outer, PinInput) | 5-7 |
-| Wave 1.5 | 2 (CloseButton, ButtonUtility) | 1 |
-| Wave 1A | 7 (Avatar family, Badge family, Progress family, Tooltip) | 3-4 |
-| Wave 1B | 2 (Card, Alert) | 2 |
-| Wave 2 | 4 (Checkbox anchor + Radio + Toggle + Textarea) | 3-4 |
-| Wave 3 | 7 (Select, Modal, Dropdown, Slider, Tags, FileUploadTrigger, ButtonGroup) | 8-10 |
+| Wave Input family ✅ | 13 (Tooltip pulled, Tags pulled, full input family) | done |
+| Wave 1.5 ✅ | CloseButton, ButtonUtility, App Store Buttons | done |
+| Wave 1A | Avatar family, Badge family, FeaturedIcon, Progress family | 3-4 |
+| Wave 1B | Card ✅, Alert ✅ | done |
+| Wave 2 | Checkbox anchor + Radio + Toggle + Textarea + Form | 3-5 |
+| Wave 3 | Select, Modal, Dropdown, Slider, FileUploadTrigger, ButtonGroup | 7-9 |
+| Wave 4 | Tabs, Slideout, DatePicker, Carousel, Pagination, EmptyState, LoadingIndicator, AppNavigation | 8-12 |
+| Wave Foundations | IntegrationIcons (18), SocialIcons full (14), PaymentIcons full (58) | 2-3 |
 | Polish | Demo pages + skill + tag | 3-5 |
-| **Total** | **~31 new + Button/Label done** | **28-36 days** |
+| **Total** | **~55 components across all waves** | **~30-42 days remaining** |
 
 ---
 

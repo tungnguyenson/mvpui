@@ -13,18 +13,19 @@ import {
   CardFooter,
   Button,
   Badge,
+  type BadgeColor,
 } from "@mvp-ui/ui";
 import {
   ComponentDocLayout,
   type DocExample,
-} from "../../_components/docs/ComponentDocLayout";
+} from "../../../_components/docs/ComponentDocLayout";
 
 /* Snippets authored by hand next to each preview — keep in sync. */
 
 const STATS = [
-  { label: "Total users", value: "12,430", delta: "+12%", variant: "success" },
-  { label: "Revenue", value: "$48,295", delta: "+8.2%", variant: "success" },
-  { label: "Churn rate", value: "2.4%", delta: "+0.3%", variant: "error" },
+  { label: "Total users", value: "12,430", delta: "+12%", color: "success" },
+  { label: "Revenue", value: "$48,295", delta: "+8.2%", color: "success" },
+  { label: "Churn rate", value: "2.4%", delta: "+0.3%", color: "error" },
 ] as const;
 
 const SECTIONS: DocExample[] = [
@@ -114,7 +115,7 @@ const SECTIONS: DocExample[] = [
             </CardHeader>
             <CardContent className="pb-4 pt-0">
               <p className="text-2xl font-semibold text-fg">{stat.value}</p>
-              <Badge variant={stat.variant} className="mt-2">
+              <Badge color={stat.color as BadgeColor} className="mt-2">
                 {stat.delta} vs last month
               </Badge>
             </CardContent>
@@ -128,7 +129,7 @@ const SECTIONS: DocExample[] = [
   </CardHeader>
   <CardContent className="pt-0 pb-4">
     <p className="text-2xl font-semibold text-fg">12,430</p>
-    <Badge variant="success" className="mt-2">+12% vs last month</Badge>
+    <Badge color="success" className="mt-2">+12% vs last month</Badge>
   </CardContent>
 </Card>`,
   },

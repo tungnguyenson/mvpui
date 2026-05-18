@@ -7,7 +7,7 @@ import { Tag, TagGroup, TagList } from "@mvp-ui/ui";
 import {
   ComponentDocLayout,
   type DocExample,
-} from "../../_components/docs/ComponentDocLayout";
+} from "../../../_components/docs/ComponentDocLayout";
 import { RemovableExample } from "./RemovableExample";
 
 const SECTIONS: DocExample[] = [

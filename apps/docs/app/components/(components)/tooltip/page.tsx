@@ -7,7 +7,7 @@ import { Tooltip, TooltipTrigger } from "@mvp-ui/ui";
 import {
   ComponentDocLayout,
   type DocExample,
-} from "../../_components/docs/ComponentDocLayout";
+} from "../../../_components/docs/ComponentDocLayout";
 
 const Dot = () => (
   <span className="inline-flex size-9 items-center justify-center rounded-md border border-border bg-bg text-sm text-fg-secondary">

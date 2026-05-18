@@ -6,7 +6,7 @@
 import {
   ComponentDocLayout,
   type DocExample,
-} from "../../_components/docs/ComponentDocLayout";
+} from "../../../_components/docs/ComponentDocLayout";
 import { PinBasic, PinInvalid, PinSeparator } from "./PinInputExamples";
 
 const SECTIONS: DocExample[] = [

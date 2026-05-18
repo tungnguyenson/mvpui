@@ -9,7 +9,7 @@ import { Button } from "@mvp-ui/ui";
 import {
   ComponentDocLayout,
   type DocExample,
-} from "../../_components/docs/ComponentDocLayout";
+} from "../../../_components/docs/ComponentDocLayout";
 
 /* Snippets are authored by hand next to each preview. Keep them in sync —
    there is no auto-derivation (asChild/Slot makes element-to-string lossy). */

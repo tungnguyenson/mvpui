@@ -134,6 +134,21 @@
       "import": "./dist/tags.js",
       "require": "./dist/tags.cjs"
     },
+    "./progress": {
+      "types": "./dist/progress.d.ts",
+      "import": "./dist/progress.js",
+      "require": "./dist/progress.cjs"
+    },
+    "./avatar": {
+      "types": "./dist/avatar.d.ts",
+      "import": "./dist/avatar.js",
+      "require": "./dist/avatar.cjs"
+    },
+    "./featured-icon": {
+      "types": "./dist/featured-icon.d.ts",
+      "import": "./dist/featured-icon.js",
+      "require": "./dist/featured-icon.cjs"
+    },
     "./styles.css": "./dist/styles.css"
   },
   "files": ["dist", "README.md"],

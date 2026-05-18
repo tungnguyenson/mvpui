@@ -8,7 +8,7 @@ import { ButtonUtility } from "@mvp-ui/ui";
 import {
   ComponentDocLayout,
   type DocExample,
-} from "../../_components/docs/ComponentDocLayout";
+} from "../../../_components/docs/ComponentDocLayout";
 
 const SECTIONS: DocExample[] = [
   {

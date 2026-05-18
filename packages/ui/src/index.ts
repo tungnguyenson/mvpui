@@ -5,8 +5,8 @@
 
 export type { AlertProps } from "./components/alert.js";
 export { Alert, AlertDescription, AlertTitle } from "./components/alert.js";
-export type { BadgeProps } from "./components/badge.js";
-export { Badge, badgeVariants } from "./components/badge.js";
+export type { BadgeProps, BadgeIconProps, BadgeColor, BadgeType } from "./components/badge.js";
+export { Badge, BadgeIcon, badgeVariants } from "./components/badge.js";
 export type { AppStoreButtonProps } from "./components/buttons/app-store-buttons.js";
 export {
 	AppGalleryButton,
@@ -91,6 +91,25 @@ export {
 export { PinInput, usePinInputContext } from "./components/inputs/pin-input.js";
 export type { SectionProps } from "./components/section.js";
 export { Section } from "./components/section.js";
+export type { FeaturedIconProps } from "./components/featured-icon.js";
+export { FeaturedIcon } from "./components/featured-icon.js";
+export type { AvatarProps, AvatarSize } from "./components/avatars/avatar.js";
+export { Avatar } from "./components/avatars/avatar.js";
+export type { AvatarLabelGroupProps } from "./components/avatars/avatar-label-group.js";
+export { AvatarLabelGroup } from "./components/avatars/avatar-label-group.js";
+export type { AvatarProfilePhotoProps } from "./components/avatars/avatar-profile-photo.js";
+export { AvatarProfilePhoto } from "./components/avatars/avatar-profile-photo.js";
+export type {
+	ProgressBarProps,
+	ProgressBarWithLabelProps,
+	ProgressCircleProps,
+} from "./components/progress.js";
+export {
+	ProgressBar,
+	ProgressBarBase,
+	ProgressBarCircle,
+	ProgressBarHalfCircle,
+} from "./components/progress.js";
 export type { TagGroupProps, TagItem, TagProps } from "./components/tags.js";
 export { Dot, Tag, TagAvatar, TagGroup, TagList } from "./components/tags.js";
 export type {

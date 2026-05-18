@@ -18,7 +18,7 @@ import {
 import {
   ComponentDocLayout,
   type DocExample,
-} from "../../_components/docs/ComponentDocLayout";
+} from "../../../_components/docs/ComponentDocLayout";
 
 const SECTIONS: DocExample[] = [
   {
