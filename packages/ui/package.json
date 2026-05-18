@@ -24,6 +24,26 @@
       "import": "./dist/button.js",
       "require": "./dist/button.cjs"
     },
+    "./button-utility": {
+      "types": "./dist/button-utility.d.ts",
+      "import": "./dist/button-utility.js",
+      "require": "./dist/button-utility.cjs"
+    },
+    "./close-button": {
+      "types": "./dist/close-button.d.ts",
+      "import": "./dist/close-button.js",
+      "require": "./dist/close-button.cjs"
+    },
+    "./social-button": {
+      "types": "./dist/social-button.d.ts",
+      "import": "./dist/social-button.js",
+      "require": "./dist/social-button.cjs"
+    },
+    "./social-logos": {
+      "types": "./dist/social-logos.d.ts",
+      "import": "./dist/social-logos.js",
+      "require": "./dist/social-logos.cjs"
+    },
     "./card": {
       "types": "./dist/card.d.ts",
       "import": "./dist/card.js",

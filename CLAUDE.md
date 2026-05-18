@@ -50,6 +50,46 @@ Read `packages/skill/components.md` for similar component patterns.
 If still unsure, check Untitled UI Figma reference (link in repo README).
 Do not guess at color or spacing values — ask.
 
+## Untitled UI adaptation
+
+Plan: [docs/plans/implement-ui.md](docs/plans/implement-ui.md). Token mapping:
+[packages/tokens/TOKEN_TRANSLATION.md](packages/tokens/TOKEN_TRANSLATION.md).
+New-token proposals: [packages/tokens/TOKEN_REGISTRY.md](packages/tokens/TOKEN_REGISTRY.md).
+Full A1–A12 decisions live in the plan — not duplicated here.
+
+**Source (A12):** Untitled UI React (MIT), pinned at
+`b857a83afef2ca52649d658b26b985eed8c9658b`, path
+`/Volumes/DATA/dev/test_repos/untitledui-react/`. Don't pull during a push.
+
+**Icon prop (A4, LOCKED):** `type IconProp = FC<{ className?: string }> | ReactNode;`
+Render via the `renderIcon` helper pattern from `button.tsx`. Every icon slot
+uses this exact type.
+
+**License header (A11):**
+
+Source-driven components:
+```ts
+/**
+ * Adapted from Untitled UI React (MIT)
+ * https://github.com/untitleduico/react @ b857a83afef2ca52649d658b26b985eed8c9658b
+ * Path: components/{folder}/{file}.tsx
+ *
+ * Copyright (c) 2026 TungMVP
+ * Licensed under MIT
+ */
+```
+
+Figma-only components (Card, Alert):
+```ts
+/**
+ * Built from Untitled UI Figma reference (PRO license).
+ * Structural pattern adapted from shadcn/ui.
+ *
+ * Copyright (c) 2026 TungMVP
+ * Licensed under MIT
+ */
+```
+
 ## Stack
 
 pnpm 9 · TypeScript 5.6+ · Next.js 16 · React 19 · Tailwind v4 · Radix Primitives · cva · tsup · Biome · Changesets

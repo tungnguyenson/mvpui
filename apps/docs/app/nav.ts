@@ -10,6 +10,9 @@ export interface NavItem {
 
 export const components: NavItem[] = [
   { name: "Button", href: "/components/button" },
+  { name: "Button Utility", href: "/components/button-utility" },
+  { name: "Close Button", href: "/components/close-button" },
+  { name: "Social Button", href: "/components/social-button" },
   { name: "Input", href: "/components/input" },
   { name: "Label", href: "/components/label" },
   { name: "Card", href: "/components/card" },

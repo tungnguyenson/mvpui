@@ -12,6 +12,25 @@ export type { BadgeProps } from "./components/badge.js";
 export { Button, buttonVariants } from "./components/button.js";
 export type { ButtonProps } from "./components/button.js";
 
+export { ButtonUtility } from "./components/button-utility.js";
+export type { ButtonUtilityProps } from "./components/button-utility.js";
+
+export { CloseButton } from "./components/close-button.js";
+export type { CloseButtonProps } from "./components/close-button.js";
+
+export { SocialButton } from "./components/social-button.js";
+export type { SocialButtonProps } from "./components/social-button.js";
+
+export {
+  GoogleLogo,
+  FigmaLogo,
+  FigmaLogoOutlined,
+  DribbleLogo,
+  FacebookLogo,
+  AppleLogo,
+  TwitterLogo,
+} from "./components/social-logos.js";
+
 export {
   Card,
   CardHeader,
