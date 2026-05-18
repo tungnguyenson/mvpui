@@ -9,13 +9,16 @@
     "lint": "biome lint ."
   },
   "dependencies": {
+    "@internationalized/date": "latest",
     "@mvp-ui/tokens": "workspace:*",
     "@mvp-ui/ui": "workspace:*",
     "highlight.js": "^11.11.1",
     "lucide-react": "latest",
     "next": "^16",
     "react": "^19",
-    "react-dom": "^19"
+    "react-dom": "^19",
+    "react-aria-components": "^1.16",
+    "react-hook-form": "latest"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

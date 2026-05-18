@@ -196,7 +196,7 @@ Reference path is absolute: `/Volumes/DATA/dev/test_repos/untitledui-react/`.
 | Button loading icon | master | | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=8993-429278&t=IBBRr0Kw7tFu3vyP-4 | ✅ |
 | SocialButton | master | `components/base/buttons/social-button.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=1256-130788&t=IBBRr0Kw7tFu3vyP-4 | ✅ |
 | SocialLogoButton | master | `components/base/buttons/social-logos.tsx` | | ✅ |
-| App Store Buttons | master | `components/base/buttons/app-store-buttons.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=1303-2162&t=IBBRr0Kw7tFu3vyP-4 | ⬜ |
+| App Store Buttons | master | `components/base/buttons/app-store-buttons.tsx` | https://www.figma.com/design/B1Afhyf9OX9gITABEJ74h7/%E2%9D%96-Untitled-UI-Figma-%E2%80%93-PRO-VARIABLES--v8.0--KTWJ8mYFqVpN--Copy-?node-id=1303-2162&t=IBBRr0Kw7tFu3vyP-4 | ✅ |
 
 ### Wave Input family (~17 components — single session, source-driven)
 
@@ -225,7 +225,7 @@ Reference path is absolute: `/Volumes/DATA/dev/test_repos/untitledui-react/`.
 | InputDate | master | `components/base/input/input-date.tsx` | React Aria | ✅ |
 | InputNumber | master | `components/base/input/input-number.tsx` | React Aria | ✅ |
 | InputTags | master | `components/base/input/input-tags.tsx` | React Aria | ✅ |
-| InputTags | subcomp-outer | `components/base/input/input-tags-outer.tsx` | React Aria | ✅ |
+| InputTags | subcomp-outer | `components/base/input/input-tags-outer.tsx` | React Aria | ✅ (colocated in `input-tags.tsx`) |
 | PinInput (A8 exception) | master | `components/base/input/pin-input.tsx` | input-otp | ✅ |
 
 
@@ -236,7 +236,7 @@ Reference path is absolute: `/Volumes/DATA/dev/test_repos/untitledui-react/`.
 | Avatar | subcomp-indicators | `components/base/avatar/base-components/` | _paste if separate frame_ | ✅ (inlined) |
 | AvatarLabelGroup | master | `components/base/avatar/avatar-label-group.tsx` | _paste_ | ✅ |
 | Badge | master | `components/base/badges/badges.tsx` | _paste_ | ✅ (v2, breaking: color+type API) |
-| BadgeGroup | master | `components/base/badges/badge-groups.tsx` | _paste_ | ❌ deferred to Wave 3 |
+| BadgeGroup | master | `components/base/badges/badge-groups.tsx` | _paste_ | ✅ |
 | FeaturedIcon | master | `components/foundations/featured-icon/featured-icon.tsx` | _paste_ | ✅ |
 | ProgressIndicator | master | `components/base/progress-indicators/progress-indicators.tsx` | _paste_ | ✅ |
 | ProgressCircle | master | `components/base/progress-indicators/progress-circles.tsx` | _paste_ | ✅ |
@@ -251,23 +251,23 @@ Reference path is absolute: `/Volumes/DATA/dev/test_repos/untitledui-react/`.
 ### Wave 2 — Form controls (5 components, anchor + parallel)
 | Component | View | Source path | Figma URL | Status |
 |---|---|---|---|---|
-| Checkbox | master | `components/base/checkbox/checkbox.tsx` | _paste_ | ⬜ |
-| Radio | master | `components/base/radio-buttons/radio-buttons.tsx` | _paste_ | ⬜ |
-| Toggle | master | `components/base/toggle/toggle.tsx` | _paste_ | ⬜ |
-| Textarea | master | `components/base/textarea/textarea.tsx` | _paste_ | ⬜ |
+| Checkbox | master | `components/base/checkbox/checkbox.tsx` | _paste_ | ✅ |
+| Radio | master | `components/base/radio-buttons/radio-buttons.tsx` | _paste_ | ✅ |
+| Toggle | master | `components/base/toggle/toggle.tsx` | _paste_ | ✅ |
+| Textarea | master | `components/base/textarea/textarea.tsx` | _paste_ | ✅ |
 | Form | react-hook-form wrapper | `components/base/form/form.tsx` | n/a | ⬜ |
 
 ### Wave 3 — Complex + composition (7 components, mostly sequential)
 | Component | View | Source path | Figma URL | Status |
 |---|---|---|---|---|
-| Select | master | `components/base/select/select.tsx` | _paste_ | ⬜ |
-| Select | subcomp-item-popover | `components/base/select/{select-item,popover}.tsx` | _paste if separate_ | ⬜ |
+| Select | master | `components/base/select/select.tsx` | _paste_ | ✅ |
+| Select | subcomp-item-popover | `components/base/select/{select-item,popover}.tsx` | _paste if separate_ | ✅ |
 | Modal | master | `components/application/modals/modal.tsx` | _paste_ | ⬜ |
-| Dropdown | master | `components/base/dropdown/dropdown.tsx` | _paste_ | ⬜ |
-| Slider | master | `components/base/slider/slider.tsx` | _paste_ | ⬜ |
+| Dropdown | master | `components/base/dropdown/dropdown.tsx` | _paste_ | ✅ |
+| Slider | master | `components/base/slider/slider.tsx` | _paste_ | ✅ |
 | Tags | master | `components/base/tags/tags.tsx` | _paste_ | ✅ (pulled ahead to Wave Input family) |
-| FileUploadTrigger | master | `components/base/file-upload-trigger/file-upload-trigger.tsx` | _paste_ | ⬜ |
-| ButtonGroup | master | `components/base/button-group/button-group.tsx` | _paste_ | ⬜ |
+| FileUploadTrigger | master | `components/base/file-upload-trigger/file-upload-trigger.tsx` | _paste_ | ✅ |
+| ButtonGroup | master | `components/base/button-group/button-group.tsx` | _paste_ | ✅ |
 
 ### Multi-file source notes
 
@@ -328,16 +328,16 @@ API while keeping existing token wiring.
 ### Wave 4 — Navigation & layout (6 components, complex + sequential)
 | Component | View | Source path | Primitive | Status |
 |---|---|---|---|---|
-| Tabs | master | `components/application/tabs/tabs.tsx` | Radix Tabs | ⬜ |
-| Slideout / Drawer | master | `components/application/slideout-menus/slideout-menus.tsx` | Radix Dialog (sheet) | ⬜ |
-| Pagination | master | `components/application/pagination/pagination.tsx` | native+cva | ⬜ |
-| EmptyState | master | `components/application/empty-state/empty-state.tsx` | native+cva | ⬜ |
-| LoadingIndicator | master | `components/application/loading-indicator/loading-indicator.tsx` | native+cva | ⬜ |
-| DatePicker | master | `components/application/date-picker/date-picker.tsx` | React Aria | ⬜ |
+| Tabs | master | `components/application/tabs/tabs.tsx` | Radix Tabs | ✅ |
+| Slideout / Drawer | master | `components/application/slideout-menus/slideout-menus.tsx` | Radix Dialog (sheet) | ✅ |
+| Pagination | master | `components/application/pagination/pagination.tsx` | native+cva | ✅ |
+| EmptyState | master | `components/application/empty-state/empty-state.tsx` | native+cva | ✅ |
+| LoadingIndicator | master | `components/application/loading-indicator/loading-indicator.tsx` | native+cva | ✅ |
+| DatePicker | master | `components/application/date-picker/date-picker.tsx` | React Aria | ✅ |
 | DateRangePicker | master | `components/application/date-picker/date-range-picker.tsx` | React Aria | ⬜ |
 | Carousel | master | `components/application/carousel/carousel.tsx` | Embla Carousel | ⬜ |
-| AppNavigation (sidebar) | master | `components/application/app-navigation/sidebar-navigation.tsx` | native+cva | ⬜ |
-| AppNavigation (header) | master | `components/application/app-navigation/header-navigation.tsx` | native+cva | ⬜ |
+| AppNavigation (sidebar) | master | `components/application/app-navigation/sidebar-navigation.tsx` | native+cva | ✅ |
+| AppNavigation (header) | master | `components/application/app-navigation/header-navigation.tsx` | native+cva | ✅ |
 
 > **Wave 4 multi-file notes:**
 > - DatePicker: read `date-picker.tsx`, `date-range-picker.tsx`, `calendar.tsx`, `range-calendar.tsx`, `cell.tsx` together
@@ -347,23 +347,23 @@ API while keeping existing token wiring.
 ### Wave Foundations — Icons (3 icon sets)
 | Component | Source path | Notes | Status |
 |---|---|---|---|
-| IntegrationIcons | `components/foundations/integration-icons/` | 18 SVG icons (ChatGPT, Claude, Figma, Gemini, GitHub, Grok, Lovable, Next.js, Perplexity, React, Replit, Tailwind, V0, Vite) | ⬜ |
-| SocialIcons (full) | `components/foundations/social-icons/` | 14 SVGs — extend / replace existing `social-logos.tsx` (7 partial) | ⬜ |
-| PaymentIcons (full) | `components/foundations/payment-icons/` | 58 SVGs — extend existing `payment-icons.tsx` (5 partial) | ⬜ |
+| IntegrationIcons | `components/foundations/integration-icons/` | 16 SVG icons — in `integration-icons.tsx` | ✅ |
+| SocialIcons (full) | `components/foundations/social-icons/` | 14 SVGs — in `buttons/social-logos.tsx` | ✅ |
+| PaymentIcons (full) | `components/foundations/payment-icons/` | 56 SVGs — in `inputs/payment-icons.tsx` | ✅ |
 
 > Ship as separate tsup entries: `./integration-icons`, `./social-icons`, `./payment-icons`.
 > All `aria-hidden="true"` + optional `className`. No dark-safe risk (SVG fill attrs, not Tailwind classes).
 
 ### Deferred to v0.2+
 - Combobox, MultiSelect, TagSelect (in `base/select/`)
-- AvatarProfilePhoto
 - Table (`components/application/table/`) + Breadcrumb, Page header
 - File upload full drag-drop (`components/application/file-upload/`)
 - Toast/Notification (uses Sonner), Command menu
 - AppNavigation sidebar variants: dual-tier, section-dividers, section-subheadings
 - Charts → separate package `@mvp-ui/charts`
 - Marketing components → never (build per-project)
-- Shared assets (BackgroundPatterns, IphoneMockup, QrCode, CreditCard mockup, Illustrations, SectionDivider) → build per-project
+
+> Previously deferred items now done: AvatarProfilePhoto ✅, BadgeGroup ✅, shared assets (BackgroundPatterns, IphoneMockup, QrCode, CreditCard mockup, Illustrations, SectionDivider) ✅
 
 ---
 
@@ -497,14 +497,15 @@ Same workflow except:
 |---|---|---|
 | Wave Input family ✅ | 13 (Tooltip pulled, Tags pulled, full input family) | done |
 | Wave 1.5 ✅ | CloseButton, ButtonUtility, App Store Buttons | done |
-| Wave 1A | Avatar family, Badge family, FeaturedIcon, Progress family | 3-4 |
-| Wave 1B | Card ✅, Alert ✅ | done |
-| Wave 2 | Checkbox anchor + Radio + Toggle + Textarea + Form | 3-5 |
-| Wave 3 | Select, Modal, Dropdown, Slider, FileUploadTrigger, ButtonGroup | 7-9 |
-| Wave 4 | Tabs, Slideout, DatePicker, Carousel, Pagination, EmptyState, LoadingIndicator, AppNavigation | 8-12 |
-| Wave Foundations | IntegrationIcons (18), SocialIcons full (14), PaymentIcons full (58) | 2-3 |
+| Wave 1A ✅ | Avatar family, BadgeGroup, FeaturedIcon, Progress family | done |
+| Wave 1B ✅ | Card, Alert | done |
+| Wave 2 | Checkbox ✅, Radio ✅, Toggle ✅, Textarea ✅ — Form ⬜ | Form only |
+| Wave 3 | Select ✅, Dropdown ✅, Slider ✅, FileUploadTrigger ✅, ButtonGroup ✅ — Modal ⬜ | Modal only |
+| Wave 4 | Tabs ✅, Slideout ✅, DatePicker ✅, Pagination ✅, EmptyState ✅, LoadingIndicator ✅, AppNavigation ✅ — Carousel ⬜, DateRangePicker ⬜ | 2 remaining |
+| Wave Foundations ✅ | IntegrationIcons (16), SocialIcons (14), PaymentIcons (56) | done |
+| Regression fix | InputTagsOuter ❌ missing | 1 file |
 | Polish | Demo pages + skill + tag | 3-5 |
-| **Total** | **~55 components across all waves** | **~30-42 days remaining** |
+| **Remaining** | **Modal, Carousel, DateRangePicker, Form, InputTagsOuter** | **~5 components** |
 
 ---
 

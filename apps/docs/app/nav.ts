@@ -66,6 +66,15 @@ export const componentSections: NavSection[] = [
       { name: "File Upload Trigger", href: "/components/file-upload-trigger" },
       { name: "Drawer", href: "/components/drawer" },
       { name: "Date Picker", href: "/components/date-picker" },
+      { name: "Date Range Picker", href: "/components/date-range-picker" },
+      { name: "Modal", href: "/components/modal" },
+      { name: "Carousel", href: "/components/carousel" },
+    ],
+  },
+  {
+    title: "Forms",
+    items: [
+      { name: "Form", href: "/components/form" },
     ],
   },
   {

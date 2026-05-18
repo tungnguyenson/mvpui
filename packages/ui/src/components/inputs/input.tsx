@@ -192,6 +192,8 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(
 			tooltip,
 			type = "text",
 			"aria-invalid": ariaInvalid,
+			// @ts-expect-error -- react-aria form context injects this; strip before DOM spread
+			validationBehavior: _validationBehavior,
 			...props
 		},
 		ref

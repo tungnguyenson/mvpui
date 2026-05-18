@@ -209,6 +209,26 @@
       "import": "./dist/qr-code.js",
       "require": "./dist/qr-code.cjs"
     },
+    "./form": {
+      "types": "./dist/form.d.ts",
+      "import": "./dist/form.js",
+      "require": "./dist/form.cjs"
+    },
+    "./modal": {
+      "types": "./dist/modal.d.ts",
+      "import": "./dist/modal.js",
+      "require": "./dist/modal.cjs"
+    },
+    "./date-range-picker": {
+      "types": "./dist/date-range-picker.d.ts",
+      "import": "./dist/date-range-picker.js",
+      "require": "./dist/date-range-picker.cjs"
+    },
+    "./carousel": {
+      "types": "./dist/carousel.d.ts",
+      "import": "./dist/carousel.js",
+      "require": "./dist/carousel.cjs"
+    },
     "./styles.css": "./dist/styles.css"
   },
   "files": [
@@ -221,14 +241,17 @@
     "dev": "tsup --watch"
   },
   "dependencies": {
+    "@internationalized/date": "latest",
     "@mvp-ui/tokens": "workspace:*",
     "@radix-ui/react-slot": "latest",
     "@radix-ui/react-tooltip": "latest",
     "class-variance-authority": "latest",
     "clsx": "latest",
+    "embla-carousel-react": "latest",
     "input-otp": "latest",
     "qr-code-styling": "^1.9.2",
     "react-aria-components": "^1.16",
+    "react-hook-form": "latest",
     "tailwind-merge": "latest"
   },
   "peerDependencies": {

@@ -84,7 +84,6 @@ export default function QRCodePage() {
       tagline="Styled QR code with branded corner handles and optional scan overlay. Backed by qr-code-styling."
       install={{
         usage: `import { QRCode, GradientScan } from "@mvp-ui/ui";`,
-        packageName: "qr-code-styling",
       }}
       sections={SECTIONS}
       tokenReference={[

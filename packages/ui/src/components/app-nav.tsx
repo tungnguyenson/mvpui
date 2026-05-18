@@ -131,7 +131,7 @@ export const AppNav = forwardRef<HTMLElement, AppNavProps>(
 				{/* Nav items */}
 				<div className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 py-4">
 					{items.map((item) => (
-						<AppNavItem key={item.href} item={item} />
+						<AppNavItem key={item.label} item={item} />
 					))}
 				</div>
 

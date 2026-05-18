@@ -42,7 +42,7 @@ export const IPhoneMockup = ({ image, imageDark, theme, className, ...svgProps }
             fill="none"
             preserveAspectRatio="xMidYMin slice"
             {...svgProps}
-            className={cn("h-auto", theme === undefined ? "text-fg [[data-theme=dark]_&]:text-primary-fg" : theme === "light" ? "text-fg" : "text-primary-fg", className)}
+            className={cn("h-auto", theme === undefined ? "text-fg in-data-[theme=dark]:text-primary-fg" : theme === "light" ? "text-fg" : "text-primary-fg", className)}
         >
             <defs>
                 <pattern id={`screen-${id}`} patternContentUnits="objectBoundingBox" width="1" height="1">
@@ -65,7 +65,7 @@ export const IPhoneMockup = ({ image, imageDark, theme, className, ...svgProps }
                     width="281.69"
                     height="609.953"
                     transform="translate(15.7744 14.2725)"
-                    className={cn(theme === undefined ? "fill-bg [[data-theme=dark]_&]:fill-fg" : theme === "light" ? "fill-bg" : "fill-fg")}
+                    className={cn(theme === undefined ? "fill-bg in-data-[theme=dark]:fill-fg" : theme === "light" ? "fill-bg" : "fill-fg")}
                 />
                 {/* The screen */}
                 <rect width="281.69" height="609.953" transform="translate(15.7744 38.3096)" fill={`url(#screen-${id})`} />

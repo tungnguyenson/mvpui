@@ -243,3 +243,30 @@ export type { IllustrationProps, IllustrationCompoundProps, IllustrationType } f
 export { Illustration, BoxIllustration, CloudIllustration, DocumentsIllustration, CreditCardIllustration } from "./components/illustrations/index.js";
 export { CreditCard } from "./components/credit-card.js";
 export { QRCode, GradientScan } from "./components/qr-code.js";
+export type { CalendarCellProps } from "./components/calendar-cell.js";
+export { CalendarCell } from "./components/calendar-cell.js";
+export { Form, HookForm, FormField, useFormFieldContext } from "./components/form.js";
+export type {
+	ModalSize,
+	ModalProps,
+	ModalHeaderProps,
+	ModalBodyProps,
+	ModalFooterProps,
+} from "./components/modal.js";
+export {
+	DialogTrigger,
+	ModalOverlay,
+	Modal,
+	Dialog,
+	ModalHeader,
+	ModalBody,
+	ModalFooter,
+} from "./components/modal.js";
+export type { DateRangePickerProps } from "./components/date-range-picker.js";
+export { DateRangePicker } from "./components/date-range-picker.js";
+export type { CarouselApi } from "./components/carousel.js";
+export {
+	Carousel,
+	CarouselContext,
+	useCarousel,
+} from "./components/carousel.js";

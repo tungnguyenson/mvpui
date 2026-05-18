@@ -92,12 +92,15 @@ Nav registration: `apps/docs/app/nav.ts`
 | DatePicker | ✅ complete | react-aria DatePicker/Calendar; light + dark safe |
 | AppNav | ✅ complete | presentational sidebar nav; items/logo/footer props |
 
-## Wave 4 — remaining
+## v0.1 Missing Components — complete
 
-| Component | Status |
-|---|---|
-| DateRangePicker | ❌ not started |
-| Carousel | ❌ not started |
+| Component | Status | Notes |
+|---|---|---|
+| Form | ✅ complete | HookForm + FormField + useFormFieldContext; react-hook-form wrapper over React Aria Form |
+| Modal | ✅ complete | React Aria; DialogTrigger/ModalOverlay/Modal/Dialog + ModalHeader/Body/Footer; sm/md/lg/xl/full sizes |
+| CalendarCell | ✅ complete | Shared internal cell for DatePicker + DateRangePicker; auto-detects range vs single via RangeCalendarContext |
+| DateRangePicker | ✅ complete | React Aria; preset sidebar; single-month calendar; Apply/Cancel footer; controlled/uncontrolled |
+| Carousel | ✅ complete | Embla; compound namespace (Carousel.Root/.Content/.Item/.PrevTrigger/.NextTrigger/.IndicatorGroup/.Indicator); A8 exception |
 
 ## Foundations — complete
 
@@ -141,3 +144,4 @@ Nav registration: `apps/docs/app/nav.ts`
 | 2026-05-18 | Dropdown: added SubmenuTrigger to Dropdown namespace; fixed DropdownExamples direct react-aria-components import |
 | 2026-05-18 | InputDate focused-segment contrast fix: chained data-focused:data-placeholder:text-primary-fg (0,2,0 specificity) |
 | 2026-05-18 | Shared assets: SectionDivider, IPhoneMockup, BackgroundPattern (4 patterns), Illustration (4 types), CreditCard (13 themes), QRCode+GradientScan — all source files, exports, tsup entries, package.json exports, nav entries, docs pages; build clean |
+| 2026-05-18 | v0.1 blockers: Form, Modal, DateRangePicker, Carousel — all 4 implemented; CalendarCell extracted as shared module; react-hook-form + embla-carousel-react + @internationalized/date added; docs pages for all 4; packages/ui + docs build clean |

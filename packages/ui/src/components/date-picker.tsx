@@ -9,7 +9,6 @@ import type { ReactNode } from "react";
 import {
 	Button as AriaButton,
 	Calendar as AriaCalendar,
-	CalendarCell as AriaCalendarCell,
 	CalendarGrid as AriaCalendarGrid,
 	CalendarGridBody as AriaCalendarGridBody,
 	CalendarGridHeader as AriaCalendarGridHeader,
@@ -24,6 +23,7 @@ import {
 	type DateValue,
 } from "react-aria-components";
 import { cn } from "../lib/cn.js";
+import { CalendarCell } from "./calendar-cell.js";
 import { HintText } from "./inputs/hint-text.js";
 import { Label } from "./inputs/label.js";
 
@@ -165,7 +165,7 @@ export const DatePicker = ({
 									className={cn(
 										"rounded-sm px-0.5 text-fg tabular-nums caret-transparent outline-none",
 										"data-focused:bg-primary data-focused:font-medium data-focused:text-primary-fg",
-										"data-placeholder:text-fg-tertiary data-placeholder:uppercase",
+										"data-placeholder:text-fg-secondary data-placeholder:uppercase data-focused:data-placeholder:text-primary-fg",
 										"data-[type=literal]:text-fg-tertiary",
 									)}
 								/>
@@ -244,23 +244,7 @@ export const DatePicker = ({
 								</AriaCalendarGridHeader>
 
 								<AriaCalendarGridBody>
-									{(date) => (
-										<AriaCalendarCell
-											date={date}
-											className={cn(
-												"flex size-9 cursor-pointer items-center justify-center rounded-lg text-sm text-fg outline-none transition-colors",
-												"hover:bg-bg-secondary",
-												"data-outside-month:text-fg-tertiary data-outside-month:opacity-50",
-												"data-selected:bg-primary data-selected:font-medium data-selected:text-primary-fg",
-												"data-selected:hover:bg-primary-hover",
-												"data-today:font-semibold data-today:ring-1 data-today:ring-border-brand",
-												"data-today:data-selected:ring-0",
-												"data-disabled:pointer-events-none data-disabled:opacity-40",
-												"data-unavailable:pointer-events-none data-unavailable:opacity-40 data-unavailable:line-through",
-												"data-focus-visible:ring-2 data-focus-visible:ring-brand-500/22",
-											)}
-										/>
-									)}
+									{(date) => <CalendarCell date={date} />}
 								</AriaCalendarGridBody>
 							</AriaCalendarGrid>
 						</AriaCalendar>
