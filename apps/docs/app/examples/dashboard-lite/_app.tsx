@@ -193,7 +193,7 @@ function MetricCard({
       </div>
       <div className="relative bg-bg border border-border-secondary rounded-xl shadow-xs m-0 flex flex-col gap-5 p-5">
         <div className="flex flex-wrap items-center gap-3">
-          <span className="text-[30px] font-semibold leading-[38px] text-fg">{value}</span>
+          <span className="text-[30px] font-semibold leading-9.5 text-fg">{value}</span>
           <div className="flex items-center gap-2">
             <span
               className={`flex items-center gap-1 text-sm font-medium ${trend === "up" ? "text-fg-success" : "text-fg-error"}`}
@@ -213,7 +213,7 @@ function MetricCard({
           color={trend === "up" ? "success" : "error"}
         />
         <button
-          className="absolute top-[19px] right-[19px] flex items-center justify-center size-5 text-fg-tertiary hover:text-fg transition-colors"
+          className="absolute top-4.75 right-4.75 flex items-center justify-center size-5 text-fg-tertiary hover:text-fg transition-colors"
           aria-label="More options"
         >
           <MoreVertical className="size-4" />
