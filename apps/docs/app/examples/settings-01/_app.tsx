@@ -85,9 +85,9 @@ export function SettingsApp() {
       <div className="flex shrink-0 items-center justify-between border-b border-border-secondary bg-bg px-4 py-3 md:hidden">
         <div className="flex items-center gap-2.5">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-fg text-sm font-bold">
-            U
+            M
           </div>
-          <span className="text-sm font-semibold text-fg">Untitled UI</span>
+          <span className="text-sm font-semibold text-fg">MVP UI</span>
         </div>
         <button
           type="button"
@@ -135,9 +135,9 @@ function AppSidebar({ className }: { className?: string }) {
         <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2.5">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-fg text-sm font-bold">
-              U
+              M
             </div>
-            <span className="text-sm font-semibold text-fg">Untitled UI</span>
+            <span className="text-sm font-semibold text-fg">MVP UI</span>
           </div>
           <Input
             placeholder="Search"

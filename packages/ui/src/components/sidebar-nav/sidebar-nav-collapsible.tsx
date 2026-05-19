@@ -81,11 +81,13 @@ export function SidebarNavCollapsible({
 				className="flex flex-1 flex-col overflow-y-auto px-3 py-4"
 			>
 				{sections.map((section, i) => (
-					<div key={section.label} className="flex flex-col gap-0.5">
+					<div key={`section-${i}`} className="flex flex-col gap-0.5">
 						{i > 0 && <hr className="my-2 border-border" />}
-						<p className="mb-1 px-3 pt-1 text-xs font-semibold uppercase tracking-wide text-fg-tertiary">
-							{section.label}
-						</p>
+						{section.label && (
+							<p className="mb-1 px-3 pt-1 text-xs font-semibold uppercase tracking-wide text-fg-tertiary">
+								{section.label}
+							</p>
+						)}
 						{section.items.map((item) => {
 							const hasChildren = item.items && item.items.length > 0;
 							const isOpen = openItems[item.id] ?? false;

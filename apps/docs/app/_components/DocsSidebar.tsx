@@ -43,6 +43,7 @@ const docSections: SidebarNavSectionDef[] = [
       { id: "theming", label: "Theming", href: "/docs/theming" },
       { id: "dark-mode", label: "Dark mode", href: "/docs/dark-mode" },
       { id: "typography", label: "Typography", href: "/docs/typography" },
+      { id: "responsive", label: "Responsive", href: "/docs/responsive" },
       { id: "agent", label: "Agent context", href: "/docs/agent" },
     ],
   },

@@ -20,13 +20,13 @@ export default function DashboardLiteExamplePage() {
           Dashboard
         </h1>
         <p className="mt-2 max-w-2xl text-base text-fg-secondary">
-          A lightweight dashboard example built with MVP UI components —
-          stat cards, data tables, charts, and team activity.
+          Customer management dashboard with metric cards, sparklines, and a
+          filterable company table — built with MVP UI components.
         </p>
       </header>
 
       <div className="flex items-center justify-between mb-4">
-        <span className="text-xl font-semibold text-fg">Dashboard example</span>
+        <span className="text-xl font-semibold text-fg">Dashboard example (Untitled UI)</span>
         <div className="flex items-center gap-1">
           <ButtonUtility
             size="xs"
