@@ -147,6 +147,14 @@ Nav registration: `apps/docs/app/nav.ts`
 | `/examples/settings` | Section, Toggle, Modal, AvatarLabelGroup, Badge, Tooltip, Select, Input, Button, CloseButton | ✅ complete |
 | `/examples/dashboard-lite` | Avatar, Badge, Button, ButtonUtility, Card, Dropdown, EmptyState, ProgressBar, Tag, TagGroup, TagList, Tooltip | ✅ complete |
 
+## Consumer Apps
+
+Standalone workspace apps that consume `@mvp-ui/ui` (not docs demo pages).
+
+| App | Purpose | Status | Notes |
+|---|---|---|---|
+| `apps/staffing-saas` | Demo `@mvp-ui/ui` with a custom brand token | ✅ complete | Slate-navy brand override (`--brand-25…950` redefined in `app/globals.css :root` after the tokens import — wins by cascade order; verified purple→slate at served-CSS lines 5311→5489). Single `/` route: dark-themed sidebar (Vietnamese CTV nav) + light content. Dashboard is default; all other nav items render `EmptyState`. Hash-based nav (anchors + `hashchange` listener — keyboard-accessible, no static-div onClick). Port 3100. Self-contained data; no public asset deps (Avatar→initials fallback). Browser/interaction not auto-verified (chrome-devtools MCP profile locked). |
+
 ## Skill Files (`packages/skill/`)
 
 | File | Status |
@@ -200,3 +208,4 @@ Nav registration: `apps/docs/app/nav.ts`
 | 2026-05-18 | Polish: /examples/auth-form (split-screen), /examples/settings (Section+Toggle+Modal+Select+Badge+Tooltip+AvatarLabelGroup); packages/skill/ created (system, tokens, components, patterns, responsive); changesets written (wave2-4, v0.1-blockers); README + quickstart written |
 | 2026-05-18 | v0.2: Combobox, MultiSelect, TagSelect, Table, FileUpload, Toast (Sonner), CommandMenu, SidebarNav (5 variants) — all in @mvp-ui/ui. @mvp-ui/charts package created with BarChart, LineChart, PieChart, ProgressCircle (Recharts). /examples/dashboard-lite. Changesets v0.2-components.md + v0.2-charts-package.md. |
 | 2026-05-19 | Breadcrumbs — Figma-only; 3 variants (text/text-with-line/button), 2 dividers (chevron/slash), showHomeIcon prop; 5 demo sections; nav.ts + skill/components.md updated |
+| 2026-05-19 | New consumer app `apps/staffing-saas` — demos `@mvp-ui/ui` with slate-navy brand-token override (redefine `--brand-*` ramp in app globals.css; cascade-order verified). Single-route dark sidebar (VI CTV nav) + light Dashboard; non-Dashboard nav items → EmptyState via hashchange. tsc + biome clean (only pre-existing CSS `@source` parser note). Browser interaction not auto-verified — chrome-devtools MCP profile locked. |

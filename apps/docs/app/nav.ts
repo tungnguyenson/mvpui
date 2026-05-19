@@ -139,7 +139,13 @@ export const examples: ExampleGroup[] = [
       { name: "Settings 01", href: "/examples/settings-01" },
     ],
   },
-  { name: "Dashboard", href: "/examples/dashboard-lite" },
+  {
+    name: "Dashboard",
+    items: [
+      { name: "Dashboard Lite", href: "/examples/dashboard-lite" },
+      { name: "Dashboard Dark Nav", href: "/examples/dashboard-dark" },
+    ],
+  },
 ];
 
 // Flat list for consumers (breadcrumbs, search, etc.)

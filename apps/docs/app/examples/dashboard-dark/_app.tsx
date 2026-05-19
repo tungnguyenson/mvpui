@@ -141,7 +141,6 @@ const METRICS = [
 
 type StatusKey = "Active" | "Trial" | "Inactive";
 
-
 const COMPANIES: {
   id: number;
   name: string;
@@ -368,7 +367,7 @@ function AppSidebar({
 /*  Main app                                                                   */
 /* -------------------------------------------------------------------------- */
 
-export function DashboardLiteApp() {
+export function DashboardDarkApp() {
   const [navOpen, setNavOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [search, setSearch] = useState("");
@@ -404,8 +403,8 @@ export function DashboardLiteApp() {
         </button>
       </div>
 
-      {/* Desktop sidebar */}
-      <div className="hidden md:block shrink-0">
+      {/* Desktop sidebar — forced dark theme */}
+      <div data-theme="dark" className="hidden md:block shrink-0">
         <AppSidebar
           collapsed={sidebarCollapsed}
           onToggle={() => setSidebarCollapsed((v) => !v)}
@@ -612,7 +611,7 @@ export function DashboardLiteApp() {
         </div>
       </main>
 
-      {/* Mobile nav drawer */}
+      {/* Mobile nav drawer — forced dark theme */}
       <Drawer
         side="left"
         size="sm"
@@ -621,7 +620,9 @@ export function DashboardLiteApp() {
         aria-label="Navigation menu"
         showCloseButton
       >
-        <AppSidebar className="border-r-0 w-full" />
+        <div data-theme="dark" className="h-full">
+          <AppSidebar className="border-r-0 w-full" />
+        </div>
       </Drawer>
     </div>
   );

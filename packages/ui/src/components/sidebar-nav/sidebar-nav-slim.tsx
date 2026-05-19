@@ -9,7 +9,7 @@
 
 "use client";
 
-import { type FC, type ReactNode, useState } from "react";
+import { type FC, type ReactNode, useEffect, useRef, useState } from "react";
 import { cn } from "../../lib/cn.js";
 import { SlimNavButton, NavItemRow, initials } from "./shared.js";
 import type { SidebarNavItemDef, SidebarNavAccountDef } from "./shared.js";
@@ -21,6 +21,8 @@ export interface SidebarNavSlimProps {
 	logo?: ReactNode;
 	account?: SidebarNavAccountDef;
 	className?: string;
+	/** When false, secondary panel opens on click instead of hover. Default: true */
+	hoverToReveal?: boolean;
 }
 
 export function SidebarNavSlim({
@@ -30,6 +32,7 @@ export function SidebarNavSlim({
 	logo,
 	account,
 	className,
+	hoverToReveal = true,
 }: SidebarNavSlimProps) {
 	const allItems = [...items, ...footerItems];
 	const findActive = () =>
@@ -43,16 +46,46 @@ export function SidebarNavSlim({
 		findActive() ?? items[0],
 	);
 	const [hovering, setHovering] = useState(false);
+	const [panelOpen, setPanelOpen] = useState(false);
+	const wrapperRef = useRef<HTMLDivElement>(null);
 
-	const secondaryVisible = hovering && Boolean(currentItem?.items?.length);
+	useEffect(() => {
+		if (hoverToReveal || !panelOpen) return;
+		function onClickOutside(e: MouseEvent) {
+			if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+				setPanelOpen(false);
+			}
+		}
+		document.addEventListener("mousedown", onClickOutside);
+		return () => document.removeEventListener("mousedown", onClickOutside);
+	}, [hoverToReveal, panelOpen]);
+
+	const secondaryVisible = hoverToReveal
+		? hovering && Boolean(currentItem?.items?.length)
+		: panelOpen && Boolean(currentItem?.items?.length);
+
 	const SECONDARY_W = 248;
 
+	function handleItemClick(item: typeof items[number]) {
+		if (hoverToReveal) {
+			setCurrentItem(item);
+			return;
+		}
+		const hasChildren = Boolean(item.items?.length);
+		if (currentItem?.id === item.id) {
+			if (hasChildren) setPanelOpen((o) => !o);
+		} else {
+			setCurrentItem(item);
+			setPanelOpen(hasChildren);
+		}
+	}
+
+	const pointerHandlers = hoverToReveal
+		? { onPointerEnter: () => setHovering(true), onPointerLeave: () => setHovering(false) }
+		: {};
+
 	return (
-		<div
-			className={cn("flex h-full", className)}
-			onPointerEnter={() => setHovering(true)}
-			onPointerLeave={() => setHovering(false)}
-		>
+		<div ref={wrapperRef} className={cn("flex h-full", className)} {...pointerHandlers}>
 			{/* Slim rail */}
 			<aside className="flex h-full w-17 shrink-0 flex-col border-r border-border bg-bg">
 				{logo && (
@@ -70,7 +103,7 @@ export function SidebarNavSlim({
 							key={item.id}
 							item={item}
 							active={currentItem?.id === item.id}
-							onClick={() => setCurrentItem(item)}
+							onClick={() => handleItemClick(item)}
 						/>
 					))}
 				</nav>
@@ -82,7 +115,7 @@ export function SidebarNavSlim({
 								key={item.id}
 								item={item}
 								active={currentItem?.id === item.id}
-								onClick={() => setCurrentItem(item)}
+								onClick={() => handleItemClick(item)}
 							/>
 						))}
 						{account && (

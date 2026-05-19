@@ -1,0 +1,44 @@
+@import "tailwindcss";
+@import "@mvp-ui/tokens/theme.css";
+
+/* Scan UI package source so Tailwind generates utilities for CVA class strings */
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+
+/* --------------------------------------------------------------------------
+   Consumer brand-token override — Untitled UI purple → corporate blue.
+
+   tokens.css exposes the brand ramp as --brand-25 … --brand-950 on :root.
+   theme.css maps those into Tailwind utilities (--color-brand-*) and the
+   semantic action/focus/info tokens reference them (var(--brand-600) etc.),
+   so redefining the ramp here re-skins the whole @mvp-ui/ui surface
+   (bg-primary, focus rings, fg-brand, info-*) without touching the library.
+
+   This block comes after the imports, so its :root wins by cascade order.
+   -------------------------------------------------------------------------- */
+:root {
+  --brand-25: #f5f8fc;
+  --brand-50: #eaf1f9;
+  --brand-100: #d2dfef;
+  --brand-200: #a6bfdf;
+  --brand-300: #7a9fcf;
+  --brand-400: #4e7fbf;
+  --brand-500: #3b6fb0;
+  --brand-600: #2b5fa1;
+  --brand-700: #234d82;
+  --brand-800: #1b3b63;
+  --brand-900: #142d4b;
+  --brand-950: #0c1b2e;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+  }
+}

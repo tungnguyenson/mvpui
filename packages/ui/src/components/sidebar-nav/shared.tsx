@@ -32,8 +32,14 @@ export interface SidebarNavAccountDef {
 /*  Icon helper                                                                */
 /* -------------------------------------------------------------------------- */
 
+const REACT_FORWARD_REF = Symbol.for("react.forward_ref");
+const REACT_MEMO = Symbol.for("react.memo");
+
 function isIconFC(v: unknown): v is FC<{ className?: string }> {
-	return typeof v === "function";
+	if (typeof v === "function") return true;
+	if (typeof v !== "object" || v === null) return false;
+	const t = (v as { $$typeof?: unknown }).$$typeof;
+	return t === REACT_FORWARD_REF || t === REACT_MEMO;
 }
 
 export function renderIcon(
