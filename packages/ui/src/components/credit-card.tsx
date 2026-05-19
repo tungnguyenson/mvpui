@@ -88,46 +88,46 @@ export const MastercardIcon = (props: SVGProps<SVGSVGElement>) => {
 const styles = {
     // Normal
     transparent: {
-        root: "bg-black/10 bg-linear-to-br from-white/30 to-transparent backdrop-blur-[6px] before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset",
+        root: "bg-black/10 bg-linear-to-br from-white/30 to-transparent backdrop-blur-[6px] before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset", // dark-ok
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "transparent-gradient": {
-        root: "bg-black/10 bg-linear-to-br from-white/30 to-transparent backdrop-blur-[6px] before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset",
+        root: "bg-black/10 bg-linear-to-br from-white/30 to-transparent backdrop-blur-[6px] before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset", // dark-ok
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "brand-dark": {
         root: "bg-linear-to-tr from-brand-900 to-brand-700 before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset", // dark-ok
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "brand-light": {
-        root: "bg-brand-100 before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-black/10 before:ring-inset",
+        root: "bg-brand-100 before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-black/10 before:ring-inset", // dark-ok
         company: "text-neutral-700", // dark-ok
         footerText: "text-neutral-700", // dark-ok
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white",
+        cardTypeRoot: "bg-white", // dark-ok
     },
     "gray-dark": {
         root: "bg-linear-to-tr from-neutral-900 to-neutral-700 before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset", // dark-ok
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "gray-light": {
         root: "bg-neutral-100 before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-black/10 before:ring-inset", // dark-ok
         company: "text-neutral-700", // dark-ok
         footerText: "text-neutral-700", // dark-ok
         paypassIcon: "text-neutral-400", // dark-ok
-        cardTypeRoot: "bg-white",
+        cardTypeRoot: "bg-white", // dark-ok
     },
 
     // Strip
@@ -136,28 +136,28 @@ const styles = {
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "gray-strip": {
         root: "bg-neutral-100 before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset", // dark-ok
         company: "text-neutral-700", // dark-ok
         footerText: "text-white",
         paypassIcon: "text-neutral-400", // dark-ok
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "gradient-strip": {
         root: "bg-linear-to-b from-[#A5C0EE] to-[#FBC5EC] before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset",
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "salmon-strip": {
         root: "bg-[#F4D9D0] before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset", // dark-ok
         company: "text-neutral-700", // dark-ok
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
 
     // Vertical strip
@@ -166,21 +166,21 @@ const styles = {
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-neutral-400", // dark-ok
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "gradient-strip-vertical": {
         root: "bg-linear-to-b from-[#FBC2EB] to-[#A18CD1] before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset",
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
     "salmon-strip-vertical": {
         root: "bg-[#F4D9D0] before:pointer-events-none before:absolute before:inset-0 before:z-1 before:rounded-[inherit] before:mask-linear-135 before:mask-linear-to-white/20 before:ring-1 before:ring-white/30 before:ring-inset", // dark-ok
         company: "text-white",
         footerText: "text-white",
         paypassIcon: "text-white",
-        cardTypeRoot: "bg-white/10",
+        cardTypeRoot: "bg-white/10", // dark-ok
     },
 };
 

@@ -9,6 +9,7 @@
 
 "use client";
 
+import { Slot } from "@radix-ui/react-slot";
 import * as RadixTooltip from "@radix-ui/react-tooltip";
 import { type ButtonHTMLAttributes, forwardRef, type ReactNode } from "react";
 import { cn } from "../lib/cn.js";
@@ -132,25 +133,43 @@ export const Tooltip = ({
 
 Tooltip.displayName = "Tooltip";
 
-export interface TooltipTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {}
+export interface TooltipTriggerProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+	/**
+	 * Merge trigger props onto the child element instead of wrapping in a new
+	 * button. Required when the child is already an interactive element (e.g.
+	 * ButtonUtility) to avoid a nested <button> hydration error.
+	 */
+	asChild?: boolean;
+}
 
 /**
- * Focusable trigger for a {@link Tooltip}. A bare `<button>` so it works as a
- * Radix `Trigger asChild` target and stays consistent with our other buttons.
+ * Focusable trigger for a {@link Tooltip}. Use `asChild` when wrapping an
+ * existing interactive element to avoid nested-button errors.
  */
 export const TooltipTrigger = forwardRef<HTMLButtonElement, TooltipTriggerProps>(
-	({ className, type, children, ...props }, ref) => (
-		<RadixTooltip.Trigger asChild>
-			<button
-				ref={ref}
-				type={type ?? "button"}
-				className={cn("h-max w-max outline-none", className)}
-				{...props}
-			>
-				{children}
-			</button>
-		</RadixTooltip.Trigger>
-	)
+	({ className, type, children, asChild = false, ...props }, ref) => {
+		if (asChild) {
+			return (
+				<RadixTooltip.Trigger asChild>
+					<Slot ref={ref} className={className} {...props}>
+						{children}
+					</Slot>
+				</RadixTooltip.Trigger>
+			);
+		}
+		return (
+			<RadixTooltip.Trigger asChild>
+				<button
+					ref={ref}
+					type={type ?? "button"}
+					className={cn("h-max w-max outline-none", className)}
+					{...props}
+				>
+					{children}
+				</button>
+			</RadixTooltip.Trigger>
+		);
+	}
 );
 
 TooltipTrigger.displayName = "TooltipTrigger";

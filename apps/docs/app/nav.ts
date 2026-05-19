@@ -13,84 +13,113 @@ export interface NavSection {
   items: NavItem[];
 }
 
+export interface ExampleGroup {
+  name: string;
+  href?: string;
+  items?: NavItem[];
+}
+
 export const componentSections: NavSection[] = [
   {
-    title: "Buttons",
+    title: "Actions",
     items: [
       { name: "Button", href: "/components/button" },
+      { name: "Button Group", href: "/components/button-group" },
       { name: "Utility Buttons", href: "/components/utility-buttons" },
       { name: "Social Button", href: "/components/social-button" },
       { name: "App Store Buttons", href: "/components/app-store-buttons" },
-      { name: "Button Group", href: "/components/button-group" },
     ],
   },
   {
-    title: "Inputs",
+    title: "Form",
     items: [
       { name: "Input", href: "/components/input" },
+      { name: "Textarea", href: "/components/textarea" },
+      { name: "Pin Input", href: "/components/pin-input" },
       { name: "Label", href: "/components/label" },
       { name: "Hint Text", href: "/components/hint-text" },
-      { name: "Input Group", href: "/components/input-group" },
-      { name: "Pin Input", href: "/components/pin-input" },
-    ],
-  },
-  {
-    title: "Form Controls",
-    items: [
       { name: "Checkbox", href: "/components/checkbox" },
       { name: "Radio", href: "/components/radio" },
       { name: "Toggle", href: "/components/toggle" },
-      { name: "Textarea", href: "/components/textarea" },
-    ],
-  },
-  {
-    title: "Components",
-    items: [
-      { name: "Avatar", href: "/components/avatar" },
-      { name: "Progress", href: "/components/progress" },
-      { name: "Featured Icon", href: "/components/featured-icon" },
-      { name: "Tooltip", href: "/components/tooltip" },
-      { name: "Tags", href: "/components/tags" },
-      { name: "Card", href: "/components/card" },
-      { name: "Badge", href: "/components/badge" },
-      { name: "Alert", href: "/components/alert" },
-      { name: "Section", href: "/components/section" },
-      { name: "Select", href: "/components/select" },
       { name: "Slider", href: "/components/slider" },
-      { name: "Tabs", href: "/components/tabs" },
-      { name: "Pagination", href: "/components/pagination" },
-      { name: "Empty State", href: "/components/empty-state" },
-      { name: "Loading Indicator", href: "/components/loading-indicator" },
-      { name: "Badge Group", href: "/components/badge-group" },
-      { name: "Dropdown", href: "/components/dropdown" },
-      { name: "File Upload Trigger", href: "/components/file-upload-trigger" },
-      { name: "Drawer", href: "/components/drawer" },
+      { name: "Select", href: "/components/select" },
+      { name: "Combobox", href: "/components/combobox" },
+      { name: "Multi Select", href: "/components/multi-select" },
+      { name: "Tag Select", href: "/components/tag-select" },
       { name: "Date Picker", href: "/components/date-picker" },
       { name: "Date Range Picker", href: "/components/date-range-picker" },
-      { name: "Modal", href: "/components/modal" },
-      { name: "Carousel", href: "/components/carousel" },
+      { name: "File Upload", href: "/components/file-upload" },
+      { name: "File Upload Trigger", href: "/components/file-upload-trigger" },
+      { name: "Form", href: "/components/form" },
     ],
   },
   {
-    title: "Forms",
+    title: "Overlays",
     items: [
-      { name: "Form", href: "/components/form" },
+      { name: "Modal", href: "/components/modal" },
+      { name: "Drawer", href: "/components/drawer" },
+      { name: "Dropdown", href: "/components/dropdown" },
+      { name: "Command Menu", href: "/components/command-menu" },
+      { name: "Tooltip", href: "/components/tooltip" },
+    ],
+  },
+  {
+    title: "Notifications",
+    items: [
+      { name: "Alert", href: "/components/alert" },
+      { name: "Toast", href: "/components/toast" },
+      { name: "Loading Indicator", href: "/components/loading-indicator" },
+      { name: "Empty State", href: "/components/empty-state" },
+    ],
+  },
+  {
+    title: "Content",
+    items: [
+      { name: "Avatar", href: "/components/avatar" },
+      { name: "Badge", href: "/components/badge" },
+      { name: "Badge Group", href: "/components/badge-group" },
+      { name: "Card", href: "/components/card" },
+      { name: "Tags", href: "/components/tags" },
+      { name: "Featured Icon", href: "/components/featured-icon" },
+      { name: "Progress", href: "/components/progress" },
+      { name: "Rating Stars", href: "/components/rating-stars" },
+      { name: "Rating Badge", href: "/components/rating-badge" },
+      { name: "Section", href: "/components/section" },
     ],
   },
   {
     title: "Navigation",
     items: [
-      { name: "App Nav", href: "/components/app-nav" },
+      { name: "Breadcrumbs", href: "/components/breadcrumbs" },
+      { name: "Sidebar Nav", href: "/components/sidebar-nav" },
+      { name: "Tabs", href: "/components/tabs" },
+      { name: "Pagination", href: "/components/pagination" },
+      { name: "Carousel", href: "/components/carousel" },
+    ],
+  },
+  {
+    title: "Data",
+    items: [
+      { name: "Table", href: "/components/table" },
+      { name: "Bar Chart", href: "/components/bar-chart" },
+      { name: "Line Chart", href: "/components/line-chart" },
+      { name: "Pie Chart", href: "/components/pie-chart" },
+      { name: "Progress Circle", href: "/components/progress-circle" },
     ],
   },
   {
     title: "Icons",
     items: [
       { name: "Integration Icons", href: "/components/integration-icons" },
+      { name: "Social Icons", href: "/components/social-icons" },
+      { name: "Payment Icons", href: "/components/payment-icons" },
+      { name: "Dot", href: "/components/dot" },
+      { name: "Play Button Icon", href: "/components/play-button-icon" },
+      { name: "Logo", href: "/components/logo" },
     ],
   },
   {
-    title: "Shared Assets",
+    title: "Decorative",
     items: [
       { name: "Section Divider", href: "/components/section-divider" },
       { name: "iPhone Mockup", href: "/components/iphone-mockup" },
@@ -102,10 +131,16 @@ export const componentSections: NavSection[] = [
   },
 ];
 
-export const examples: NavItem[] = [
+export const examples: ExampleGroup[] = [
   { name: "Auth form", href: "/examples/auth-form" },
-  { name: "Settings", href: "/examples/settings" },
+  {
+    name: "Settings",
+    items: [
+      { name: "Settings 01", href: "/examples/settings-01" },
+    ],
+  },
+  { name: "Dashboard", href: "/examples/dashboard-lite" },
 ];
 
-// Flat list for backwards-compat consumers (layout breadcrumbs etc.)
+// Flat list for consumers (breadcrumbs, search, etc.)
 export const components: NavItem[] = componentSections.flatMap((s) => s.items);

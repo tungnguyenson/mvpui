@@ -9,8 +9,8 @@
  * Licensed under MIT
  */
 
+import { useCallback, useContext, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
-import { useCallback, useMemo, useRef, useState } from "react";
 import {
 	endOfMonth,
 	endOfWeek,
@@ -38,6 +38,7 @@ import {
 	Heading as AriaHeading,
 	Popover as AriaPopover,
 	RangeCalendar as AriaRangeCalendar,
+	RangeCalendarStateContext,
 	useLocale,
 } from "react-aria-components";
 import { cn } from "../lib/cn.js";
@@ -101,6 +102,22 @@ function ChevronRightIcon({ className }: { className?: string }) {
 		>
 			<path d="M9 18l6-6-6-6" />
 		</svg>
+	);
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Month heading — reads visible range from RangeCalendar context            */
+/* -------------------------------------------------------------------------- */
+
+function MonthHeading({ offset = 0 }: { offset?: number }) {
+	const state = useContext(RangeCalendarStateContext)!;
+	const month = state.visibleRange.start.add({ months: offset });
+	return (
+		<span className="flex-1 text-center text-sm font-semibold text-fg">
+			{new Intl.DateTimeFormat(undefined, { month: "long", year: "numeric" }).format(
+				month.toDate(getLocalTimeZone()),
+			)}
+		</span>
 	);
 }
 
@@ -262,6 +279,13 @@ export const DateRangePicker = ({
 					end: endOfMonth(now.set({ month: 12 }).subtract({ years: 1 })),
 				},
 			},
+			{
+				label: "All time",
+				value: {
+					start: now.subtract({ years: 10 }),
+					end: now,
+				},
+			},
 		],
 		[now, locale],
 	);
@@ -366,49 +390,76 @@ export const DateRangePicker = ({
 									{/* Calendar + footer */}
 									<div className="flex flex-col">
 										<AriaRangeCalendar
-											visibleDuration={{ months: 1 }}
+											visibleDuration={{ months: 2 }}
 											className="p-4"
 										>
-											<header className="mb-3 flex items-center justify-between gap-2">
-												<AriaButton
-													slot="previous"
-													className={cn(
-														"flex size-8 items-center justify-center rounded-lg text-fg-tertiary outline-none transition-colors",
-														"hover:bg-bg-secondary hover:text-fg",
-														"focus-visible:ring-2 focus-visible:ring-brand-500/22",
-														"data-disabled:pointer-events-none data-disabled:opacity-40",
-													)}
-												>
-													<ChevronLeftIcon className="size-4" />
-												</AriaButton>
+											{/* Hidden heading for a11y */}
+											<AriaHeading className="sr-only" />
 
-												<AriaHeading className="flex-1 text-center text-sm font-semibold text-fg" />
+											<div className="flex gap-6">
+												{/* Month 1 */}
+												<div className="flex flex-col gap-3">
+													<div className="flex items-center gap-1">
+														<AriaButton
+															slot="previous"
+															className={cn(
+																"flex size-8 shrink-0 items-center justify-center rounded-lg text-fg-tertiary outline-none transition-colors",
+																"hover:bg-bg-secondary hover:text-fg",
+																"focus-visible:ring-2 focus-visible:ring-brand-500/22",
+																"data-disabled:pointer-events-none data-disabled:opacity-40",
+															)}
+														>
+															<ChevronLeftIcon className="size-4" />
+														</AriaButton>
+														<MonthHeading offset={0} />
+													</div>
+													<AriaCalendarGrid className="w-full border-collapse">
+														<AriaCalendarGridHeader>
+															{(day) => (
+																<AriaCalendarHeaderCell className="pb-2 text-center text-xs font-medium text-fg-tertiary">
+																	{day}
+																</AriaCalendarHeaderCell>
+															)}
+														</AriaCalendarGridHeader>
+														<AriaCalendarGridBody>
+															{(date) => <CalendarCell date={date} />}
+														</AriaCalendarGridBody>
+													</AriaCalendarGrid>
+												</div>
 
-												<AriaButton
-													slot="next"
-													className={cn(
-														"flex size-8 items-center justify-center rounded-lg text-fg-tertiary outline-none transition-colors",
-														"hover:bg-bg-secondary hover:text-fg",
-														"focus-visible:ring-2 focus-visible:ring-brand-500/22",
-														"data-disabled:pointer-events-none data-disabled:opacity-40",
-													)}
-												>
-													<ChevronRightIcon className="size-4" />
-												</AriaButton>
-											</header>
+												{/* Divider */}
+												<div className="w-px bg-border" />
 
-											<AriaCalendarGrid className="w-full border-collapse">
-												<AriaCalendarGridHeader>
-													{(day) => (
-														<AriaCalendarHeaderCell className="pb-2 text-center text-xs font-medium text-fg-tertiary">
-															{day}
-														</AriaCalendarHeaderCell>
-													)}
-												</AriaCalendarGridHeader>
-												<AriaCalendarGridBody>
-													{(date) => <CalendarCell date={date} />}
-												</AriaCalendarGridBody>
-											</AriaCalendarGrid>
+												{/* Month 2 */}
+												<div className="flex flex-col gap-3">
+													<div className="flex items-center gap-1">
+														<MonthHeading offset={1} />
+														<AriaButton
+															slot="next"
+															className={cn(
+																"flex size-8 shrink-0 items-center justify-center rounded-lg text-fg-tertiary outline-none transition-colors",
+																"hover:bg-bg-secondary hover:text-fg",
+																"focus-visible:ring-2 focus-visible:ring-brand-500/22",
+																"data-disabled:pointer-events-none data-disabled:opacity-40",
+															)}
+														>
+															<ChevronRightIcon className="size-4" />
+														</AriaButton>
+													</div>
+													<AriaCalendarGrid offset={{ months: 1 }} className="w-full border-collapse">
+														<AriaCalendarGridHeader>
+															{(day) => (
+																<AriaCalendarHeaderCell className="pb-2 text-center text-xs font-medium text-fg-tertiary">
+																	{day}
+																</AriaCalendarHeaderCell>
+															)}
+														</AriaCalendarGridHeader>
+														<AriaCalendarGridBody>
+															{(date) => <CalendarCell date={date} />}
+														</AriaCalendarGridBody>
+													</AriaCalendarGrid>
+												</div>
+											</div>
 										</AriaRangeCalendar>
 
 										{/* Footer */}
@@ -426,7 +477,7 @@ export const DateRangePicker = ({
 																className={cn(
 																	"rounded-sm px-0.5 text-sm text-fg tabular-nums caret-transparent outline-none",
 																	"data-focused:bg-primary data-focused:font-medium data-focused:text-primary-fg",
-																	"data-placeholder:text-fg-tertiary data-placeholder:uppercase",
+																	"data-placeholder:text-fg-secondary data-placeholder:uppercase data-focused:data-placeholder:text-primary-fg",
 																	"data-[type=literal]:text-fg-tertiary",
 																)}
 															/>
@@ -445,7 +496,7 @@ export const DateRangePicker = ({
 																className={cn(
 																	"rounded-sm px-0.5 text-sm text-fg tabular-nums caret-transparent outline-none",
 																	"data-focused:bg-primary data-focused:font-medium data-focused:text-primary-fg",
-																	"data-placeholder:text-fg-tertiary data-placeholder:uppercase",
+																	"data-placeholder:text-fg-secondary data-placeholder:uppercase data-focused:data-placeholder:text-primary-fg",
 																	"data-[type=literal]:text-fg-tertiary",
 																)}
 															/>

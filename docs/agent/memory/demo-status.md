@@ -121,11 +121,62 @@ Nav registration: `apps/docs/app/nav.ts`
 | CreditCard | ✅ complete | 13 themes (normal/strip/vertical-strip); scalable width |
 | QRCode + GradientScan | ✅ complete | qr-code-styling backed; md/lg; branded corner handles |
 
+## v0.2 Components — complete
+
+| Component | Package | Status | Notes |
+|---|---|---|---|
+| Combobox (`ComboBox`) | `@mvp-ui/ui` | ✅ complete | React Aria ComboBox; optional shortcut kbd, icon, label, hint, tooltip; 5 doc sections |
+| MultiSelect | `@mvp-ui/ui` | ✅ complete | Autocomplete + multi-selection; badge count, select-all, reset footer; 5 doc sections |
+| TagSelect | `@mvp-ui/ui` | ✅ complete | Tag-chip selection with removable chips in trigger; 4 doc sections |
+| Table (`Table`, `TableCard`) | `@mvp-ui/ui` | ✅ complete | React Aria; sorting, row selection, sm/md sizes, card wrapper; 4 doc sections |
+| FileUpload | `@mvp-ui/ui` | ✅ complete | Drag-drop drop zone, progress-bar list item, fill-behind-row list item; 4 doc sections |
+| Toast (`Toaster`, `toast`) | `@mvp-ui/ui` | ✅ complete | Sonner wrapper; success/error/warning/info/promise/action; 6 doc sections |
+| CommandMenu | `@mvp-ui/ui` | ✅ complete | React Aria ComboBox in ModalOverlay; grouped items, shortcuts, disabled; 4 doc sections |
+| SidebarNav | `@mvp-ui/ui` | ✅ complete | 5 variants: Simple, DualTier, SectionDividers, SectionsSubheadings, Slim; CSS width transitions; 5 doc sections |
+| BarChart | `@mvp-ui/charts` | ✅ complete | Recharts; stacked/grouped; multi-series; 3 doc sections |
+| LineChart | `@mvp-ui/charts` | ✅ complete | Recharts; area/line; gradient fill; dashed lines; 3 doc sections |
+| PieChart | `@mvp-ui/charts` | ✅ complete | Recharts; donut/pie; per-item colors; 3 doc sections |
+| ProgressCircle | `@mvp-ui/charts` | ✅ complete | Recharts RadialBar; 4 sizes; title/subtitle; custom colors; 4 doc sections |
+| `/examples/dashboard-lite` | `@mvp-ui/ui` | ✅ complete | stat cards, orders table, traffic sources, team activity, deal tags |
+
+## Example Pages
+
+| Page | Components used | Status |
+|---|---|---|
+| `/examples/auth-form` | Button, Input, Label, HintText, Checkbox, Alert | ✅ complete — split-screen layout |
+| `/examples/settings` | Section, Toggle, Modal, AvatarLabelGroup, Badge, Tooltip, Select, Input, Button, CloseButton | ✅ complete |
+| `/examples/dashboard-lite` | Avatar, Badge, Button, ButtonUtility, Card, Dropdown, EmptyState, ProgressBar, Tag, TagGroup, TagList, Tooltip | ✅ complete |
+
+## Skill Files (`packages/skill/`)
+
+| File | Status |
+|---|---|
+| `system.md` | ✅ complete |
+| `tokens.md` | ✅ complete |
+| `components.md` | ✅ complete — index table format |
+| `patterns.md` | ✅ complete |
+| `responsive.md` | ✅ complete |
+
+## Distribution
+
+| Item | Status |
+|---|---|
+| README + quickstart | ✅ complete |
+| Changesets | ✅ wave2-4-components.md + v0.1-blockers.md |
+| Test install | ⬜ manual — user action |
+| Tag v0.1.0 | ⬜ after test install |
+
 ## Deferred
 
 *(BadgeGroup was deferred to Wave 3 — now complete)*
 
 ---
+
+## Navigation Components
+
+| Component | Status | Notes |
+|---|---|---|
+| Breadcrumbs | ✅ complete | Figma-only; `variant="text"/"text-with-line"/"button"`; `divider="chevron"/"slash"`; `showHomeIcon`; 5 demo sections |
 
 ## Session log
 
@@ -145,3 +196,7 @@ Nav registration: `apps/docs/app/nav.ts`
 | 2026-05-18 | InputDate focused-segment contrast fix: chained data-focused:data-placeholder:text-primary-fg (0,2,0 specificity) |
 | 2026-05-18 | Shared assets: SectionDivider, IPhoneMockup, BackgroundPattern (4 patterns), Illustration (4 types), CreditCard (13 themes), QRCode+GradientScan — all source files, exports, tsup entries, package.json exports, nav entries, docs pages; build clean |
 | 2026-05-18 | v0.1 blockers: Form, Modal, DateRangePicker, Carousel — all 4 implemented; CalendarCell extracted as shared module; react-hook-form + embla-carousel-react + @internationalized/date added; docs pages for all 4; packages/ui + docs build clean |
+| 2026-05-18 | Modal fix: DialogTrigger incompatible with HTML-based Button; rewrote all demos to controlled state (isOpen/onOpenChange) |
+| 2026-05-18 | Polish: /examples/auth-form (split-screen), /examples/settings (Section+Toggle+Modal+Select+Badge+Tooltip+AvatarLabelGroup); packages/skill/ created (system, tokens, components, patterns, responsive); changesets written (wave2-4, v0.1-blockers); README + quickstart written |
+| 2026-05-18 | v0.2: Combobox, MultiSelect, TagSelect, Table, FileUpload, Toast (Sonner), CommandMenu, SidebarNav (5 variants) — all in @mvp-ui/ui. @mvp-ui/charts package created with BarChart, LineChart, PieChart, ProgressCircle (Recharts). /examples/dashboard-lite. Changesets v0.2-components.md + v0.2-charts-package.md. |
+| 2026-05-19 | Breadcrumbs — Figma-only; 3 variants (text/text-with-line/button), 2 dividers (chevron/slash), showHomeIcon prop; 5 demo sections; nav.ts + skill/components.md updated |

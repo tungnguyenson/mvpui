@@ -6,6 +6,7 @@
 import { ComponentDocLayout, type DocExample } from "../../../_components/docs/ComponentDocLayout";
 import {
 	DefaultDemo,
+	FullWidthDemo,
 	WithLabelHintDemo,
 	ControlledDemo,
 	SizesDemo,
@@ -43,6 +44,22 @@ const SECTIONS: DocExample[] = [
   value={value ?? undefined}
   onChange={(v) => setValue(v)}
   onApply={() => console.log("applied", value)}
+  onCancel={() => setValue(null)}
+/>`,
+	},
+	{
+		id: "full-width",
+		title: "Dual-month",
+		description:
+			"Two-month calendar view with preset sidebar and Apply / Cancel footer. Opens wider to show both months side by side.",
+		preview: <FullWidthDemo />,
+		code: `const [value, setValue] = useState<DateRange | null>(null);
+
+<DateRangePicker
+  label="Report period"
+  value={value ?? undefined}
+  onChange={(v) => setValue(v)}
+  onApply={() => {}}
   onCancel={() => setValue(null)}
 />`,
 	},

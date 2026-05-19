@@ -10,6 +10,7 @@ import {
 	forwardRef,
 	useId,
 } from "react";
+import { X } from "lucide-react";
 import {
 	Dialog as AriaDialog,
 	Modal as AriaModal,
@@ -38,6 +39,8 @@ export interface DrawerProps extends Omit<AriaModalOverlayProps, "className" | "
 	"aria-label"?: string;
 	/** Additional class name for the panel. */
 	className?: string;
+	/** Render an X button in the overlay area (outside the panel). @default false */
+	showCloseButton?: boolean;
 	children?: ReactNode;
 }
 
@@ -119,6 +122,7 @@ export const Drawer = ({
 	title,
 	description,
 	isDismissable = true,
+	showCloseButton = false,
 	children,
 	className,
 	"aria-label": ariaLabel,
@@ -141,6 +145,19 @@ export const Drawer = ({
 				)
 			}
 		>
+			{showCloseButton && (
+				<button
+					type="button"
+					aria-label="Close"
+					onClick={() => props.onOpenChange?.(false)}
+					className={cn(
+						"absolute top-2 z-10 flex h-10 w-10 items-center justify-center rounded-lg text-white/80 hover:text-white transition-colors",
+						isRight ? "left-2" : "right-2",
+					)}
+				>
+					<X className="size-5" />
+				</button>
+			)}
 			<AriaModal
 				className={({ isEntering, isExiting }) =>
 					cn(

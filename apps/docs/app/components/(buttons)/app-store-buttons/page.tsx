@@ -105,7 +105,7 @@ export default function AppStoreButtonsPage() {
         <>
           Official download badges — Google&nbsp;Play, App&nbsp;Store,
           Galaxy&nbsp;Store, AppGallery. Brand-mandated artwork, two sizes,
-          native <code>&lt;a&gt;</code>. Ported verbatim from Untitled UI.
+          native <code>&lt;a&gt;</code>.
         </>
       }
       install={{

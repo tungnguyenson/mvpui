@@ -365,8 +365,7 @@ export default function Page() {
       tagline={
         <>
           Tag / chip list on React Aria <code>TagGroup</code>. Sizes, status
-          dot, count, avatar, selection (checkbox) and removable (X). Pulled
-          ahead from Wave 3 — <code>InputTags</code> builds on it.
+          dot, count, avatar, selection (checkbox) and removable (X).
         </>
       }
       install={{

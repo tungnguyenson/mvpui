@@ -367,7 +367,7 @@ export default function InputPage() {
         <>
           Text input family — base field, leading/trailing slots, inline
           prefix/suffix, and specialized variants for payment, file, date,
-          number, and tags. API mirrors Untitled UI; native{" "}
+          number, and tags. native{" "}
           <code>&lt;input&gt;</code> in an always-on field wrapper.
         </>
       }

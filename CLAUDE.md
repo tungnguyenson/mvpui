@@ -58,6 +58,27 @@ Use canonical boolean data variants — **no square brackets for bare attribute 
 
 Keep `data-[attr=value]:` syntax only for attributes that carry a value (e.g. `data-[state=open]:`, `data-[icon-only=true]:`). Negative arbitrary values belong inside the brackets: `-outline-offset-[0.5px]` → `outline-offset-[-0.5px]`.
 
+## Tailwind v4 canonical utilities (enforced)
+
+Prefer canonical scale utilities over arbitrary px values when a scale equivalent exists (px ÷ 4 = scale unit):
+
+| Wrong | Correct |
+|---|---|
+| `w-[68px]` | `w-17` |
+| `h-[72px]` | `h-18` |
+| `min-w-[80px]` | `min-w-20` |
+| `[&:nth-child(2)]:pl-3` | `nth-2:pl-3` |
+
+Rule: only use `[px]` arbitrary sizing when no canonical unit maps to that value.
+
+## Ring conflict rule (enforced)
+
+Never apply both a semantic ring token (`ring-border-brand`) and an alpha ring (`ring-brand-500/22`) to the same element — they both set `--tw-ring-color` and the linter flags it as `cssConflict`.
+
+- Default focus ring: use `ring-border-brand` (semantic, dark-safe)
+- Transparent/alpha ring variant: use `ring-brand-500/22` alone (mark `dark-ok` if needed)
+- Never combine both on one element
+
 ## Dark-safe styling (enforced)
 
 Component variant/class strings must use the **semantic flipping aliases**, never raw numbered color scales. Raw scales are token-backed but do NOT flip under `[data-theme="dark"]` — they look right in light and wash out (or vanish) in dark. This is checked: `pnpm lint:dark` (in `pnpm lint` and CI) fails the build on a violation.

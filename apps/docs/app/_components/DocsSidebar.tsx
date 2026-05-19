@@ -7,82 +7,105 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { componentSections, examples, type NavItem } from "../nav";
+import { SidebarNavSectionsSubheadings, SidebarNavCollapsible } from "@mvp-ui/ui";
+import type { SidebarNavSectionDef } from "@mvp-ui/ui";
+import { componentSections, examples } from "../nav";
 
-function NavGroup({
-  title,
-  items,
-  pathname,
-}: {
-  title: string;
-  items: NavItem[];
-  pathname: string;
-}) {
-  return (
-    <div className="mb-6 last:mb-0">
-      <h2 className="px-3 mb-1 text-xs font-semibold uppercase tracking-widest text-fg-tertiary">
-        {title}
-      </h2>
-      <ul className="flex flex-col gap-0.5">
-        {items.map((item) => {
-          const active = pathname === item.href;
-          return (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                aria-current={active ? "page" : undefined}
-                className={`block px-3 py-1.5 rounded-lg text-sm font-medium
-                  transition-colors duration-150 ease-[cubic-bezier(0.2,0,0,1)]
-                  ${
-                    active
-                      ? "bg-brand-50 text-brand-700"
-                      : "text-fg-secondary hover:text-fg hover:bg-bg-secondary"
-                  }`}
-              >
-                {item.name}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
+const INNER_CLS = "h-auto w-full shrink-0 border-none bg-transparent";
+
+function sectionsToNavDef(
+  label: string,
+  sections: { title: string; items: { name: string; href: string }[] }[]
+): SidebarNavSectionDef[] {
+  return [
+    {
+      label,
+      items: sections.map((section) => ({
+        id: section.title.toLowerCase().replace(/\s+/g, "-"),
+        label: section.title,
+        href: section.items[0]?.href ?? "#",
+        items: section.items.map((item) => ({
+          id: item.href,
+          label: item.name,
+          href: item.href,
+        })),
+      })),
+    },
+  ];
 }
+
+const docSections: SidebarNavSectionDef[] = [
+  {
+    label: "Documentation",
+    items: [
+      { id: "introduction", label: "Introduction", href: "/docs/introduction" },
+      { id: "installation", label: "Installation", href: "/docs/installation" },
+      { id: "theming", label: "Theming", href: "/docs/theming" },
+      { id: "dark-mode", label: "Dark mode", href: "/docs/dark-mode" },
+      { id: "typography", label: "Typography", href: "/docs/typography" },
+      { id: "agent", label: "Agent context", href: "/docs/agent" },
+    ],
+  },
+];
+
+const componentNavSections = sectionsToNavDef("Components", componentSections);
+
+const exampleNavSections: SidebarNavSectionDef[] = [
+  {
+    label: "Examples",
+    items: examples.map((e) => {
+      const href = e.href ?? e.items?.[0]?.href ?? "#";
+      return {
+        id: href,
+        label: e.name,
+        href,
+        ...(e.items && {
+          items: e.items.map((sub) => ({
+            id: sub.href,
+            label: sub.name,
+            href: sub.href,
+          })),
+        }),
+      };
+    }),
+  },
+];
 
 export function DocsSidebar() {
   const pathname = usePathname();
 
   return (
-    <nav
-      aria-label="Component docs"
-      className="sticky top-0 h-screen w-64 shrink-0 overflow-y-auto
-        border-r border-border bg-bg px-4 py-8"
-    >
-      <Link
-        href="/"
-        className="block px-3 mb-8 text-lg font-semibold text-fg tracking-tight
-          hover:text-brand-700 transition-colors"
-      >
-        MVP UI
-      </Link>
-
-      <div className="mb-8">
-        <h2 className="px-3 mb-1 text-xs font-semibold uppercase tracking-widest text-fg-tertiary">
-          Components
-        </h2>
-        <div className="flex flex-col gap-4 mt-3">
-          {componentSections.map((section) => (
-            <NavGroup
-              key={section.title}
-              title={section.title}
-              items={section.items}
-              pathname={pathname}
-            />
-          ))}
-        </div>
+    <aside className="sticky top-0 flex h-screen w-64 shrink-0 flex-col overflow-y-auto border-r border-border bg-bg">
+      <div className="flex h-16 shrink-0 items-center px-5 border-b border-border">
+        <Link
+          href="/"
+          className="text-base font-semibold text-fg tracking-tight hover:text-fg-brand transition-colors"
+        >
+          MVP UI
+        </Link>
       </div>
 
-      <NavGroup title="Examples" items={examples} pathname={pathname} />
-    </nav>
+      <SidebarNavSectionsSubheadings
+        className={INNER_CLS}
+        activeHref={pathname}
+        sections={docSections}
+      />
+
+      <hr className="shrink-0 border-border" />
+
+      <SidebarNavCollapsible
+        className={INNER_CLS}
+        activeHref={pathname}
+        sections={componentNavSections}
+      />
+
+      <hr className="shrink-0 border-border" />
+
+      <SidebarNavCollapsible
+        className={INNER_CLS}
+        activeHref={pathname}
+        sections={exampleNavSections}
+      />
+    </aside>
   );
 }

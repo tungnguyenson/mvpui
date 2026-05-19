@@ -296,8 +296,7 @@ export default function ButtonPage() {
       tagline={
         <>
           Triggers an action. Nine color variants &times; four sizes, with
-          leading/trailing icons, icon-only, and loading states. API mirrors
-          Untitled UI; polymorphism is Radix <code>asChild</code>. Toggle any
+          leading/trailing icons, icon-only, and loading states. Toggle any
           example to dark with the moon.
         </>
       }

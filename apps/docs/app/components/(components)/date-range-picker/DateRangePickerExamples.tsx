@@ -67,6 +67,35 @@ export function ControlledDemo() {
 }
 
 /* -------------------------------------------------------------------------- */
+/*  FullWidthDemo                                                              */
+/* -------------------------------------------------------------------------- */
+
+export function FullWidthDemo() {
+	const now = today(getLocalTimeZone());
+	const [value, setValue] = useState<DateRange | null>({
+		start: now.subtract({ days: 7 }),
+		end: now,
+	});
+
+	return (
+		<div className="w-full">
+			<DateRangePicker
+				label="Report period"
+				value={value}
+				onChange={(v) => setValue(v)}
+				onApply={() => {}}
+				onCancel={() => setValue(null)}
+			/>
+			{value?.start && value?.end && (
+				<p className="mt-3 text-xs text-fg-tertiary text-center">
+					{value.start.toString()} → {value.end.toString()}
+				</p>
+			)}
+		</div>
+	);
+}
+
+/* -------------------------------------------------------------------------- */
 /*  SizesDemo                                                                  */
 /* -------------------------------------------------------------------------- */
 

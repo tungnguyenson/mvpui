@@ -17,14 +17,14 @@ const TriggerIcon = () => (
 );
 
 const PLACEMENTS = [
-  { label: "Top left",     value: "top left" },
-  { label: "Top",          value: "top" },
-  { label: "Top right",    value: "top right" },
-  { label: "Bottom left",  value: "bottom left" },
-  { label: "Bottom",       value: "bottom" },
+  { label: "Top left", value: "top left" },
+  { label: "Top", value: "top" },
+  { label: "Top right", value: "top right" },
+  { label: "Bottom left", value: "bottom left" },
+  { label: "Bottom", value: "bottom" },
   { label: "Bottom right", value: "bottom right" },
-  { label: "Left",         value: "left" },
-  { label: "Right",        value: "right" },
+  { label: "Left", value: "left" },
+  { label: "Right", value: "right" },
 ] as const;
 
 const SECTIONS: DocExample[] = [
@@ -169,9 +169,7 @@ export default function Page() {
       name="Tooltip"
       tagline={
         <>
-          Hover/focus tooltip. API mirrors Untitled UI (
-          <code>title</code>, <code>description</code>, <code>arrow</code>,{" "}
-          <code>placement</code>) on a Radix Tooltip. Surface is
+          Hover/focus tooltip. Surface is
           theme-following (dark in light, light in dark) — dark-safe without a
           new token.
         </>
