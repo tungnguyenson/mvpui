@@ -133,7 +133,7 @@ toast.info("New version available.");`,
               key={pos}
               color="secondary"
               size="sm"
-              onClick={() => toast(`Position: ${pos}`)}
+              onClick={() => toast(`Position: ${pos}`, { position: pos })}
             >
               {pos}
             </Button>

@@ -11,7 +11,7 @@ import {
   forwardRef,
   isValidElement,
   type ButtonHTMLAttributes,
-  type FC,
+  type ComponentType,
   type ReactNode,
 } from "react";
 import { cn } from "../../lib/cn.js";
@@ -108,7 +108,7 @@ export const buttonVariants = cva(
   }
 );
 
-type IconProp = FC<{ className?: string }> | ReactNode;
+type IconProp = ComponentType<{ className?: string }> | ReactNode;
 
 export interface ButtonProps
   extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "color">,
@@ -130,11 +130,14 @@ const LINK_COLORS = ["link-color", "link-gray", "link-destructive"] as const;
 function renderIcon(icon: IconProp, slot: "leading" | "trailing"): ReactNode {
   if (!icon) return null;
   if (isValidElement(icon)) return icon;
-  if (typeof icon === "function") {
-    const Icon = icon as FC<{ className?: string; "data-icon"?: string }>;
+  if (
+    typeof icon === "function" ||
+    (typeof icon === "object" && "render" in (icon as unknown as Record<string, unknown>))
+  ) {
+    const Icon = icon as ComponentType<{ className?: string; "data-icon"?: string }>;
     return <Icon className="size-4" data-icon={slot} />;
   }
-  return icon;
+  return icon as ReactNode;
 }
 
 function Spinner({ centered }: { centered: boolean }) {

@@ -20,8 +20,7 @@ export function BasicUpload() {
   return (
     <div className="flex flex-col items-start gap-3">
       <FileUploadTrigger onSelect={(f) => setFiles(f ? [...f].map((x) => x.name) : [])}>
-        <Button size="sm" color="secondary">
-          <Upload className="size-4" />
+        <Button size="sm" color="secondary" iconLeading={Upload}>
           Upload file
         </Button>
       </FileUploadTrigger>
@@ -47,8 +46,7 @@ export function ImageOnlyUpload() {
         acceptedFileTypes={["image/*"]}
         onSelect={(f) => setFiles(f ? [...f].map((x) => x.name) : [])}
       >
-        <Button size="sm" color="secondary">
-          <Image className="size-4" />
+        <Button size="sm" color="secondary" iconLeading={Image}>
           Upload image
         </Button>
       </FileUploadTrigger>
@@ -74,8 +72,7 @@ export function MultipleFilesUpload() {
         allowsMultiple
         onSelect={(f) => setFiles(f ? [...f].map((x) => x.name) : [])}
       >
-        <Button size="sm" color="secondary">
-          <Upload className="size-4" />
+        <Button size="sm" color="secondary" iconLeading={Upload}>
           Upload multiple files
         </Button>
       </FileUploadTrigger>
@@ -106,8 +103,7 @@ export function DirectoryUpload() {
         acceptDirectory
         onSelect={(f) => setFileCount(f ? f.length : 0)}
       >
-        <Button size="sm" color="secondary">
-          <FolderOpen className="size-4" />
+        <Button size="sm" color="secondary" iconLeading={FolderOpen}>
           Select folder
         </Button>
       </FileUploadTrigger>
@@ -134,8 +130,7 @@ export function CameraCaptureUpload() {
         acceptedFileTypes={["image/*"]}
         onSelect={(f) => setFiles(f ? [...f].map((x) => x.name) : [])}
       >
-        <Button size="sm" color="secondary">
-          <Camera className="size-4" />
+        <Button size="sm" color="secondary" iconLeading={Camera}>
           Take photo
         </Button>
       </FileUploadTrigger>

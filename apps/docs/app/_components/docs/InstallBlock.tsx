@@ -89,7 +89,7 @@ export function InstallBlock({
         Add the package, then import the component.
       </p>
       <div className="flex flex-col gap-3">
-        <CodePanel label="Install" code={addCode} codeHtml={addHtml} />
+        {/* <CodePanel label="Install" code={addCode} codeHtml={addHtml} /> */}
         <CodePanel label="Import" code={usageCode} codeHtml={usageHtml} />
       </div>
     </section>

@@ -6,7 +6,7 @@
  */
 
 import { ChevronDown, Edit2, Trash2, Copy, Scissors, Clipboard, User, Settings, LogOut, Star, Archive, Share2 } from "lucide-react";
-import { Button, Dropdown } from "@mvp-ui/ui";
+import { Dropdown } from "@mvp-ui/ui";
 
 /* -------------------------------------------------------------------------- */
 /*  Basic dropdown with text-only items                                        */
@@ -15,10 +15,10 @@ import { Button, Dropdown } from "@mvp-ui/ui";
 export function BasicDropdown() {
   return (
     <Dropdown.Root>
-      <Button size="sm" color="secondary">
+      <Dropdown.Trigger size="sm" color="secondary">
         Options
         <ChevronDown className="size-4" />
-      </Button>
+      </Dropdown.Trigger>
       <Dropdown.Popover className="w-54">
         <Dropdown.Menu>
           <Dropdown.Section>
@@ -43,10 +43,10 @@ export function BasicDropdown() {
 export function DropdownWithAddons() {
   return (
     <Dropdown.Root>
-      <Button size="sm" color="secondary">
+      <Dropdown.Trigger size="sm" color="secondary">
         Edit
         <ChevronDown className="size-4" />
-      </Button>
+      </Dropdown.Trigger>
       <Dropdown.Popover className="w-54">
         <Dropdown.Menu>
           <Dropdown.Section>
@@ -71,10 +71,10 @@ export function DropdownWithAddons() {
 export function DropdownWithIcons() {
   return (
     <Dropdown.Root>
-      <Button size="sm" color="secondary">
+      <Dropdown.Trigger size="sm" color="secondary">
         Account
         <ChevronDown className="size-4" />
-      </Button>
+      </Dropdown.Trigger>
       <Dropdown.Popover className="w-54">
         <Dropdown.Menu>
           <Dropdown.Section>
@@ -99,10 +99,10 @@ export function DropdownWithIcons() {
 export function DropdownWithAvatar() {
   return (
     <Dropdown.Root>
-      <Button size="sm" color="secondary">
+      <Dropdown.Trigger size="sm" color="secondary">
         Assign to
         <ChevronDown className="size-4" />
-      </Button>
+      </Dropdown.Trigger>
       <Dropdown.Popover className="w-56">
         <Dropdown.Menu>
           <Dropdown.Section>
@@ -136,10 +136,10 @@ export function DropdownWithAvatar() {
 export function DropdownWithSectionHeaders() {
   return (
     <Dropdown.Root>
-      <Button size="sm" color="secondary">
+      <Dropdown.Trigger size="sm" color="secondary">
         Actions
         <ChevronDown className="size-4" />
-      </Button>
+      </Dropdown.Trigger>
       <Dropdown.Popover className="w-56">
         <Dropdown.Menu>
           <Dropdown.Section>
@@ -172,10 +172,10 @@ export function DropdownWithSectionHeaders() {
 export function DropdownWithDisabled() {
   return (
     <Dropdown.Root>
-      <Button size="sm" color="secondary">
+      <Dropdown.Trigger size="sm" color="secondary">
         More
         <ChevronDown className="size-4" />
-      </Button>
+      </Dropdown.Trigger>
       <Dropdown.Popover className="w-54">
         <Dropdown.Menu disabledKeys={["archive", "delete"]}>
           <Dropdown.Section>
@@ -225,10 +225,10 @@ export function DropdownDotsMenu() {
 export function DropdownWithSubmenu() {
   return (
     <Dropdown.Root>
-      <Button size="sm" color="secondary">
+      <Dropdown.Trigger size="sm" color="secondary">
         Actions
         <ChevronDown className="size-4" />
-      </Button>
+      </Dropdown.Trigger>
       <Dropdown.Popover className="w-54">
         <Dropdown.Menu>
           <Dropdown.Section>

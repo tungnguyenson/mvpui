@@ -9,7 +9,7 @@
  * Licensed under MIT
  */
 
-import { type FC, type RefAttributes, type ReactNode, useCallback } from "react";
+import { type FC, type RefAttributes, type ReactNode, type ComponentType, useCallback, createElement, isValidElement } from "react";
 import type {
   ButtonProps as AriaButtonProps,
   MenuItemProps as AriaMenuItemProps,
@@ -18,6 +18,8 @@ import type {
   SeparatorProps as AriaSeparatorProps,
   MenuItemRenderProps,
 } from "react-aria-components";
+import type { VariantProps } from "class-variance-authority";
+import { buttonVariants } from "./buttons/button.js";
 import {
   Button as AriaButton,
   Header as AriaHeader,
@@ -39,11 +41,11 @@ type IconProp = FC<{ className?: string }> | ReactNode;
 
 function renderIcon(icon: IconProp | undefined, className: string) {
   if (!icon) return null;
-  if (typeof icon === "function") {
-    const Icon = icon as FC<{ className?: string }>;
-    return <Icon className={className} />;
+  if (isValidElement(icon)) return icon;
+  if (typeof icon === "function" || (typeof icon === "object" && "render" in (icon as object))) {
+    return createElement(icon as ComponentType<{ className?: string }>, { className });
   }
-  return icon;
+  return icon as ReactNode;
 }
 
 function DotsVerticalIcon({ className }: { className?: string }) {
@@ -296,6 +298,34 @@ const DropdownSeparator = (props: AriaSeparatorProps) => {
 DropdownSeparator.displayName = "DropdownSeparator";
 
 /* -------------------------------------------------------------------------- */
+/*  DropdownTrigger                                                            */
+/* -------------------------------------------------------------------------- */
+
+export interface DropdownTriggerProps
+  extends AriaButtonProps,
+    Pick<VariantProps<typeof buttonVariants>, "color" | "size"> {}
+
+const DropdownTrigger = ({
+  color = "secondary",
+  size = "sm",
+  className,
+  ...props
+}: DropdownTriggerProps) => {
+  return (
+    <AriaButton
+      {...props}
+      className={(state) =>
+        cn(
+          buttonVariants({ color, size }),
+          typeof className === "function" ? className(state) : className,
+        )
+      }
+    />
+  );
+};
+DropdownTrigger.displayName = "DropdownTrigger";
+
+/* -------------------------------------------------------------------------- */
 /*  DropdownDotsButton                                                         */
 /* -------------------------------------------------------------------------- */
 
@@ -351,6 +381,7 @@ DropdownSectionHeader.displayName = "DropdownSectionHeader";
 
 export const Dropdown = {
   Root: AriaMenuTrigger,
+  Trigger: DropdownTrigger,
   Popover: DropdownPopover,
   Menu: DropdownMenu,
   Section: AriaMenuSection,
