@@ -9,6 +9,7 @@ import { OverviewTab } from "./OverviewTab";
 import { PositionsTab } from "./PositionsTab";
 import { PricingTab } from "./PricingTab";
 import { ReconciliationTab } from "./ReconciliationTab";
+import { ShiftsTab } from "./ShiftsTab";
 import { UsersTab } from "./UsersTab";
 
 interface CustomerDetailTabsProps {
@@ -22,6 +23,7 @@ const TAB_DEFS = [
   { id: "locations", label: "Địa điểm" },
   { id: "positions", label: "Công việc" },
   { id: "pricing", label: "Cấu hình giá" },
+  { id: "shifts", label: "Ca làm việc" },
   { id: "reconciliation", label: "Cấu hình đối soát" },
   { id: "users", label: "Nhân viên" },
 ] as const;
@@ -63,6 +65,14 @@ export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsPro
           configs={extras.pricingConfigs}
           customerId={customerId}
           customerName={extras.brand.brandName}
+        />
+      </TabPanel>
+      <TabPanel id="shifts">
+        <ShiftsTab
+          shifts={extras.shifts}
+          positions={extras.positions}
+          locations={extras.locations}
+          pricingConfigs={extras.pricingConfigs}
         />
       </TabPanel>
       <TabPanel id="reconciliation">

@@ -147,6 +147,86 @@ export interface CustomerReconciliation {
   note: string | null;
 }
 
+export type CustomerShiftStatus = "active" | "inactive";
+
+export const CUSTOMER_SHIFT_STATUS_LABELS: Record<
+  CustomerShiftStatus,
+  { label: string; color: "success" | "gray" }
+> = {
+  active: { label: "Đang hoạt động", color: "success" },
+  inactive: { label: "Ngừng hoạt động", color: "gray" },
+};
+
+export type CustomerShiftAttendanceMode = "precise" | "simple";
+export type CustomerShiftOvertimeCalcMode =
+  | "afterScheduledEnd"
+  | "dailyHourThreshold";
+export type CustomerShiftWeekday = 1 | 2 | 3 | 4 | 5 | 6 | 7;
+
+export const CUSTOMER_SHIFT_WEEKDAYS: {
+  key: CustomerShiftWeekday;
+  label: string;
+  isSunday?: boolean;
+}[] = [
+  { key: 1, label: "T2" },
+  { key: 2, label: "T3" },
+  { key: 3, label: "T4" },
+  { key: 4, label: "T5" },
+  { key: 5, label: "T6" },
+  { key: 6, label: "T7" },
+  { key: 7, label: "CN", isSunday: true },
+];
+
+export type CustomerShiftHiringRequestStatus =
+  | "publishing"
+  | "draft"
+  | "paused"
+  | "completed";
+
+export const CUSTOMER_SHIFT_HR_STATUS_LABELS: Record<
+  CustomerShiftHiringRequestStatus,
+  { label: string; color: "warning" | "gray" | "success" | "brand" }
+> = {
+  publishing: { label: "Đang tuyển", color: "warning" },
+  draft: { label: "Nháp", color: "gray" },
+  paused: { label: "Tạm dừng", color: "gray" },
+  completed: { label: "Hoàn thành", color: "success" },
+};
+
+export interface CustomerShiftHiringRequestRef {
+  id: string;
+  title: string;
+  status: CustomerShiftHiringRequestStatus;
+  startDate: string;
+  endDate: string;
+  headcount: number;
+  filled: number;
+}
+
+export interface CustomerShift {
+  id: string;
+  name: string;
+  status: CustomerShiftStatus;
+  positionId: string;
+  locationId: string;
+  weekdays: CustomerShiftWeekday[];
+  startTime: string;
+  endTime: string;
+  breakMinutes: number | null;
+  pricingConfigId: number;
+  requireFullAttendance: boolean;
+  roundingMinutes: number;
+  attendanceMode: CustomerShiftAttendanceMode;
+  allowsOvertime: boolean;
+  overtimeCalcMode: CustomerShiftOvertimeCalcMode | null;
+  overtimeMinMinutesAfterShift: number | null;
+  overtimeDailyHourLimit: number | null;
+  createdAt: string;
+  updatedAt: string;
+  hiringRequestCount: number;
+  hiringRequests: CustomerShiftHiringRequestRef[];
+}
+
 export interface CustomerDetailExtras {
   brand: CustomerBrandProfile;
   legal: CustomerLegalProfile;
@@ -156,6 +236,7 @@ export interface CustomerDetailExtras {
   positions: CustomerPosition[];
   locations: CustomerLocation[];
   pricingConfigs: CustomerPricingConfig[];
+  shifts: CustomerShift[];
   reconciliation: CustomerReconciliation;
 }
 
@@ -258,6 +339,139 @@ const DEFAULT_POSITIONS: CustomerPosition[] = [
   },
 ];
 
+const DEFAULT_SHIFTS: CustomerShift[] = [
+  {
+    id: "SC1001",
+    name: "Ca tối kho ECDC - CTV lấy hàng",
+    status: "active",
+    positionId: "pos-1",
+    locationId: "loc-5",
+    weekdays: [1, 2, 3, 4, 5],
+    startTime: "18:00",
+    endTime: "22:00",
+    breakMinutes: 15,
+    pricingConfigId: 210,
+    requireFullAttendance: true,
+    roundingMinutes: 15,
+    attendanceMode: "precise",
+    allowsOvertime: true,
+    overtimeCalcMode: "afterScheduledEnd",
+    overtimeMinMinutesAfterShift: 30,
+    overtimeDailyHourLimit: null,
+    createdAt: "12/03/2026",
+    updatedAt: "04/05/2026",
+    hiringRequestCount: 3,
+    hiringRequests: [
+      {
+        id: "HR-2451",
+        title: "CTV kho ECDC - Ca tối tuần 21/05",
+        status: "publishing",
+        startDate: "20/05/2026",
+        endDate: "26/05/2026",
+        headcount: 12,
+        filled: 8,
+      },
+      {
+        id: "HR-2447",
+        title: "CTV kho ECDC - Ca tối tuần 14/05",
+        status: "publishing",
+        startDate: "13/05/2026",
+        endDate: "19/05/2026",
+        headcount: 10,
+        filled: 10,
+      },
+      {
+        id: "HR-2432",
+        title: "CTV kho ECDC - Ca tối 28/04 - 03/05",
+        status: "paused",
+        startDate: "28/04/2026",
+        endDate: "03/05/2026",
+        headcount: 8,
+        filled: 5,
+      },
+    ],
+  },
+  {
+    id: "SC1002",
+    name: "Ca cuối tuần đóng gói kho Củ Chi",
+    status: "active",
+    positionId: "pos-2",
+    locationId: "loc-5",
+    weekdays: [6, 7],
+    startTime: "08:00",
+    endTime: "17:00",
+    breakMinutes: 60,
+    pricingConfigId: 210,
+    requireFullAttendance: false,
+    roundingMinutes: 30,
+    attendanceMode: "simple",
+    allowsOvertime: false,
+    overtimeCalcMode: null,
+    overtimeMinMinutesAfterShift: null,
+    overtimeDailyHourLimit: null,
+    createdAt: "01/04/2026",
+    updatedAt: "01/04/2026",
+    hiringRequestCount: 1,
+    hiringRequests: [
+      {
+        id: "HR-2455",
+        title: "Đóng gói cuối tuần 24-25/05",
+        status: "publishing",
+        startDate: "24/05/2026",
+        endDate: "25/05/2026",
+        headcount: 6,
+        filled: 4,
+      },
+    ],
+  },
+  {
+    id: "SC1003",
+    name: "Ca sáng giao hàng Boxme Long Biên",
+    status: "active",
+    positionId: "pos-3",
+    locationId: "loc-2",
+    weekdays: [1, 2, 3, 4, 5, 6],
+    startTime: "06:00",
+    endTime: "12:00",
+    breakMinutes: 0,
+    pricingConfigId: 196,
+    requireFullAttendance: true,
+    roundingMinutes: 15,
+    attendanceMode: "precise",
+    allowsOvertime: true,
+    overtimeCalcMode: "dailyHourThreshold",
+    overtimeMinMinutesAfterShift: null,
+    overtimeDailyHourLimit: 8,
+    createdAt: "20/02/2026",
+    updatedAt: "22/04/2026",
+    hiringRequestCount: 0,
+    hiringRequests: [],
+  },
+  {
+    id: "SC1004",
+    name: "Ca đêm soạn hàng - GHN Xuyên Á",
+    status: "inactive",
+    positionId: "pos-1",
+    locationId: "loc-6",
+    weekdays: [1, 2, 3, 4, 5, 6, 7],
+    startTime: "22:00",
+    endTime: "06:00",
+    breakMinutes: 30,
+    pricingConfigId: 168,
+    requireFullAttendance: true,
+    roundingMinutes: 15,
+    attendanceMode: "precise",
+    allowsOvertime: false,
+    overtimeCalcMode: null,
+    overtimeMinMinutesAfterShift: null,
+    overtimeDailyHourLimit: null,
+    createdAt: "10/12/2025",
+    updatedAt: "15/03/2026",
+    hiringRequestCount: 0,
+    hiringRequests: [],
+  },
+];
+
 const SERVICE_TAGS_BASE = [
   "SaaS ATS - Quản lý Tuyển dụng ATS/Free",
   "On-demand Staffing - Kết nối và quản lý CTV thời vụ Staffing/Enterprise",
@@ -296,6 +510,7 @@ function defaultExtras(customer: CustomerRecord): CustomerDetailExtras {
     positions: DEFAULT_POSITIONS,
     locations: DEFAULT_LOCATIONS,
     pricingConfigs: defaultPricingConfigs(customer.city),
+    shifts: DEFAULT_SHIFTS,
     reconciliation: emptyReconciliation(),
   };
 }
