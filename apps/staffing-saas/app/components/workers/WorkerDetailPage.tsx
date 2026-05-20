@@ -1,10 +1,13 @@
-import { AvatarProfilePhoto, Badge, Button } from "@mvp-ui/ui";
+import { AvatarProfilePhoto, Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   AlertTriangle,
+  CalendarCheck,
+  CalendarDays,
   CreditCard,
   Phone,
+  Receipt,
   ShieldCheck,
   Star,
 } from "lucide-react";
@@ -15,21 +18,6 @@ import {
 } from "./workers-data";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { getAvatarFor, getInitials } from "../_shared/assets";
-
-function SummaryCard({
-  label,
-  value,
-}: {
-  label: string;
-  value: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-fg">{value}</p>
-    </div>
-  );
-}
 
 function SectionCard({
   title,
@@ -144,10 +132,42 @@ export function WorkerDetailPage({ id }: { id: string }) {
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">
-        <SummaryCard label="Điểm đánh giá" value={`★ ${worker.rating}`} />
-        <SummaryCard label="Ca tuần này" value={`${worker.weeklyShifts}`} />
-        <SummaryCard label="Tổng số ca" value={`${worker.totalShifts}`} />
-        <SummaryCard label="Batch gần nhất" value={worker.payment.batchId} />
+        <MetricCard
+          label="Điểm đánh giá"
+          value={`★ ${worker.rating}`}
+          valueSize="md"
+          iconChip={<Star className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Ca tuần này"
+          value={`${worker.weeklyShifts}`}
+          valueSize="md"
+          iconChip={<CalendarCheck className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Tổng số ca"
+          value={`${worker.totalShifts}`}
+          valueSize="md"
+          iconChip={<CalendarDays className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Batch gần nhất"
+          value={worker.payment.batchId}
+          valueSize="md"
+          iconChip={<Receipt className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">

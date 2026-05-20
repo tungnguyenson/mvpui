@@ -342,3 +342,7 @@ export type { RatingBadgeProps } from "./components/rating-badge.js";
 export { RatingBadge } from "./components/rating-badge.js";
 export type { UntitledLogoProps } from "./components/logo.js";
 export { UntitledLogo, UntitledLogoMinimal } from "./components/logo.js";
+export type { SparklineProps, SparklinePoint, SparklineTone } from "./components/sparkline.js";
+export { Sparkline } from "./components/sparkline.js";
+export type { MetricCardProps, MetricTrend } from "./components/metric-card.js";
+export { MetricCard } from "./components/metric-card.js";

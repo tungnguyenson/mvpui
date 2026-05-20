@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -6,7 +6,10 @@ import {
   CalendarDays,
   CircleDollarSign,
   ClipboardList,
+  Clock,
+  Flag,
   MapPin,
+  Target,
 } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
@@ -15,15 +18,6 @@ import {
   type ShiftAssignment,
 } from "./shifts-data";
 import { getAvatarFor, getCustomerLogo, getInitials } from "../_shared/assets";
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-fg">{value}</p>
-    </div>
-  );
-}
 
 function SectionCard({
   title,
@@ -124,13 +118,45 @@ export function ShiftsDetailPage({ id }: { id: string }) {
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">
-        <SummaryCard
+        <MetricCard
           label="Tiến độ fill"
           value={`${shift.assignedCount}/${shift.requiredCount} • ${fillRate}%`}
+          valueSize="md"
+          valueTone="warning"
+          iconChip={<Target className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
+          helpText="Có rủi ro không đạt đủ số lượng CTV cần thiết để vận hành ca này"
         />
-        <SummaryCard label="Pay rate" value={shift.payRate} />
-        <SummaryCard label="Bắt đầu" value={shift.startAt} />
-        <SummaryCard label="Kết thúc" value={shift.endAt} />
+        <MetricCard
+          label="Thù lao"
+          value={shift.payRate}
+          valueSize="md"
+          iconChip={<CircleDollarSign className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Ngày"
+          value="24/05 - 31/05/2026"
+          valueSize="md"
+          iconChip={<CalendarDays className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Khung giờ"
+          value="08:00 - 17:00"
+          valueSize="md"
+          iconChip={<Clock className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">

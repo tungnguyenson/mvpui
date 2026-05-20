@@ -6,13 +6,14 @@ import {
   ButtonUtility,
   DateRangePicker,
   Input,
+  MetricCard,
   Pagination,
   Select,
   SelectItem,
   Table,
   TableCard,
 } from "@mvp-ui/ui";
-import { ChevronRight, Plus, RefreshCw, Search } from "lucide-react";
+import { CheckCircle2, ChevronRight, Plus, RefreshCw, Search, Sparkles, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
@@ -44,24 +45,6 @@ const COLUMNS = [
   { id: "manager", name: "Quản lý" },
   { id: "action", name: "" },
 ];
-
-function SummaryCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
-  );
-}
 
 export function BonusesPage() {
   const [search, setSearch] = useState("");
@@ -119,20 +102,32 @@ export function BonusesPage() {
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">
-        <SummaryCard
+        <MetricCard
           label="Chương trình đang chạy"
           value={`${runningCount}`}
-          description="Đang ảnh hưởng đến batch thanh toán hiện tại."
+          helpText="Đang ảnh hưởng đến batch thanh toán hiện tại."
+          iconChip={<Sparkles className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Ngân sách tối đa (đang chạy)"
           value={formatVnd(totalBudget)}
-          description="Tổng chi phí tối đa nếu mọi CTV đạt điều kiện."
+          helpText="Tổng chi phí tối đa nếu mọi CTV đạt điều kiện."
+          iconChip={<Wallet className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Đã thanh toán (toàn bộ)"
           value={formatVnd(totalPaid)}
-          description="Số tiền đã thực chi cho CTV qua các batch payout."
+          helpText="Số tiền đã thực chi cho CTV qua các batch payout."
+          iconChip={<CheckCircle2 className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
         />
       </div>
 

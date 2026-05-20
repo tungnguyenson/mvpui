@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Button, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Button, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { Building2, ChevronRight, Plus, Search, UserPlus } from "lucide-react";
+import { AlertOctagon, Briefcase, Building2, ChevronRight, Plus, Search, UserPlus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { getCustomerLogo } from "../_shared/assets";
@@ -57,24 +57,6 @@ const COLUMNS = [
   { id: "status", name: "Trạng thái" },
   { id: "detail", name: "" },
 ];
-
-function SummaryCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
-  );
-}
 
 function HiringRow({ record }: { record: HiringRequestRecord }) {
   const status = HIRING_STATUS_LABELS[record.status];
@@ -173,20 +155,32 @@ export function HiringRequestsPage() {
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">
-        <SummaryCard
+        <MetricCard
           label="Request đang mở"
           value={`${openCount}`}
-          description="Nhu cầu tuyển khách hàng đang gửi cho đội vận hành."
+          helpText="Nhu cầu tuyển khách hàng đang gửi cho đội vận hành."
+          iconChip={<Briefcase className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Request quá hạn"
           value={`${overdueCount}`}
-          description="Đã quá deadline, cần xử lý hoặc thương lượng lại với khách."
+          helpText="Đã quá deadline, cần xử lý hoặc thương lượng lại với khách."
+          iconChip={<AlertOctagon className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="error"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="CTV cần fill thêm"
           value={`${totalNeeded}`}
-          description="Tổng số headcount còn thiếu trong toàn bộ request hiện hiển thị."
+          helpText="Tổng số headcount còn thiếu trong toàn bộ request hiện hiển thị."
+          iconChip={<UserPlus className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
         />
       </div>
 

@@ -1,9 +1,10 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   AlertTriangle,
   CalendarClock,
+  FileWarning,
   Phone,
   Receipt,
   UserCircle2,
@@ -16,15 +17,6 @@ import {
   type ViolationCase,
 } from "./worker-violations-data";
 import { WorkerProfilePhoto } from "../_shared";
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-fg">{value}</p>
-    </div>
-  );
-}
 
 function SectionCard({
   title,
@@ -149,11 +141,35 @@ export function WorkerViolationsDetailPage({ id }: { id: string }) {
         </div>
       }
     >
-      <div className="grid gap-4 lg:grid-cols-4">
-        <SummaryCard label="Tổng số case" value={`${record.totalCases}`} />
-        <SummaryCard label="Mức gần nhất" value={severity.label} />
-        <SummaryCard label="Tổng phạt" value={record.totalPenalty} />
-        <SummaryCard label="Lần gần nhất" value={record.latestAt} />
+      <div className="grid gap-4 lg:grid-cols-3">
+        <MetricCard
+          label="Tổng số case"
+          value={`${record.totalCases}`}
+          valueSize="md"
+          iconChip={<FileWarning className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
+        />
+
+        <MetricCard
+          label="Tổng phạt"
+          value={record.totalPenalty}
+          valueSize="md"
+          iconChip={<Receipt className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="error"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Lần gần nhất"
+          value={record.latestAt}
+          valueSize="md"
+          iconChip={<CalendarClock className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
       </div>
 
       <SectionCard

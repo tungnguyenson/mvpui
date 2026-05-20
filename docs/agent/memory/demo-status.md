@@ -137,6 +137,8 @@ Nav registration: `apps/docs/app/nav.ts`
 | LineChart | `@mvp-ui/charts` | ✅ complete | Recharts; area/line; gradient fill; dashed lines; 3 doc sections |
 | PieChart | `@mvp-ui/charts` | ✅ complete | Recharts; donut/pie; per-item colors; 3 doc sections |
 | ProgressCircle | `@mvp-ui/charts` | ✅ complete | Recharts RadialBar; 4 sizes; title/subtitle; custom colors; 4 doc sections |
+| Sparkline | `@mvp-ui/ui` | ✅ complete | Lightweight inline SVG; tone palette (brand/success/error/warning/neutral); smooth/straight; filled/line; 7 doc sections |
+| MetricCard | `@mvp-ui/ui` | ✅ complete | Label+value tile; trend arrow + colored change; built-in Sparkline shorthand; prefix/suffix; loading skeleton; href anchor; chart slot; 10 doc sections |
 | `/examples/dashboard-lite` | `@mvp-ui/ui` | ✅ complete | stat cards, orders table, traffic sources, team activity, deal tags |
 
 ## Example Pages

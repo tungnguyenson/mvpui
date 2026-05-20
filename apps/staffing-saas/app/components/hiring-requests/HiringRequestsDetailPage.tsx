@@ -1,13 +1,15 @@
-import { Avatar, Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   Building2,
   CalendarRange,
   CircleDollarSign,
+  Clock,
   MapPin,
   Target,
   UserPlus,
+  Users,
 } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
@@ -18,15 +20,6 @@ import {
   type HiringTimelineEntry,
 } from "./hiring-requests-data";
 import { getAvatarFor, getCustomerLogo, getInitials } from "../_shared/assets";
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-fg">{value}</p>
-    </div>
-  );
-}
 
 function SectionCard({
   title,
@@ -161,13 +154,42 @@ export function HiringRequestsDetailPage({ id }: { id: string }) {
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">
-        <SummaryCard label="Headcount" value={`${record.headcount} người`} />
-        <SummaryCard
+        <MetricCard
+          label="Headcount"
+          value={`${record.headcount} người`}
+          valueSize="md"
+          iconChip={<Users className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
           label="Tiến độ fill"
           value={`${record.filled}/${record.headcount} • ${fillRate}%`}
+          valueSize="md"
+          iconChip={<Target className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
         />
-        <SummaryCard label="Còn cần" value={`${remaining} người`} />
-        <SummaryCard label="Deadline" value={record.deadline} />
+        <MetricCard
+          label="Còn cần"
+          value={`${remaining} người`}
+          valueSize="md"
+          iconChip={<UserPlus className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Deadline"
+          value={record.deadline}
+          valueSize="md"
+          iconChip={<Clock className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">

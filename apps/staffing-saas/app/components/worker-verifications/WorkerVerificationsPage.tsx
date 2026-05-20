@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight, FileSearch, Search, ShieldCheck, ShieldQuestion } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
@@ -29,23 +29,6 @@ const COLUMNS = [
   { id: "detail", name: "" },
 ];
 
-function SummaryCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
-  );
-}
 
 function VerificationRow({ record }: { record: VerificationRecord }) {
   const status = VERIFICATION_STATUS_LABELS[record.status];
@@ -136,20 +119,32 @@ export function WorkerVerificationsPage() {
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">
-        <SummaryCard
+        <MetricCard
           label="Đã xác thực"
           value={`${verifiedCount}`}
-          description="Workers đủ điều kiện nhận ca và được khách hàng yêu cầu."
+          helpText="Workers đủ điều kiện nhận ca và được khách hàng yêu cầu."
+          iconChip={<ShieldCheck className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Đang rà soát"
           value={`${reviewCount}`}
-          description="Hồ sơ cần đội vận hành kiểm tra trước khi cho phép vào ca."
+          helpText="Hồ sơ cần đội vận hành kiểm tra trước khi cho phép vào ca."
+          iconChip={<FileSearch className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Chờ bổ sung"
           value={`${missingCount}`}
-          description="Workers còn thiếu tài liệu hoặc thông tin pháp lý quan trọng."
+          helpText="Workers còn thiếu tài liệu hoặc thông tin pháp lý quan trọng."
+          iconChip={<ShieldQuestion className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="error"
+          iconPlacement="inline"
         />
       </div>
 

@@ -1,8 +1,27 @@
 "use client";
 
-import { Badge, Button, Input, Table, TableCard } from "@mvp-ui/ui";
+import {
+  Badge,
+  Button,
+  Input,
+  MetricCard,
+  Tab,
+  TabList,
+  Table,
+  TableCard,
+  Tabs,
+} from "@mvp-ui/ui";
 import Link from "next/link";
-import { Building2, ChevronRight, Plus, Search } from "lucide-react";
+import {
+  Briefcase,
+  Building2,
+  ChevronRight,
+  Plus,
+  Rocket,
+  Search,
+  Target,
+} from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
 import { useMemo, useState } from "react";
 import {
   CUSTOMERS,
@@ -76,17 +95,23 @@ function CustomerSummaryCard({
   label,
   value,
   description,
+  icon: Icon,
 }: {
   label: string;
   value: string;
   description: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }) {
   return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
+    <MetricCard
+      label={label}
+      value={value}
+      helpText={description}
+      iconChip={<Icon className="size-5" />}
+      iconChipStyle="tint"
+      featuredIconColor="brand"
+      iconPlacement="inline"
+    />
   );
 }
 
@@ -473,50 +498,52 @@ export function CustomersPage() {
     >
       <div className="grid gap-4 lg:grid-cols-3">
         <CustomerSummaryCard
-          label="Khách đang tuyển"
+          label="Khách hàng đang tuyển"
           value={`${counts.hiring}`}
           description={`${totalActiveRequests} hiring requests và ${totalOpenShifts} ca đang mở.`}
+          icon={Briefcase}
         />
         <CustomerSummaryCard
           label="Pipeline Leads"
           value={`${counts.lead}`}
           description="Khách tiềm năng đang được sale theo đuổi."
+          icon={Target}
         />
         <CustomerSummaryCard
           label="Đang Onboarding"
           value={`${counts.onboarding}`}
           description="Khách đã ký, chờ go-live trong 30-60 ngày."
+          icon={Rocket}
         />
       </div>
 
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
-          <div className="flex flex-wrap gap-1 border-b border-border-secondary -mx-4 px-4 -mb-4 pb-0">
-            {TABS.map((t) => {
-              const active = t.id === tab;
-              return (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => setTab(t.id)}
-                  className={`relative -mb-px flex items-center gap-2 border-b-2 px-3 py-2.5 text-sm font-medium transition-colors ${active
-                    ? "border-border-brand text-fg-brand"
-                    : "border-transparent text-fg-tertiary hover:text-fg"
-                    }`}
-                >
-                  <span>{t.label}</span>
-                  <span
-                    className={`rounded-full px-2 py-0.5 text-xs font-medium ${active
-                      ? "bg-primary text-primary-fg"
-                      : "bg-bg-secondary text-fg-tertiary"
-                      }`}
-                  >
-                    {counts[t.id]}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          <Tabs
+            variant="underline"
+            selectedKey={tab}
+            onSelectionChange={(key) => setTab(key as TabId)}
+            className="-mx-4 -mb-4 px-4"
+          >
+            <TabList aria-label="Lọc khách hàng theo trạng thái">
+              {TABS.map((t) => {
+                const active = t.id === tab;
+                return (
+                  <Tab key={t.id} id={t.id}>
+                    <span>{t.label}</span>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${active
+                        ? "bg-primary text-primary-fg"
+                        : "bg-bg-secondary text-fg-tertiary"
+                        }`}
+                    >
+                      {counts[t.id]}
+                    </span>
+                  </Tab>
+                );
+              })}
+            </TabList>
+          </Tabs>
 
           <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] mt-4">
             <Input

@@ -1,7 +1,7 @@
-import { Avatar, Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
+import { Activity, CalendarPlus, Mail, MapPin, Phone, ShieldCheck, UserCog } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   USER_ROLE_LABELS,
@@ -11,15 +11,6 @@ import {
   type UserPermission,
 } from "./users-data";
 import { getAvatarFor, getInitials } from "../_shared/assets";
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-fg">{value}</p>
-    </div>
-  );
-}
 
 function SectionCard({
   title,
@@ -121,10 +112,42 @@ export function UsersDetailPage({ id }: { id: string }) {
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">
-        <SummaryCard label="Vai trò" value={USER_ROLE_LABELS[user.role]} />
-        <SummaryCard label="Khu vực phụ trách" value={user.region} />
-        <SummaryCard label="Gia nhập" value={user.joinedAt} />
-        <SummaryCard label="Hoạt động gần nhất" value={user.lastActiveAt} />
+        <MetricCard
+          label="Vai trò"
+          value={USER_ROLE_LABELS[user.role]}
+          valueSize="md"
+          iconChip={<UserCog className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Khu vực phụ trách"
+          value={user.region}
+          valueSize="md"
+          iconChip={<MapPin className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Gia nhập"
+          value={user.joinedAt}
+          valueSize="md"
+          iconChip={<CalendarPlus className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Hoạt động gần nhất"
+          value={user.lastActiveAt}
+          valueSize="md"
+          iconChip={<Activity className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">

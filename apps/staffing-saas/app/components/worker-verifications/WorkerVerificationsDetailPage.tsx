@@ -1,10 +1,12 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   AlertTriangle,
   CreditCard,
   FileCheck2,
+  FileWarning,
+  Hash,
   Phone,
   UserSquare2,
 } from "lucide-react";
@@ -16,15 +18,6 @@ import {
   type VerificationTimelineEntry,
 } from "./worker-verifications-data";
 import { WorkerProfilePhoto } from "../_shared";
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-fg">{value}</p>
-    </div>
-  );
-}
 
 function SectionCard({
   title,
@@ -139,10 +132,42 @@ export function WorkerVerificationsDetailPage({ id }: { id: string }) {
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">
-        <SummaryCard label="SĐT" value={record.phone} />
-        <SummaryCard label="CCCD/CMND" value={record.nationalId} />
-        <SummaryCard label="MST" value={record.taxId} />
-        <SummaryCard label="Tài liệu thiếu" value={`${record.missingDocs.length}`} />
+        <MetricCard
+          label="SĐT"
+          value={record.phone}
+          valueSize="md"
+          iconChip={<Phone className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="CCCD/CMND"
+          value={record.nationalId}
+          valueSize="md"
+          iconChip={<UserSquare2 className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="MST"
+          value={record.taxId}
+          valueSize="md"
+          iconChip={<Hash className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Tài liệu thiếu"
+          value={`${record.missingDocs.length}`}
+          valueSize="md"
+          iconChip={<FileWarning className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="error"
+          iconPlacement="inline"
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">

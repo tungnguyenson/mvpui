@@ -1,7 +1,7 @@
-import { Avatar, Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { AlertCircle, Building2, CalendarDays, ClipboardCheck, Clock } from "lucide-react";
+import { AlertCircle, AlertTriangle, Building2, CalendarDays, CheckCircle2, ClipboardCheck, Clock, Users } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   ATTENDANCE_LABELS,
@@ -10,15 +10,6 @@ import {
   type AttendanceRecord,
 } from "./timesheets-data";
 import { getAvatarFor, getCustomerLogo, getInitials } from "../_shared/assets";
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-fg">{value}</p>
-    </div>
-  );
-}
 
 function SectionCard({
   title,
@@ -140,14 +131,32 @@ export function TimesheetsDetailPage({ id }: { id: string }) {
         </div>
       }
     >
-      <div className="grid gap-4 lg:grid-cols-4">
-        <SummaryCard label="Workers dự kiến" value={`${record.expectedCount}`} />
-        <SummaryCard
+      <div className="grid gap-4 lg:grid-cols-3">
+        <MetricCard
+          label="Workers dự kiến"
+          value={`${record.expectedCount}`}
+          iconChip={<Users className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
           label="Đã check-in"
           value={`${record.checkedInCount}/${record.expectedCount}`}
+          iconChip={<CheckCircle2 className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
         />
-        <SummaryCard label="Bất thường" value={`${record.exceptions}`} />
-        <SummaryCard label="Khách hàng" value={record.customer} />
+        <MetricCard
+          label="Bất thường"
+          value={`${record.exceptions}`}
+          iconChip={<AlertTriangle className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
+        />
+
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">

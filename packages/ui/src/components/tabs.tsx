@@ -94,7 +94,7 @@ export function TabList<T extends object>({
       ref={ref}
       className={cn(
         "flex",
-        variant === "underline" && "border-b border-border",
+        variant === "underline" && "gap-3 border-b border-border",
         variant === "pill" &&
           "gap-1 rounded-lg bg-bg-secondary p-1 w-max",
         className,

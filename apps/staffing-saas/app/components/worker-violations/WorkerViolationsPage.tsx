@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, Search } from "lucide-react";
+import { AlertTriangle, ChevronRight, Lock, PauseCircle, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
@@ -29,23 +29,6 @@ const COLUMNS = [
   { id: "detail", name: "" },
 ];
 
-function SummaryCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
-  );
-}
 
 function ViolationRow({ record }: { record: ViolationWorkerRecord }) {
   const status = VIOLATION_STATUS_LABELS[record.status];
@@ -139,20 +122,32 @@ export function WorkerViolationsPage() {
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">
-        <SummaryCard
+        <MetricCard
           label="Workers đang bị khóa"
           value={`${lockedCount}`}
-          description="Tài khoản hiện không nhận ca được do vi phạm nghiêm trọng."
+          helpText="Tài khoản hiện không nhận ca được do vi phạm nghiêm trọng."
+          iconChip={<Lock className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="error"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Workers tạm đình chỉ"
           value={`${suspendedCount}`}
-          description="Đang trong thời gian xem xét hoặc kỷ luật ngắn hạn."
+          helpText="Đang trong thời gian xem xét hoặc kỷ luật ngắn hạn."
+          iconChip={<PauseCircle className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Vi phạm nghiêm trọng gần đây"
           value={`${severeCount}`}
-          description="Case gần nhất ở mức nghiêm trọng cần đội vận hành theo sát."
+          helpText="Case gần nhất ở mức nghiêm trọng cần đội vận hành theo sát."
+          iconChip={<AlertTriangle className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="error"
+          iconPlacement="inline"
         />
       </div>
 

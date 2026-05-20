@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { CalendarDays, ChevronRight, Search } from "lucide-react";
+import { AlertOctagon, CalendarDays, ChevronRight, Clock, Search, Target } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
@@ -27,24 +27,6 @@ const COLUMNS = [
   { id: "pay", name: "Pay rate" },
   { id: "detail", name: "" },
 ];
-
-function SummaryCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
-  );
-}
 
 function ShiftRow({ shift }: { shift: ShiftRecord }) {
   const status = SHIFT_STATUS_LABELS[shift.status];
@@ -132,20 +114,32 @@ export function ShiftsPage() {
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">
-        <SummaryCard
+        <MetricCard
           label="Ca đang mở"
           value={`${openCount}`}
-          description="Các ca cần đội vận hành tiếp tục bổ sung workers."
+          helpText="Các ca cần đội vận hành tiếp tục bổ sung workers."
+          iconChip={<Clock className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Ca thiếu gấp"
           value={`${criticalCount}`}
-          description="Ca có tỉ lệ fill thấp và cần phản ứng nhanh."
+          helpText="Ca có tỉ lệ fill thấp và cần phản ứng nhanh."
+          iconChip={<AlertOctagon className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="error"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Tiến độ fill"
           value={`${totalAssigned}/${totalRequired}`}
-          description="Tổng số worker đã nhận ca so với headcount yêu cầu."
+          helpText="Tổng số worker đã nhận ca so với headcount yêu cầu."
+          iconChip={<Target className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
         />
       </div>
 

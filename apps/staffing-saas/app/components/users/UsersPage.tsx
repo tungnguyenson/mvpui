@@ -1,8 +1,8 @@
 "use client";
 
-import { Avatar, Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Avatar, Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, Search } from "lucide-react";
+import { ChevronRight, Mail, Search, UserCheck, UsersRound } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
@@ -28,24 +28,6 @@ const COLUMNS = [
   { id: "status", name: "Trạng thái" },
   { id: "detail", name: "" },
 ];
-
-function SummaryCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
-  );
-}
 
 function UserRow({ user }: { user: UserRecord }) {
   const status = USER_STATUS_LABELS[user.status];
@@ -128,20 +110,32 @@ export function UsersPage() {
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">
-        <SummaryCard
+        <MetricCard
           label="User đang hoạt động"
           value={`${activeCount}`}
-          description="Tài khoản nội bộ đang vận hành hệ thống mỗi ngày."
+          helpText="Tài khoản nội bộ đang vận hành hệ thống mỗi ngày."
+          iconChip={<UserCheck className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Đang chờ kích hoạt"
           value={`${invitedCount}`}
-          description="User đã được mời nhưng chưa xác nhận đăng nhập."
+          helpText="User đã được mời nhưng chưa xác nhận đăng nhập."
+          iconChip={<Mail className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Điều phối viên"
           value={`${operationsCount}`}
-          description="User chịu trách nhiệm điều phối ca và worker theo khu vực."
+          helpText="User chịu trách nhiệm điều phối ca và worker theo khu vực."
+          iconChip={<UsersRound className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
         />
       </div>
 

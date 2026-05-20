@@ -83,6 +83,8 @@ export default defineConfig({
     "date-range-picker": "src/components/date-range-picker.tsx",
     carousel: "src/components/carousel.tsx",
     accordion: "src/components/accordion.tsx",
+    sparkline: "src/components/sparkline.tsx",
+    "metric-card": "src/components/metric-card.tsx",
   },
   format: ["esm", "cjs"],
   dts: true,

@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, Clock, Search } from "lucide-react";
+import { AlertTriangle, CheckCircle2, ChevronRight, Clock, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
@@ -28,23 +28,6 @@ const COLUMNS = [
   { id: "detail", name: "" },
 ];
 
-function SummaryCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
-  );
-}
 
 function TimesheetRow({ record }: { record: TimesheetRecord }) {
   const status = TIMESHEET_STATUS_LABELS[record.status];
@@ -130,20 +113,32 @@ export function TimesheetsPage() {
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">
-        <SummaryCard
+        <MetricCard
           label="Ca đang diễn ra"
           value={`${inProgress}`}
-          description="Workers còn đang trong ca, chưa hoàn tất chấm công."
+          helpText="Workers còn đang trong ca, chưa hoàn tất chấm công."
+          iconChip={<Clock className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Bất thường chờ xử lý"
           value={`${exceptions}`}
-          description="Trường hợp đi trễ, vắng mặt hoặc thiếu check-out cần xem lại."
+          helpText="Trường hợp đi trễ, vắng mặt hoặc thiếu check-out cần xem lại."
+          iconChip={<AlertTriangle className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
         />
-        <SummaryCard
+        <MetricCard
           label="Ca đã chốt"
           value={`${closed}`}
-          description="Số ca đã chốt chấm công, sẵn sàng đẩy sang đối soát."
+          helpText="Số ca đã chốt chấm công, sẵn sàng đẩy sang đối soát."
+          iconChip={<CheckCircle2 className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="success"
+          iconPlacement="inline"
         />
       </div>
 

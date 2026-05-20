@@ -105,6 +105,8 @@ export const componentSections: NavSection[] = [
     title: "Data",
     items: [
       { name: "Table", href: "/components/table" },
+      { name: "Metric Card", href: "/components/metric-card" },
+      { name: "Sparkline", href: "/components/sparkline" },
       { name: "Bar Chart", href: "/components/bar-chart" },
       { name: "Line Chart", href: "/components/line-chart" },
       { name: "Pie Chart", href: "/components/pie-chart" },

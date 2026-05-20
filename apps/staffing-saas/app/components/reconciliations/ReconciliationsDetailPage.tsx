@@ -1,7 +1,7 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Building2, CalendarRange, Calculator, User2 } from "lucide-react";
+import { Building2, CalendarRange, Calculator, CalendarCheck, CircleDollarSign, Percent, Scale, User2 } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   DISCREPANCY_LABELS,
@@ -11,15 +11,6 @@ import {
   type DiscrepancyItem,
 } from "./reconciliations-data";
 import { getCustomerLogo } from "../_shared/assets";
-
-function SummaryCard({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-xl font-semibold text-fg">{value}</p>
-    </div>
-  );
-}
 
 function SectionCard({
   title,
@@ -136,10 +127,42 @@ export function ReconciliationsDetailPage({ id }: { id: string }) {
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">
-        <SummaryCard label="Tổng số ca" value={`${record.totalShifts}`} />
-        <SummaryCard label="Tổng tiền" value={record.totalAmount} />
-        <SummaryCard label="Chênh lệch" value={record.variance} />
-        <SummaryCard label="Tỉ lệ" value={record.variancePercent} />
+        <MetricCard
+          label="Tổng số ca"
+          value={`${record.totalShifts}`}
+          valueSize="md"
+          iconChip={<CalendarCheck className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Tổng tiền"
+          value={record.totalAmount}
+          valueSize="md"
+          iconChip={<CircleDollarSign className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Chênh lệch"
+          value={record.variance}
+          valueSize="md"
+          iconChip={<Scale className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Tỉ lệ"
+          value={record.variancePercent}
+          valueSize="md"
+          iconChip={<Percent className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
