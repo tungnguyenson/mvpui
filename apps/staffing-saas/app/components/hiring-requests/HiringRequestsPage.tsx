@@ -1,15 +1,44 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Button, Input, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, Search, UserPlus } from "lucide-react";
+import { Building2, ChevronRight, Plus, Search, UserPlus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { getCustomerLogo } from "../_shared/assets";
 import {
   HIRING_REQUESTS,
   HIRING_STATUS_LABELS,
   type HiringRequestRecord,
 } from "./hiring-requests-data";
+
+function CustomerCell({
+  customerId,
+  customerName,
+}: {
+  customerId: string;
+  customerName: string;
+}) {
+  const logo = getCustomerLogo(customerId);
+  return (
+    <div className="flex items-center gap-2.5">
+      {logo ? (
+        <div className="size-7 shrink-0 overflow-hidden rounded-md">
+          <img
+            src={logo.mark}
+            alt={`Logo ${customerName}`}
+            className="size-full object-cover"
+          />
+        </div>
+      ) : (
+        <div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-bg-secondary text-fg-tertiary">
+          <Building2 className="size-4" />
+        </div>
+      )}
+      <span className="truncate text-sm text-fg">{customerName}</span>
+    </div>
+  );
+}
 
 const FILTERS = [
   { id: "all", label: "Tất cả" },
@@ -69,7 +98,7 @@ function HiringRow({ record }: { record: HiringRequestRecord }) {
         </Link>
       </Table.Cell>
       <Table.Cell>
-        <div className="text-sm text-fg">{record.customer}</div>
+        <CustomerCell customerId={record.customerId} customerName={record.customer} />
       </Table.Cell>
       <Table.Cell>
         <div className="text-sm text-fg">{record.headcount} người</div>
@@ -127,12 +156,19 @@ export function HiringRequestsPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Tuyển dụng</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Theo dõi các hiring requests từ khách hàng và mức độ lấp đầy nhu cầu nhân sự
-            theo từng tài khoản và khu vực.
-          </p>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl font-semibold text-fg">Tuyển dụng</h1>
+            <p className="max-w-3xl text-base text-fg-tertiary">
+              Theo dõi các hiring requests từ khách hàng và mức độ lấp đầy nhu cầu nhân sự
+              theo từng tài khoản và khu vực.
+            </p>
+          </div>
+          <div className="flex shrink-0 items-center gap-3">
+            <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
+              Tạo Hiring Request mới
+            </Button>
+          </div>
         </div>
       }
     >
@@ -172,11 +208,10 @@ export function HiringRequestsPage() {
                     key={filter.id}
                     type="button"
                     onClick={() => setStatusFilter(filter.id)}
-                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
-                      active
-                        ? "border-border-brand bg-bg-secondary text-fg"
-                        : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                    }`}
+                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${active
+                      ? "border-border-brand bg-bg-secondary text-fg"
+                      : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
+                      }`}
                   >
                     {filter.label}
                   </button>

@@ -197,23 +197,30 @@ export interface CustomerBrand {
   mark: string;
 }
 
+const VIEC = (path: string) => `https://business.viec.co/storage/companies/${path}`;
+const sameLogo = (path: string): CustomerBrand => ({ full: VIEC(path), mark: VIEC(path) });
+
 export const CUSTOMER_LOGOS: Record<string, CustomerBrand> = {
-  "highlands-commerce": {
-    full: "https://business.viec.co/storage/companies/1591/logo.png",
-    mark: "https://business.viec.co/storage/companies/1591/logo.png",
-  },
-  "gomart-distribution": {
-    full: "https://business.viec.co/storage/companies/42/logo.png",
-    mark: "https://business.viec.co/storage/companies/42/logo.png",
-  },
-  "medistar-clinic": {
-    full: "https://business.viec.co/storage/companies/2312/logo.png",
-    mark: "https://business.viec.co/storage/companies/2312/logo.png",
-  },
-  "nova-event-partners": {
-    full: "https://business.viec.co/storage/companies/July2021/logo83799.png",
-    mark: "https://business.viec.co/storage/companies/July2021/logo83799.png",
-  },
+  "highlands-commerce": sameLogo("1591/logo.png"),
+  "gomart-distribution": sameLogo("42/logo.png"),
+  "medistar-clinic": sameLogo("2312/logo.png"),
+  "nova-event-partners": sameLogo("July2021/logo83799.png"),
+  "ghtk-logistics": sameLogo("1553/logo.jpg"),
+  "viettel-post-hcm": sameLogo("December2022/unnamed.png"),
+  "shopee-express": sameLogo("3078/logo.png"),
+  "bach-hoa-xanh": sameLogo("1793/logo.png"),
+  "tiki-now-smart-logistics": sameLogo("January2023/logo_(1).png"),
+  "foodmap": sameLogo("1719/logo.png"),
+  "boxme": sameLogo("October2022/Logo-Boxme-New.png"),
+  "tiki-market": sameLogo("6/logo.png"),
+  "seedcom-food": sameLogo("April2022/62069254_1170385843140023_3169201825928708096_n.png"),
+  "skt-vina": sameLogo("1540/logo.png"),
+  "tc-logistics": sameLogo("August2022/tcwt.jpeg"),
+  "baspro": sameLogo("2680/logo.jpg"),
+  "ship60": sameLogo("748/logo.png"),
+  "viec-co": sameLogo("1/logo.png"),
+  "tgdd": sameLogo("1757/logo.png"),
+  "shopee-retail": sameLogo("3128/logo.jpg"),
 };
 
 export function getCustomerLogo(customerId?: string): CustomerBrand | undefined {

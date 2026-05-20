@@ -3,7 +3,9 @@
 import { Tab, TabList, TabPanel, Tabs } from "@mvp-ui/ui";
 import { useSearchParams } from "next/navigation";
 import type { CustomerDetailExtras } from "../customer-detail-data";
+import { LocationsTab } from "./LocationsTab";
 import { OverviewTab } from "./OverviewTab";
+import { PositionsTab } from "./PositionsTab";
 import { PricingTab } from "./PricingTab";
 import { ReconciliationTab } from "./ReconciliationTab";
 import { UsersTab } from "./UsersTab";
@@ -15,6 +17,8 @@ interface CustomerDetailTabsProps {
 
 const TAB_DEFS = [
   { id: "overview", label: "Tổng quan" },
+  { id: "locations", label: "Địa điểm" },
+  { id: "positions", label: "Vị trí làm việc" },
   { id: "users", label: "Quản lý user" },
   { id: "pricing", label: "Cấu hình chi trả & phí" },
   { id: "reconciliation", label: "Cấu hình đối soát" },
@@ -39,6 +43,12 @@ export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsPro
 
       <TabPanel id="overview">
         <OverviewTab extras={extras} />
+      </TabPanel>
+      <TabPanel id="locations">
+        <LocationsTab locations={extras.locations} />
+      </TabPanel>
+      <TabPanel id="positions">
+        <PositionsTab positions={extras.positions} />
       </TabPanel>
       <TabPanel id="users">
         <UsersTab users={extras.users} />

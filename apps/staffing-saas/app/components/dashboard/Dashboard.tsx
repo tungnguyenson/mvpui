@@ -13,6 +13,7 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock3,
+  Download,
   Plus,
   Search,
   ShieldAlert,
@@ -404,71 +405,98 @@ export function Dashboard() {
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
-            <Button color="secondary" size="sm" iconLeading={<Upload className="size-4" />}>
-              Nhập dữ liệu
+            <Button color="secondary" size="sm" iconLeading={<Download className="size-4" />}>
+              Xuất dữ liệu
             </Button>
-            <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-              Tạo hiring request
-            </Button>
+
           </div>
         </div>
       }
     >
-        <div className="flex flex-col gap-5 xl:flex-row">
-          {METRICS.map((metric) => (
-            <MetricCard key={metric.label} {...metric} />
-          ))}
-        </div>
+      <div className="flex flex-col gap-5 xl:flex-row">
+        {METRICS.map((metric) => (
+          <MetricCard key={metric.label} {...metric} />
+        ))}
+      </div>
 
-        <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
-          {MODULES.map((module) => (
-            <ModuleTile key={module.href} {...module} />
-          ))}
-        </div>
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+        {MODULES.map((module) => (
+          <ModuleTile key={module.href} {...module} />
+        ))}
+      </div>
 
-        <div className="grid gap-6 xl:grid-cols-[1.0fr_1.0fr]">
-          <SectionCard
-            title="Hiring requests cần ưu tiên"
-            description="Các nhu cầu tuyển từ khách hàng đang đến hạn và cần tăng tốc fill."
-            actionLabel="Xem tất cả"
-            actionHref={APP_ROUTES.hiringRequests}
-          >
-            <div className="flex flex-col gap-4">
-              {HIRING_REQUESTS.map((request) => (
-                <Link
-                  key={request.id}
-                  href={`${APP_ROUTES.hiringRequests}/${request.id.toLowerCase()}`}
-                  className="rounded-lg border border-border-secondary bg-bg-secondary p-4 transition-colors hover:bg-bg-tertiary"
-                >
-                  <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-semibold text-fg">{request.role}</span>
-                        <Badge color="brand" type="pill-color" size="sm">
-                          {request.id}
-                        </Badge>
-                      </div>
-                      <p className="mt-1 text-sm text-fg-tertiary">
-                        {request.customer} • {request.city}
-                      </p>
+      <div className="grid gap-6 xl:grid-cols-[1.0fr_1.0fr]">
+        <SectionCard
+          title="Hiring requests cần ưu tiên"
+          description="Các nhu cầu tuyển từ khách hàng đang đến hạn và cần tăng tốc fill."
+          actionLabel="Xem tất cả"
+          actionHref={APP_ROUTES.hiringRequests}
+        >
+          <div className="flex flex-col gap-4">
+            {HIRING_REQUESTS.map((request) => (
+              <Link
+                key={request.id}
+                href={`${APP_ROUTES.hiringRequests}/${request.id.toLowerCase()}`}
+                className="rounded-lg border border-border-secondary bg-bg-secondary p-4 transition-colors hover:bg-bg-tertiary"
+              >
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-fg">{request.role}</span>
+                      <Badge color="brand" type="pill-color" size="sm">
+                        {request.id}
+                      </Badge>
                     </div>
-                    <div className="text-sm text-fg-tertiary">
-                      Deadline: <span className="font-medium text-fg">{request.deadline}</span>
+                    <p className="mt-1 text-sm text-fg-tertiary">
+                      {request.customer} • {request.city}
+                    </p>
+                  </div>
+                  <div className="text-sm text-fg-tertiary">
+                    Deadline: <span className="font-medium text-fg">{request.deadline}</span>
+                  </div>
+                </div>
+                <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                  <div>
+                    <p className="text-xs font-medium text-fg-tertiary">Đã fill</p>
+                    <p className="mt-1 text-sm font-semibold text-fg">{request.openSlots}</p>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <div className="flex items-center justify-between text-xs text-fg-tertiary">
+                      <span>Tiến độ</span>
+                      <span>{request.progress}%</span>
+                    </div>
+                    <div className="mt-2">
+                      <ProgressBar value={request.progress} max={100} />
                     </div>
                   </div>
-                  <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                    <div>
-                      <p className="text-xs font-medium text-fg-tertiary">Đã fill</p>
-                      <p className="mt-1 text-sm font-semibold text-fg">{request.openSlots}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </SectionCard>
+
+        <div className="flex flex-col gap-6">
+          <SectionCard
+            title="Xác thực cần review"
+            description="Ưu tiên các worker còn thiếu giấy tờ hoặc có cảnh báo."
+            actionLabel="Mở trung tâm xác thực"
+            actionHref={APP_ROUTES.workerVerifications}
+          >
+            <div className="flex flex-col gap-3">
+              {VERIFICATION_QUEUE.map((item) => (
+                <Link
+                  key={item.id}
+                  href={`${APP_ROUTES.workerVerifications}/${item.id.toLowerCase()}`}
+                  className="rounded-lg border border-border-secondary bg-bg-secondary p-4 transition-colors hover:bg-bg-tertiary"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-warning-bg text-warning-fg">
+                      <ShieldAlert className="size-5" />
                     </div>
-                    <div className="sm:col-span-2">
-                      <div className="flex items-center justify-between text-xs text-fg-tertiary">
-                        <span>Tiến độ</span>
-                        <span>{request.progress}%</span>
-                      </div>
-                      <div className="mt-2">
-                        <ProgressBar value={request.progress} max={100} />
-                      </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-fg">{item.name}</p>
+                      <p className="mt-1 text-sm text-fg-tertiary">{item.missing}</p>
+                      <p className="mt-1 text-xs text-fg-tertiary">Rủi ro: {item.risk}</p>
                     </div>
                   </div>
                 </Link>
@@ -476,218 +504,189 @@ export function Dashboard() {
             </div>
           </SectionCard>
 
-          <div className="flex flex-col gap-6">
-            <SectionCard
-              title="Xác thực cần review"
-              description="Ưu tiên các worker còn thiếu giấy tờ hoặc có cảnh báo."
-              actionLabel="Mở trung tâm xác thực"
-              actionHref={APP_ROUTES.workerVerifications}
-            >
-              <div className="flex flex-col gap-3">
-                {VERIFICATION_QUEUE.map((item) => (
-                  <Link
-                    key={item.id}
-                    href={`${APP_ROUTES.workerVerifications}/${item.id.toLowerCase()}`}
-                    className="rounded-lg border border-border-secondary bg-bg-secondary p-4 transition-colors hover:bg-bg-tertiary"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full bg-warning-bg text-warning-fg">
-                        <ShieldAlert className="size-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-sm font-semibold text-fg">{item.name}</p>
-                        <p className="mt-1 text-sm text-fg-tertiary">{item.missing}</p>
-                        <p className="mt-1 text-xs text-fg-tertiary">Rủi ro: {item.risk}</p>
-                      </div>
+          <SectionCard
+            title="Batch thanh toán gần nhất"
+            description="Tổng hợp các batch đang chờ duyệt hoặc chờ chuyển khoản."
+            actionLabel="Xem tất cả batch"
+            actionHref={APP_ROUTES.workerPaymentBatches}
+          >
+            <div className="flex flex-col gap-3">
+              {PAYMENT_BATCHES.map((batch) => (
+                <Link
+                  key={batch.id}
+                  href={`${APP_ROUTES.workerPaymentBatches}/${batch.id.toLowerCase()}`}
+                  className="rounded-lg border border-border-secondary bg-bg-secondary p-4 transition-colors hover:bg-bg-tertiary"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-sm font-semibold text-fg">{batch.id}</p>
+                      <p className="mt-1 text-sm text-fg-tertiary">{batch.period}</p>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            </SectionCard>
-
-            <SectionCard
-              title="Batch thanh toán gần nhất"
-              description="Tổng hợp các batch đang chờ duyệt hoặc chờ chuyển khoản."
-              actionLabel="Xem tất cả batch"
-              actionHref={APP_ROUTES.workerPaymentBatches}
-            >
-              <div className="flex flex-col gap-3">
-                {PAYMENT_BATCHES.map((batch) => (
-                  <Link
-                    key={batch.id}
-                    href={`${APP_ROUTES.workerPaymentBatches}/${batch.id.toLowerCase()}`}
-                    className="rounded-lg border border-border-secondary bg-bg-secondary p-4 transition-colors hover:bg-bg-tertiary"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <div>
-                        <p className="text-sm font-semibold text-fg">{batch.id}</p>
-                        <p className="mt-1 text-sm text-fg-tertiary">{batch.period}</p>
-                      </div>
-                      <Wallet className="size-5 shrink-0 text-fg-brand" />
+                    <Wallet className="size-5 shrink-0 text-fg-brand" />
+                  </div>
+                  <div className="mt-3 grid grid-cols-3 gap-3">
+                    <div>
+                      <p className="text-xs text-fg-tertiary">Workers</p>
+                      <p className="mt-1 text-sm font-semibold text-fg">{batch.workers}</p>
                     </div>
-                    <div className="mt-3 grid grid-cols-3 gap-3">
-                      <div>
-                        <p className="text-xs text-fg-tertiary">Workers</p>
-                        <p className="mt-1 text-sm font-semibold text-fg">{batch.workers}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-fg-tertiary">Tổng tiền</p>
-                        <p className="mt-1 text-sm font-semibold text-fg">{batch.amount}</p>
-                      </div>
-                      <div>
-                        <p className="text-xs text-fg-tertiary">Trạng thái</p>
-                        <p className="mt-1 text-sm font-semibold text-fg">{batch.status}</p>
-                      </div>
+                    <div>
+                      <p className="text-xs text-fg-tertiary">Tổng tiền</p>
+                      <p className="mt-1 text-sm font-semibold text-fg">{batch.amount}</p>
                     </div>
-                  </Link>
-                ))}
-              </div>
-            </SectionCard>
-          </div>
+                    <div>
+                      <p className="text-xs text-fg-tertiary">Trạng thái</p>
+                      <p className="mt-1 text-sm font-semibold text-fg">{batch.status}</p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </SectionCard>
         </div>
+      </div>
 
-        <SectionCard
-          title="CTV hiệu suất cao tuần này"
-          description="Danh sách CTV nổi bật để điều phối vào các ca cần độ ổn định cao."
-          actionLabel="Mở danh sách CTV"
-          actionHref={APP_ROUTES.workers}
-        >
-          <div className="flex flex-col gap-4">
-            <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
-              <div className="min-w-0">
-                <Input
-                  placeholder="Tìm theo tên hoặc số điện thoại"
-                  iconLeading={<Search className="size-4" />}
-                  value={search}
-                  onChange={(event) => {
-                    setSearch(event.target.value);
-                    setPage(1);
-                  }}
-                  aria-label="Tìm cộng tác viên"
-                />
-              </div>
-              <div className="flex items-center gap-3 text-sm text-fg-tertiary">
-                <CheckCircle2 className="size-4 text-fg-success" />
-                4 CTV đạt đủ KPI tuần này
-              </div>
-            </div>
-
-            <div className="overflow-x-auto">
-              <Table
-                aria-label="CTV hiệu suất cao"
-                selectionMode="multiple"
-                selectedKeys={selected}
-                onSelectionChange={(keys) => {
-                  if (keys === "all") {
-                    setSelected(new Set(rows.map((row) => row.id)));
-                  } else {
-                    setSelected(keys as Set<number>);
-                  }
+      <SectionCard
+        title="CTV hiệu suất cao tuần này"
+        description="Danh sách CTV nổi bật để điều phối vào các ca cần độ ổn định cao."
+        actionLabel="Mở danh sách CTV"
+        actionHref={APP_ROUTES.workers}
+      >
+        <div className="flex flex-col gap-4">
+          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
+            <div className="min-w-0">
+              <Input
+                placeholder="Tìm theo tên hoặc số điện thoại"
+                iconLeading={<Search className="size-4" />}
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setPage(1);
                 }}
-              >
-                <Table.Header>
-                  {COLUMNS.map((column) => (
-                    <Table.Head
-                      key={column.id}
-                      id={column.id}
-                      label={column.name}
-                      {...(column.isRowHeader && { isRowHeader: true })}
-                    />
-                  ))}
-                </Table.Header>
-                <Table.Body items={rows}>
-                  {(row) => (
-                    <Table.Row id={row.id}>
-                      <Table.Cell>
-                        <Link
-                          href={`${APP_ROUTES.workers}/${row.id}`}
-                          className="flex items-center gap-3"
-                        >
-                          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-fg select-none">
-                            {initials(row.name)}
-                          </div>
-                          <div className="min-w-0">
-                            <div className="truncate text-sm font-medium text-fg">{row.name}</div>
-                            <div className="truncate text-sm text-fg-tertiary">{row.phone}</div>
-                          </div>
-                        </Link>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <span className="text-sm text-fg-secondary">{row.area}</span>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <Badge color={STATUS[row.status].color} type="pill-color" size="sm">
-                          {STATUS[row.status].label}
-                        </Badge>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <div className="flex min-w-28 flex-col gap-1">
-                          <span className="text-xs text-fg-tertiary">{row.shifts}/100</span>
-                          <ProgressBar value={row.shifts} max={100} />
-                        </div>
-                      </Table.Cell>
-                      <Table.Cell>
-                        <span className="text-sm font-medium text-fg">★ {row.rating}</span>
-                      </Table.Cell>
-                    </Table.Row>
-                  )}
-                </Table.Body>
-              </Table>
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm text-fg-tertiary">
-                <Clock3 className="size-4" />
-                Đồng bộ lần cuối lúc 09:30 hôm nay
-              </div>
-              <Pagination
-                totalPages={totalPages}
-                currentPage={page}
-                onPageChange={setPage}
-                compact
+                aria-label="Tìm cộng tác viên"
               />
             </div>
+            <div className="flex items-center gap-3 text-sm text-fg-tertiary">
+              <CheckCircle2 className="size-4 text-fg-success" />
+              4 CTV đạt đủ KPI tuần này
+            </div>
           </div>
-        </SectionCard>
 
-        <div className="grid gap-4 lg:grid-cols-3">
-          <Link
-            href={APP_ROUTES.shifts}
-            className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs transition-colors hover:bg-bg-secondary"
-          >
-            <div className="flex items-center gap-3">
-              <Clock3 className="size-5 text-fg-brand" />
-              <div>
-                <p className="text-sm font-semibold text-fg">Lịch làm việc hôm nay</p>
-                <p className="text-sm text-fg-tertiary">18 ca cần check-in trong 4 giờ tới.</p>
-              </div>
+          <div className="overflow-x-auto">
+            <Table
+              aria-label="CTV hiệu suất cao"
+              selectionMode="multiple"
+              selectedKeys={selected}
+              onSelectionChange={(keys) => {
+                if (keys === "all") {
+                  setSelected(new Set(rows.map((row) => row.id)));
+                } else {
+                  setSelected(keys as Set<number>);
+                }
+              }}
+            >
+              <Table.Header>
+                {COLUMNS.map((column) => (
+                  <Table.Head
+                    key={column.id}
+                    id={column.id}
+                    label={column.name}
+                    {...(column.isRowHeader && { isRowHeader: true })}
+                  />
+                ))}
+              </Table.Header>
+              <Table.Body items={rows}>
+                {(row) => (
+                  <Table.Row id={row.id}>
+                    <Table.Cell>
+                      <Link
+                        href={`${APP_ROUTES.workers}/${row.id}`}
+                        className="flex items-center gap-3"
+                      >
+                        <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-fg select-none">
+                          {initials(row.name)}
+                        </div>
+                        <div className="min-w-0">
+                          <div className="truncate text-sm font-medium text-fg">{row.name}</div>
+                          <div className="truncate text-sm text-fg-tertiary">{row.phone}</div>
+                        </div>
+                      </Link>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <span className="text-sm text-fg-secondary">{row.area}</span>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <Badge color={STATUS[row.status].color} type="pill-color" size="sm">
+                        {STATUS[row.status].label}
+                      </Badge>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <div className="flex min-w-28 flex-col gap-1">
+                        <span className="text-xs text-fg-tertiary">{row.shifts}/100</span>
+                        <ProgressBar value={row.shifts} max={100} />
+                      </div>
+                    </Table.Cell>
+                    <Table.Cell>
+                      <span className="text-sm font-medium text-fg">★ {row.rating}</span>
+                    </Table.Cell>
+                  </Table.Row>
+                )}
+              </Table.Body>
+            </Table>
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-sm text-fg-tertiary">
+              <Clock3 className="size-4" />
+              Đồng bộ lần cuối lúc 09:30 hôm nay
             </div>
-          </Link>
-          <Link
-            href={APP_ROUTES.timesheets}
-            className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs transition-colors hover:bg-bg-secondary"
-          >
-            <div className="flex items-center gap-3">
-              <Users className="size-5 text-fg-success" />
-              <div>
-                <p className="text-sm font-semibold text-fg">Chấm công</p>
-                <p className="text-sm text-fg-tertiary">11 worker chưa checkout ở các ca sáng.</p>
-              </div>
-            </div>
-          </Link>
-          <Link
-            href={APP_ROUTES.reconciliations}
-            className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs transition-colors hover:bg-bg-secondary"
-          >
-            <div className="flex items-center gap-3">
-              <Wallet className="size-5 text-warning-fg" />
-              <div>
-                <p className="text-sm font-semibold text-fg">Đối soát</p>
-                <p className="text-sm text-fg-tertiary">3 kỳ đối soát còn chênh lệch cần xử lý.</p>
-              </div>
-            </div>
-          </Link>
+            <Pagination
+              totalPages={totalPages}
+              currentPage={page}
+              onPageChange={setPage}
+              compact
+            />
+          </div>
         </div>
+      </SectionCard>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Link
+          href={APP_ROUTES.shifts}
+          className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs transition-colors hover:bg-bg-secondary"
+        >
+          <div className="flex items-center gap-3">
+            <Clock3 className="size-5 text-fg-brand" />
+            <div>
+              <p className="text-sm font-semibold text-fg">Lịch làm việc hôm nay</p>
+              <p className="text-sm text-fg-tertiary">18 ca cần check-in trong 4 giờ tới.</p>
+            </div>
+          </div>
+        </Link>
+        <Link
+          href={APP_ROUTES.timesheets}
+          className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs transition-colors hover:bg-bg-secondary"
+        >
+          <div className="flex items-center gap-3">
+            <Users className="size-5 text-fg-success" />
+            <div>
+              <p className="text-sm font-semibold text-fg">Chấm công</p>
+              <p className="text-sm text-fg-tertiary">11 worker chưa checkout ở các ca sáng.</p>
+            </div>
+          </div>
+        </Link>
+        <Link
+          href={APP_ROUTES.reconciliations}
+          className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs transition-colors hover:bg-bg-secondary"
+        >
+          <div className="flex items-center gap-3">
+            <Wallet className="size-5 text-warning-fg" />
+            <div>
+              <p className="text-sm font-semibold text-fg">Đối soát</p>
+              <p className="text-sm text-fg-tertiary">3 kỳ đối soát còn chênh lệch cần xử lý.</p>
+            </div>
+          </div>
+        </Link>
+      </div>
     </PageScaffold>
   );
 }

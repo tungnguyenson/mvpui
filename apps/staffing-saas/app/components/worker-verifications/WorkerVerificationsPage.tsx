@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -10,7 +10,7 @@ import {
   VERIFICATION_STATUS_LABELS,
   type VerificationRecord,
 } from "./worker-verifications-data";
-import { getAvatarFor, getInitials } from "../_shared/assets";
+import { WorkerAvatar } from "../_shared";
 
 const FILTERS = [
   { id: "all", label: "Tất cả" },
@@ -57,11 +57,10 @@ function VerificationRow({ record }: { record: VerificationRecord }) {
           href={`/worker-verifications/${record.id}`}
           className="flex items-center gap-3"
         >
-          <Avatar
-            size="md"
-            src={getAvatarFor(record.workerName, record.id)}
-            alt={record.workerName}
-            initials={getInitials(record.workerName)}
+          <WorkerAvatar
+            name={record.workerName}
+            id={record.id}
+            status={record.status}
           />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium text-fg">{record.workerName}</div>

@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button } from "@mvp-ui/ui";
+import { Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -15,7 +15,7 @@ import {
   getViolationWorkerById,
   type ViolationCase,
 } from "./worker-violations-data";
-import { getAvatarFor, getInitials } from "../_shared/assets";
+import { WorkerProfilePhoto } from "../_shared";
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
@@ -114,11 +114,11 @@ export function WorkerViolationsDetailPage({ id }: { id: string }) {
       header={
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-4">
-            <Avatar
-              size="xl"
-              src={getAvatarFor(record.workerName, record.id)}
-              alt={record.workerName}
-              initials={getInitials(record.workerName)}
+            <WorkerProfilePhoto
+              name={record.workerName}
+              id={record.id}
+              status={record.status}
+              size="sm"
             />
             <div>
               <div className="flex flex-wrap items-center gap-3">

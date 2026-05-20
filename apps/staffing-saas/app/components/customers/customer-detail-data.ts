@@ -43,6 +43,21 @@ export interface CustomerUserRecord {
   phone: string;
 }
 
+export interface CustomerPosition {
+  id: string;
+  name: string;
+  description: string;
+}
+
+export interface CustomerLocation {
+  id: string;
+  shortName: string;
+  address: string;
+  province: string;
+  jobCount: number;
+  workerCount: number;
+}
+
 export type CustomerPricingStatus = "active" | "inactive";
 
 export const CUSTOMER_PRICING_STATUS_LABELS: Record<
@@ -135,6 +150,8 @@ export interface CustomerDetailExtras {
   management: CustomerManagementProfile;
   documents: CustomerDocument[];
   users: CustomerUserRecord[];
+  positions: CustomerPosition[];
+  locations: CustomerLocation[];
   pricingConfigs: CustomerPricingConfig[];
   reconciliation: CustomerReconciliation;
 }
@@ -152,6 +169,78 @@ const DEFAULT_USERS: CustomerUserRecord[] = [
   { id: "u-1", fullName: "Nguyễn Thị Thu", email: "thuntc@example.com", phone: "0346 759 965" },
   { id: "u-2", fullName: "Trần Anh Cường", email: "anctt@example.com", phone: "0356 953 226" },
   { id: "u-3", fullName: "Bùi Duy Đức", email: "ducbd1@example.com", phone: "0978 142 908" },
+];
+
+const DEFAULT_LOCATIONS: CustomerLocation[] = [
+  {
+    id: "loc-1",
+    shortName: "70 Lữ Gia",
+    address: "70 Lữ Gia, lầu 4",
+    province: "Hồ Chí Minh",
+    jobCount: 48,
+    workerCount: 0,
+  },
+  {
+    id: "loc-2",
+    shortName: "Boxme Long Biên Bốc Xếp - Phường Thạch Bàn - Long Biên - Hà Nội",
+    address: "Số 1 Huỳnh Tấn Phát - Thạch Bàn - Long Biên - Hà Nội",
+    province: "Hà Nội",
+    jobCount: 0,
+    workerCount: 0,
+  },
+  {
+    id: "loc-3",
+    shortName: "Chi nhánh 3",
+    address: "Mì cay MC",
+    province: "Đồng Nai",
+    jobCount: 2,
+    workerCount: 0,
+  },
+  {
+    id: "loc-4",
+    shortName: "Cầu Giấy - Hà Nội",
+    address: "Số 152 Đường Trần Vĩ, Phường Mai Dịch, Quận Cầu Giấy, Hà Nội",
+    province: "Hà Nội",
+    jobCount: 0,
+    workerCount: 0,
+  },
+  {
+    id: "loc-5",
+    shortName: "Dự án Củ Chi",
+    address: "Nhà Kho 2, Lô KB2, Khu Kho Bãi 2, đường N13, KCN Tân Phú Trung",
+    province: "Hồ Chí Minh",
+    jobCount: 1,
+    workerCount: 0,
+  },
+  {
+    id: "loc-6",
+    shortName: "GHN Xuyên Á",
+    address: "Lô HH, đường số 11, KCN Xuyên Á",
+    province: "Long An",
+    jobCount: 3,
+    workerCount: 0,
+  },
+];
+
+const DEFAULT_POSITIONS: CustomerPosition[] = [
+  {
+    id: "pos-1",
+    name: "CTV lấy hàng",
+    description:
+      "Nhận đơn theo wave, picking hàng tại kệ theo SKU, gom hàng về khu vực soạn đơn. Yêu cầu di chuyển nhiều, đọc được mã SKU và quét scanner.",
+  },
+  {
+    id: "pos-2",
+    name: "CTV đóng gói",
+    description:
+      "Soạn hàng theo đơn, kiểm tra số lượng và chất lượng, đóng gói bằng thùng/túi theo SOP, dán nhãn vận chuyển. Yêu cầu cẩn thận, làm việc theo nhịp.",
+  },
+  {
+    id: "pos-3",
+    name: "CTV giao hàng",
+    description:
+      "Nhận đơn từ kho, vận chuyển đến địa chỉ khách, thu tiền COD nếu có. Yêu cầu có phương tiện cá nhân, thông thuộc khu vực giao.",
+  },
 ];
 
 const SERVICE_TAGS_BASE = [
@@ -189,6 +278,8 @@ function defaultExtras(customer: CustomerRecord): CustomerDetailExtras {
     },
     documents: [],
     users: DEFAULT_USERS,
+    positions: DEFAULT_POSITIONS,
+    locations: DEFAULT_LOCATIONS,
     pricingConfigs: defaultPricingConfigs(customer.city),
     reconciliation: emptyReconciliation(),
   };

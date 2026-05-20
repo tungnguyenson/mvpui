@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -10,7 +10,7 @@ import {
   type WorkerRecord,
 } from "./workers-data";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { getAvatarFor, getInitials } from "../_shared/assets";
+import { WorkerAvatar } from "../_shared";
 
 const FILTERS = [
   { id: "all", label: "Tất cả" },
@@ -53,12 +53,7 @@ function WorkerRow({ worker }: { worker: WorkerRecord }) {
     <Table.Row id={worker.id}>
       <Table.Cell>
         <Link href={`/workers/${worker.id}`} className="flex items-center gap-3">
-          <Avatar
-            size="md"
-            src={getAvatarFor(worker.name, worker.id)}
-            alt={worker.name}
-            initials={getInitials(worker.name)}
-          />
+          <WorkerAvatar name={worker.name} id={worker.id} status={worker.status} />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium text-fg">{worker.name}</div>
             <div className="truncate text-sm text-fg-tertiary">{worker.phone}</div>
@@ -166,11 +161,10 @@ export function WorkersPage() {
                     key={filter.id}
                     type="button"
                     onClick={() => setStatusFilter(filter.id)}
-                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
-                      active
+                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${active
                         ? "border-border-brand bg-bg-secondary text-fg"
                         : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                    }`}
+                      }`}
                   >
                     {filter.label}
                   </button>

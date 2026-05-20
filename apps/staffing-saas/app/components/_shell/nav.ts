@@ -70,17 +70,17 @@ export const NAV_SECTIONS: NavSection[] = [
         href: APP_ROUTES.customerReconciliations,
         icon: Receipt,
       },
+      {
+        id: "hiring-requests",
+        label: "Y/c tuyển dụng",
+        href: APP_ROUTES.hiringRequests,
+        icon: UserPlus,
+      },
     ],
   },
   {
     label: "Cộng tác viên",
     items: [
-      {
-        id: "hiring-requests",
-        label: "Tuyển dụng",
-        href: APP_ROUTES.hiringRequests,
-        icon: UserPlus,
-      },
       {
         id: "workers",
         label: "Danh sách CTV",
