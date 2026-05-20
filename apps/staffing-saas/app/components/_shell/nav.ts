@@ -116,7 +116,7 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    label: "Ca lfullàm việc",
+    label: "Làm việc",
     items: [
       {
         id: "shifts",

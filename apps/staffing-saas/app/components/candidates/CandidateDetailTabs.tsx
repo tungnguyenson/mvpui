@@ -385,29 +385,17 @@ export function CandidateDetailTabs({ record }: CandidateDetailTabsProps) {
     <Tabs variant="underline" size="md" defaultSelectedKey="overview">
       <TabList aria-label="Phần chi tiết ứng viên">
         <Tab id="overview">Tổng quan</Tab>
-        <Tab id="documents">
+        <Tab id="documents" value={record.documents.length}>
           Hồ sơ
-          <span className="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-bg-tertiary px-1.5 text-xs font-medium text-fg-secondary">
-            {record.documents.length}
-          </span>
         </Tab>
-        <Tab id="interviews">
+        <Tab id="interviews" value={record.interviews.length}>
           Phỏng vấn
-          <span className="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-bg-tertiary px-1.5 text-xs font-medium text-fg-secondary">
-            {record.interviews.length}
-          </span>
         </Tab>
-        <Tab id="interactions">
+        <Tab id="interactions" value={record.interactions.length}>
           Tương tác
-          <span className="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-bg-tertiary px-1.5 text-xs font-medium text-fg-secondary">
-            {record.interactions.length}
-          </span>
         </Tab>
-        <Tab id="notes">
+        <Tab id="notes" value={record.notes.length}>
           Ghi chú
-          <span className="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-bg-tertiary px-1.5 text-xs font-medium text-fg-secondary">
-            {record.notes.length}
-          </span>
         </Tab>
       </TabList>
       <TabPanel id="overview">

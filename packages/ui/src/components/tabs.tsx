@@ -109,6 +109,13 @@ TabList.displayName = "TabList";
 export interface TabProps extends Omit<AriaTabProps, "className"> {
   /** Optional leading icon. */
   icon?: ReactNode;
+  /**
+   * Optional trailing value pill (count, label, etc.). Rendered as a neutral
+   * badge after the tab label. Pass any ReactNode — numbers, strings, even
+   * mini badges. Use this instead of `<Badge>` inside `children` so spacing
+   * and styling stay consistent across tabs.
+   */
+  value?: ReactNode;
   children?: ReactNode;
   className?: string;
   ref?: Ref<HTMLDivElement>;
@@ -116,6 +123,7 @@ export interface TabProps extends Omit<AriaTabProps, "className"> {
 
 export const Tab = ({
   icon,
+  value,
   children,
   className,
   ref,
@@ -164,12 +172,32 @@ export const Tab = ({
         )
       }
     >
-      {icon && (
-        <span className={cn("shrink-0", size === "sm" ? "size-4" : "size-5")}>
-          {icon}
-        </span>
+      {(renderState) => (
+        <>
+          {icon && (
+            <span
+              className={cn("shrink-0", size === "sm" ? "size-4" : "size-5")}
+            >
+              {icon}
+            </span>
+          )}
+          {children}
+          {value !== undefined && value !== null && value !== false && (
+            <span
+              className={cn(
+                "inline-flex shrink-0 items-center rounded-full border px-2 py-0.5 text-xs font-medium leading-[18px] transition-colors",
+                renderState.isSelected
+                  ? "border-border-brand bg-info-bg text-info-fg"
+                  : renderState.isHovered
+                    ? "border-border bg-bg-tertiary text-fg-secondary"
+                    : "border-neutral-border bg-neutral-bg text-fg-secondary",
+              )}
+            >
+              {value}
+            </span>
+          )}
+        </>
       )}
-      {children}
     </AriaTab>
   );
 };

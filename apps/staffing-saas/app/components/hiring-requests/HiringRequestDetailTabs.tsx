@@ -203,11 +203,8 @@ export function HiringRequestDetailTabs({
     <Tabs variant="underline" size="md" defaultSelectedKey="overview">
       <TabList aria-label="Phần chi tiết hiring request">
         <Tab id="overview">Tổng quan</Tab>
-        <Tab id="funnel">
+        <Tab id="funnel" value={record.candidates.length}>
           Ứng viên
-          <span className="ml-1 inline-flex min-w-5 items-center justify-center rounded-full bg-bg-tertiary px-1.5 text-xs font-medium text-fg-secondary">
-            {record.candidates.length}
-          </span>
         </Tab>
       </TabList>
       <TabPanel id="overview">

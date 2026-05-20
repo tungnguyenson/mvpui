@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Button, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -149,24 +149,20 @@ export function WorkerPaymentBatchesPage() {
     >
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
-          <div className="flex flex-wrap gap-2">
-            {QUICK_FILTERS.map((filter) => {
-              const active = filter.id === quickFilter;
-              return (
-                <button
-                  key={filter.id}
-                  type="button"
-                  onClick={() => setQuickFilter(filter.id)}
-                  className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${active
-                      ? "border-border-brand bg-bg-secondary text-fg"
-                      : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                    }`}
-                >
+          <Tabs
+            variant="pill"
+            size="md"
+            selectedKey={quickFilter}
+            onSelectionChange={(key) => setQuickFilter(key as QuickFilterId)}
+          >
+            <TabList aria-label="Lọc kỳ thanh toán theo trạng thái">
+              {QUICK_FILTERS.map((filter) => (
+                <Tab key={filter.id} id={filter.id}>
                   {filter.label}
-                </button>
-              );
-            })}
-          </div>
+                </Tab>
+              ))}
+            </TabList>
+          </Tabs>
           <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
             <Input
               value={search}

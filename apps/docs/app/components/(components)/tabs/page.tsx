@@ -211,6 +211,77 @@ const SECTIONS: DocExample[] = [
 </Tabs>`,
   },
   {
+    id: "with-value",
+    title: "With trailing value (badge / count)",
+    description:
+      "Pass any ReactNode via the `value` prop to render a neutral trailing pill after the tab label — counts, status labels, anything. Style stays consistent across active and inactive tabs (matches Untitled UI).",
+    preview: (
+      <div className="flex flex-col gap-8">
+        <Tabs defaultSelectedKey="inbox">
+          <TabList>
+            <Tab id="inbox" value={12}>
+              Inbox
+            </Tab>
+            <Tab id="drafts" value={3}>
+              Drafts
+            </Tab>
+            <Tab id="sent" value={0}>
+              Sent
+            </Tab>
+            <Tab id="archive">Archive</Tab>
+          </TabList>
+          <TabPanel id="inbox">
+            <p className="text-sm text-fg-secondary">Inbox panel.</p>
+          </TabPanel>
+          <TabPanel id="drafts">
+            <p className="text-sm text-fg-secondary">Drafts panel.</p>
+          </TabPanel>
+          <TabPanel id="sent">
+            <p className="text-sm text-fg-secondary">Sent panel.</p>
+          </TabPanel>
+          <TabPanel id="archive">
+            <p className="text-sm text-fg-secondary">Archive panel.</p>
+          </TabPanel>
+        </Tabs>
+        <Tabs defaultSelectedKey="inbox" variant="pill">
+          <TabList>
+            <Tab id="inbox" value={12}>
+              Inbox
+            </Tab>
+            <Tab id="drafts" value={3}>
+              Drafts
+            </Tab>
+            <Tab id="sent" value="new">
+              Sent
+            </Tab>
+            <Tab id="archive">Archive</Tab>
+          </TabList>
+          <TabPanel id="inbox">
+            <p className="text-sm text-fg-secondary">Inbox panel.</p>
+          </TabPanel>
+          <TabPanel id="drafts">
+            <p className="text-sm text-fg-secondary">Drafts panel.</p>
+          </TabPanel>
+          <TabPanel id="sent">
+            <p className="text-sm text-fg-secondary">Sent panel.</p>
+          </TabPanel>
+          <TabPanel id="archive">
+            <p className="text-sm text-fg-secondary">Archive panel.</p>
+          </TabPanel>
+        </Tabs>
+      </div>
+    ),
+    code: `<Tabs defaultSelectedKey="inbox">
+  <TabList>
+    <Tab id="inbox" value={12}>Inbox</Tab>
+    <Tab id="drafts" value={3}>Drafts</Tab>
+    <Tab id="sent" value={0}>Sent</Tab>
+    <Tab id="archive">Archive</Tab>
+  </TabList>
+  {/* …panels */}
+</Tabs>`,
+  },
+  {
     id: "disabled",
     title: "Disabled tab",
     description: "Individual tabs can be disabled with the isDisabled prop.",

@@ -125,28 +125,18 @@ export function WorkerViolationsPage() {
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
           <Tabs
-            variant="underline"
+            variant="pill"
+            size="md"
             selectedKey={tab}
             onSelectionChange={(key) => setTab(key as TabId)}
             className="-mx-4 -mb-4 px-4"
           >
             <TabList aria-label="Lọc worker vi phạm theo trạng thái">
-              {TABS.map((t) => {
-                const active = t.id === tab;
-                return (
-                  <Tab key={t.id} id={t.id}>
-                    <span>{t.label}</span>
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${active
-                        ? "bg-primary text-primary-fg"
-                        : "bg-bg-secondary text-fg-tertiary"
-                        }`}
-                    >
-                      {counts[t.id]}
-                    </span>
-                  </Tab>
-                );
-              })}
+              {TABS.map((t) => (
+                <Tab key={t.id} id={t.id} value={counts[t.id]}>
+                  {t.label}
+                </Tab>
+              ))}
             </TabList>
           </Tabs>
 

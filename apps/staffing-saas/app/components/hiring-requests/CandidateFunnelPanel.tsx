@@ -82,17 +82,6 @@ function CandidateList({ items }: { items: HiringCandidate[] }) {
   );
 }
 
-function TabLabel({ label, count }: { label: string; count: number }) {
-  return (
-    <span className="inline-flex items-center gap-2">
-      {label}
-      <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-bg-tertiary px-1.5 text-xs font-medium text-fg-secondary">
-        {count}
-      </span>
-    </span>
-  );
-}
-
 export function CandidateFunnelPanel({
   candidates,
   remaining,
@@ -120,15 +109,16 @@ export function CandidateFunnelPanel({
         <Tabs variant="pill" size="sm" defaultSelectedKey="all">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between md:gap-4">
             <TabList aria-label="Lọc ứng viên theo trạng thái">
-              <Tab id="all">
-                <TabLabel label="Tất cả" count={candidates.length} />
+              <Tab id="all" value={candidates.length}>
+                Tất cả
               </Tab>
               {visibleStatuses.map((status) => (
-                <Tab key={status} id={status}>
-                  <TabLabel
-                    label={CANDIDATE_LABELS[status].label}
-                    count={statusCounts[status]}
-                  />
+                <Tab
+                  key={status}
+                  id={status}
+                  value={statusCounts[status]}
+                >
+                  {CANDIDATE_LABELS[status].label}
                 </Tab>
               ))}
             </TabList>
