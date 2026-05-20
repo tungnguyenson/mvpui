@@ -2,6 +2,11 @@ export { AppShell } from "./AppShell";
 export { Header } from "./Header";
 export { PageScaffold } from "./PageScaffold";
 export {
+  BreadcrumbProvider,
+  SetPageBreadcrumb,
+  useBreadcrumbOverride,
+} from "./BreadcrumbContext";
+export {
   APP_ROUTES,
   NAV_SECTIONS,
   activeHrefForPath,

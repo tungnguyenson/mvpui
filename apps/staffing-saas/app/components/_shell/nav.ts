@@ -39,7 +39,7 @@ export const APP_ROUTES = {
   timesheets: "/timesheets",
   reconciliations: "/reconciliations",
   hiringRequests: "/hiring-requests",
-  rewardRules: "/reward-rules",
+  bonuses: "/bonuses",
   users: "/users",
 } as const;
 
@@ -76,6 +76,12 @@ export const NAV_SECTIONS: NavSection[] = [
     label: "Cộng tác viên",
     items: [
       {
+        id: "hiring-requests",
+        label: "Tuyển dụng",
+        href: APP_ROUTES.hiringRequests,
+        icon: UserPlus,
+      },
+      {
         id: "workers",
         label: "Danh sách CTV",
         href: APP_ROUTES.workers,
@@ -92,12 +98,6 @@ export const NAV_SECTIONS: NavSection[] = [
         label: "Quản lý vi phạm",
         href: APP_ROUTES.workerViolations,
         icon: AlertTriangle,
-      },
-      {
-        id: "worker-payment-batches",
-        label: "Thanh toán CTV",
-        href: APP_ROUTES.workerPaymentBatches,
-        icon: CreditCard,
       },
     ],
   },
@@ -123,22 +123,22 @@ export const NAV_SECTIONS: NavSection[] = [
         icon: Calculator,
       },
       {
-        id: "hiring-requests",
-        label: "Tuyển dụng",
-        href: APP_ROUTES.hiringRequests,
-        icon: UserPlus,
+        id: "bonuses",
+        label: "Thưởng",
+        href: APP_ROUTES.bonuses,
+        icon: Gift,
+      },
+      {
+        id: "worker-payment-batches",
+        label: "Thanh toán CTV",
+        href: APP_ROUTES.workerPaymentBatches,
+        icon: CreditCard,
       },
     ],
   },
   {
     label: "Cấu hình",
     items: [
-      {
-        id: "reward-rules",
-        label: "Thưởng",
-        href: APP_ROUTES.rewardRules,
-        icon: Gift,
-      },
       {
         id: "users",
         label: "User",

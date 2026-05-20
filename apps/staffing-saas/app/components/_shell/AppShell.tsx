@@ -6,6 +6,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { NAV_SECTIONS, activeHrefForPath } from "./nav";
 import { Header } from "./Header";
+import { BreadcrumbProvider } from "./BreadcrumbContext";
 import { logoutAction } from "../../login/actions";
 
 const SECTIONS = NAV_SECTIONS.map((section) => ({
@@ -85,8 +86,10 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       {/* Content — light themed */}
       <main className="min-w-0 flex-1 overflow-y-auto bg-bg-secondary">
-        <Header />
-        {children}
+        <BreadcrumbProvider>
+          <Header />
+          {children}
+        </BreadcrumbProvider>
       </main>
 
       {/* Mobile nav drawer — dark themed */}

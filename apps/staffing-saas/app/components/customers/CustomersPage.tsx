@@ -21,18 +21,18 @@ function CustomerLogo({
   size: "sm" | "lg";
 }) {
   const logo = getCustomerLogo(customer.id);
-  const sizeClass = size === "lg" ? "size-14 rounded-2xl" : "size-10 rounded-full";
+  const sizeClass = size === "lg" ? "size-14 rounded-2xl" : "size-10 rounded-xl";
   const iconClass = size === "lg" ? "size-7" : "size-5";
 
   if (logo) {
     return (
       <div
-        className={`flex ${sizeClass} shrink-0 items-center justify-center border border-border-secondary bg-bg p-1.5`}
+        className={`${sizeClass} shrink-0 overflow-hidden`}
       >
         <img
           src={logo.mark}
           alt={`Logo ${customer.name}`}
-          className="size-full object-contain"
+          className="size-full object-cover"
         />
       </div>
     );

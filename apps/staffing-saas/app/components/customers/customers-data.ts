@@ -76,7 +76,7 @@ export const CUSTOMER_VERIFICATION_LABELS: Record<
 export const CUSTOMERS: CustomerRecord[] = [
   {
     id: "highlands-commerce",
-    name: "Highlands Commerce",
+    name: "GHN Sorting",
     industry: "Bán lẻ",
     city: "TP.HCM",
     status: "active",
@@ -142,7 +142,7 @@ export const CUSTOMERS: CustomerRecord[] = [
   },
   {
     id: "gomart-distribution",
-    name: "GoMart Distribution",
+    name: "Ninja Van",
     industry: "Kho vận",
     city: "Bình Dương",
     status: "active",
@@ -208,7 +208,7 @@ export const CUSTOMERS: CustomerRecord[] = [
   },
   {
     id: "medistar-clinic",
-    name: "Medistar Clinic",
+    name: "Shopee Express Official",
     industry: "Y tế",
     city: "Hà Nội",
     status: "pilot",
@@ -266,7 +266,7 @@ export const CUSTOMERS: CustomerRecord[] = [
   },
   {
     id: "nova-event-partners",
-    name: "Nova Event Partners",
+    name: "Kingfoodmart",
     industry: "Sự kiện",
     city: "Đà Nẵng",
     status: "paused",

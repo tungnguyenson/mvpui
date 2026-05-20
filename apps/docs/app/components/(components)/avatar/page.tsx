@@ -81,7 +81,17 @@ const verifiedRow = (border?: true) => (
   <div className="flex items-start gap-8">
     {SIZES_ALL.map((sz) => (
       <AvatarLink key={sz} relative>
-        <Avatar {...(border ? { border } : {})} size={sz} src={SRC} focusable alt="Olivia Rhye" verified />
+        <Avatar {...(border ? { border } : {})} size={sz} src={SRC} focusable alt="Olivia Rhye" state="verified" />
+      </AvatarLink>
+    ))}
+  </div>
+);
+
+const blockedRow = (border?: true) => (
+  <div className="flex items-start gap-8">
+    {SIZES_ALL.map((sz) => (
+      <AvatarLink key={sz} relative>
+        <Avatar {...(border ? { border } : {})} size={sz} src={SRC} focusable alt="Olivia Rhye" state="blocked" />
       </AvatarLink>
     ))}
   </div>
@@ -176,11 +186,17 @@ const SECTIONS: DocExample[] = [
 />`,
   },
   {
-    id: "verified",
-    title: "Verified",
-    description: "Verified badge anchored to the bottom-right.",
-    preview: <Avatar verified size="md" src={SRC} alt="Olivia Rhye" />,
-    code: `<Avatar verified size="md" src="..." alt="Olivia Rhye" />`,
+    id: "state",
+    title: "State",
+    description: "Status badge anchored to the bottom-right. `verified` shows a blue tick, `blocked` shows a red X.",
+    preview: (
+      <div className="flex gap-8">
+        <Avatar state="verified" size="md" src={SRC} alt="Olivia Rhye" />
+        <Avatar state="blocked" size="md" src={SRC} alt="Olivia Rhye" />
+      </div>
+    ),
+    code: `<Avatar state="verified" size="md" src="..." alt="Olivia Rhye" />
+<Avatar state="blocked"  size="md" src="..." alt="Olivia Rhye" />`,
   },
   {
     id: "placeholder",
@@ -223,14 +239,16 @@ const SECTIONS: DocExample[] = [
     description: "Large avatar for profile pages. Image, placeholder, and initials at md size.",
     preview: (
       <div className="flex gap-8">
-        <AvatarProfilePhoto verified size="md" src={SRC} alt="Olivia Rhye" />
-        <AvatarProfilePhoto verified size="md" alt="Olivia Rhye" />
-        <AvatarProfilePhoto verified size="md" initials="OR" alt="Olivia Rhye" />
+        <AvatarProfilePhoto state="verified" size="md" src={SRC} alt="Olivia Rhye" />
+        <AvatarProfilePhoto state="verified" size="md" alt="Olivia Rhye" />
+        <AvatarProfilePhoto state="verified" size="md" initials="OR" alt="Olivia Rhye" />
+        <AvatarProfilePhoto state="blocked" size="md" src={SRC} alt="Olivia Rhye" />
       </div>
     ),
-    code: `<AvatarProfilePhoto verified size="md" src="..." alt="Olivia Rhye" />
-<AvatarProfilePhoto verified size="md" alt="Olivia Rhye" />
-<AvatarProfilePhoto verified size="md" initials="OR" alt="Olivia Rhye" />`,
+    code: `<AvatarProfilePhoto state="verified" size="md" src="..." alt="Olivia Rhye" />
+<AvatarProfilePhoto state="verified" size="md" alt="Olivia Rhye" />
+<AvatarProfilePhoto state="verified" size="md" initials="OR" alt="Olivia Rhye" />
+<AvatarProfilePhoto state="blocked"  size="md" src="..." alt="Olivia Rhye" />`,
   },
   {
     id: "group",
@@ -254,7 +272,7 @@ const SECTIONS: DocExample[] = [
   {
     id: "default-all",
     title: "Default — all sizes",
-    description: "All sizes × no badge, count badge, online, company icon, verified.",
+    description: "All sizes × no badge, count badge, online, company icon, verified, blocked.",
     preview: (
       <div className="flex flex-col gap-4">
         {baseRow()}
@@ -262,18 +280,19 @@ const SECTIONS: DocExample[] = [
         {statusRow()}
         {companyIconRow()}
         {verifiedRow()}
+        {blockedRow()}
       </div>
     ),
     code: `<Avatar size="xs" src="..." alt="Olivia Rhye" focusable />
 <Avatar size="md" src="..." badge={<AvatarCount count={5} />} focusable />
 <Avatar size="md" src="..." status="online" focusable />
 <Avatar size="md" src="..." badge={<AvatarCompanyIcon src="..." alt="..." size="md" />} focusable />
-<Avatar size="md" src="..." verified focusable />`,
+<Avatar size="md" src="..." state="verified" focusable />`,
   },
   {
     id: "with-border",
     title: "With border — all sizes",
-    description: "All sizes with border ring × no badge, count badge, online, company icon, verified.",
+    description: "All sizes with border ring × no badge, count badge, online, company icon, verified, blocked.",
     preview: (
       <div className="flex flex-col gap-4">
         {baseRow(true)}
@@ -281,13 +300,14 @@ const SECTIONS: DocExample[] = [
         {statusRow(true)}
         {companyIconRow(true)}
         {verifiedRow(true)}
+        {blockedRow(true)}
       </div>
     ),
     code: `<Avatar border size="xs" src="..." alt="Olivia Rhye" focusable />
 <Avatar border size="md" src="..." badge={<AvatarCount count={5} />} focusable />
 <Avatar border size="md" src="..." status="online" focusable />
 <Avatar border size="md" src="..." badge={<AvatarCompanyIcon src="..." alt="..." size="md" />} focusable />
-<Avatar border size="md" src="..." verified focusable />`,
+<Avatar border size="md" src="..." state="verified" focusable />`,
   },
   {
     id: "placeholder-all",
@@ -338,7 +358,7 @@ const SECTIONS: DocExample[] = [
   {
     id: "label-group-all",
     title: "Label group — all sizes",
-    description: "AvatarLabelGroup at sm/md/lg × no decoration, online, company icon, verified.",
+    description: "AvatarLabelGroup at sm/md/lg × no decoration, online, company icon, verified, blocked.",
     preview: (
       <div className="flex flex-col gap-4">
         {(["sm", "md", "lg"] as const).map((sz) => (
@@ -351,13 +371,17 @@ const SECTIONS: DocExample[] = [
           <AvatarLabelGroup key={`${sz}-company`} size={sz} src={SRC} alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" badge={<AvatarCompanyIcon src={COMPANY} alt="Layers Inc." size={sz} />} />
         ))}
         {(["sm", "md", "lg"] as const).map((sz) => (
-          <AvatarLabelGroup key={`${sz}-verified`} size={sz} src={SRC} alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" verified />
+          <AvatarLabelGroup key={`${sz}-verified`} size={sz} src={SRC} alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" state="verified" />
+        ))}
+        {(["sm", "md", "lg"] as const).map((sz) => (
+          <AvatarLabelGroup key={`${sz}-blocked`} size={sz} src={SRC} alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" state="blocked" />
         ))}
       </div>
     ),
     code: `<AvatarLabelGroup size="sm" src="..." alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" />
 <AvatarLabelGroup size="md" src="..." alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" status="online" />
-<AvatarLabelGroup size="lg" src="..." alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" verified />`,
+<AvatarLabelGroup size="lg" src="..." alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" state="verified" />
+<AvatarLabelGroup size="lg" src="..." alt="Olivia Rhye" title="Olivia Rhye" subtitle="olivia@untitledui.com" state="blocked" />`,
   },
   {
     id: "profile-photo-all",
@@ -367,24 +391,30 @@ const SECTIONS: DocExample[] = [
       <div className="flex flex-col gap-16">
         <div className="flex gap-8">
           {(["sm", "md", "lg"] as const).map((sz) => (
-            <AvatarProfilePhoto key={sz} verified size={sz} src={SRC} alt="Olivia Rhye" />
+            <AvatarProfilePhoto key={sz} state="verified" size={sz} src={SRC} alt="Olivia Rhye" />
           ))}
         </div>
         <div className="flex gap-8">
           {(["sm", "md", "lg"] as const).map((sz) => (
-            <AvatarProfilePhoto key={sz} verified size={sz} alt="Olivia Rhye" />
+            <AvatarProfilePhoto key={sz} state="verified" size={sz} alt="Olivia Rhye" />
           ))}
         </div>
         <div className="flex gap-8">
           {(["sm", "md", "lg"] as const).map((sz) => (
-            <AvatarProfilePhoto key={sz} verified size={sz} initials="OR" />
+            <AvatarProfilePhoto key={sz} state="verified" size={sz} initials="OR" />
+          ))}
+        </div>
+        <div className="flex gap-8">
+          {(["sm", "md", "lg"] as const).map((sz) => (
+            <AvatarProfilePhoto key={sz} state="blocked" size={sz} src={SRC} alt="Olivia Rhye" />
           ))}
         </div>
       </div>
     ),
-    code: `<AvatarProfilePhoto verified size="sm" src="..." alt="Olivia Rhye" />
-<AvatarProfilePhoto verified size="md" src="..." alt="Olivia Rhye" />
-<AvatarProfilePhoto verified size="lg" src="..." alt="Olivia Rhye" />`,
+    code: `<AvatarProfilePhoto state="verified" size="sm" src="..." alt="Olivia Rhye" />
+<AvatarProfilePhoto state="verified" size="md" src="..." alt="Olivia Rhye" />
+<AvatarProfilePhoto state="verified" size="lg" src="..." alt="Olivia Rhye" />
+<AvatarProfilePhoto state="blocked"  size="lg" src="..." alt="Olivia Rhye" />`,
   },
 ];
 
@@ -392,7 +422,7 @@ export default function AvatarPage() {
   return (
     <ComponentDocLayout
       name="Avatar"
-      tagline="User identity container with image, initials, or placeholder fallback. Supports status dots, verified badges, count badges, company icons, label groups, and profile photos."
+      tagline="User identity container with image, initials, or placeholder fallback. Supports status dots, verified/blocked state badges, count badges, company icons, label groups, and profile photos."
       install={{
         usage: `import { Avatar, AvatarLabelGroup, AvatarProfilePhoto, AvatarCompanyIcon, AvatarCount, AvatarAddButton } from "@mvp-ui/ui";`,
       }}

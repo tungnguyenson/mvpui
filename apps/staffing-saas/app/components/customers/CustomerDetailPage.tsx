@@ -1,7 +1,7 @@
 import { Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Building2, ChevronRight } from "lucide-react";
+import { Building2 } from "lucide-react";
 import {
   CUSTOMER_STATUS_LABELS,
   getCustomerById,
@@ -9,6 +9,8 @@ import {
 import { getCustomerDetailExtras } from "./customer-detail-data";
 import { CustomerDetailTabs } from "./detail/CustomerDetailTabs";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
+import { APP_ROUTES } from "../_shell/nav";
 import { getCustomerLogo } from "../_shared/assets";
 
 export function CustomerDetailPage({ id }: { id: string }) {
@@ -25,17 +27,13 @@ export function CustomerDetailPage({ id }: { id: string }) {
     <PageScaffold
       header={
         <div className="flex flex-col gap-5">
-          <nav className="flex items-center gap-1 text-sm text-fg-tertiary" aria-label="breadcrumb">
-            <Link href="/" className="hover:text-fg">
-              Home
-            </Link>
-            <ChevronRight className="size-3.5" />
-            <Link href="/customers" className="hover:text-fg">
-              Quản lý công ty
-            </Link>
-            <ChevronRight className="size-3.5" />
-            <span className="text-fg">Chi tiết</span>
-          </nav>
+          <SetPageBreadcrumb
+            items={[
+              { label: "Dashboard", href: APP_ROUTES.dashboard },
+              { label: "Khách hàng", href: APP_ROUTES.customers },
+              { label: extras.brand.brandName },
+            ]}
+          />
 
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="flex items-start gap-4">
@@ -43,11 +41,11 @@ export function CustomerDetailPage({ id }: { id: string }) {
                 const logo = getCustomerLogo(customer.id);
                 if (logo) {
                   return (
-                    <div className="flex size-16 shrink-0 items-center justify-center rounded-xl border border-border-secondary bg-bg p-2">
+                    <div className="size-16 shrink-0 overflow-hidden rounded-xl shadow-sm">
                       <img
                         src={logo.mark}
                         alt={`Logo ${customer.name}`}
-                        className="size-full object-contain"
+                        className="size-full object-cover"
                       />
                     </div>
                   );

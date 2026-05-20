@@ -90,7 +90,7 @@ export const WORKERS: WorkerRecord[] = [
       {
         id: "SH-801",
         shiftName: "Ca bán hàng cuối tuần",
-        customer: "Highlands Commerce",
+        customer: "GHN Sorting",
         schedule: "18/05, 08:00 - 17:00",
         checkInStatus: "Đúng giờ",
         payout: "₫650.000",
@@ -98,7 +98,7 @@ export const WORKERS: WorkerRecord[] = [
       {
         id: "SH-784",
         shiftName: "Ca activation quầy sampling",
-        customer: "Highlands Commerce",
+        customer: "GHN Sorting",
         schedule: "17/05, 10:00 - 18:00",
         checkInStatus: "Đúng giờ",
         payout: "₫720.000",
@@ -138,7 +138,7 @@ export const WORKERS: WorkerRecord[] = [
       {
         id: "SH-702",
         shiftName: "Ca lễ tân chiều",
-        customer: "Medistar Clinic",
+        customer: "Shopee Express Official",
         schedule: "19/05, 13:00 - 18:00",
         checkInStatus: "Đúng giờ",
         payout: "₫480.000",
@@ -146,7 +146,7 @@ export const WORKERS: WorkerRecord[] = [
       {
         id: "SH-695",
         shiftName: "Ca hỗ trợ khách hàng sáng",
-        customer: "Medistar Clinic",
+        customer: "Shopee Express Official",
         schedule: "17/05, 08:00 - 12:00",
         checkInStatus: "Đi trễ",
         payout: "₫360.000",
@@ -186,7 +186,7 @@ export const WORKERS: WorkerRecord[] = [
       {
         id: "SH-910",
         shiftName: "Ca kho đêm A",
-        customer: "GoMart Distribution",
+        customer: "Ninja Van",
         schedule: "18/05, 22:00 - 06:00",
         checkInStatus: "Đúng giờ",
         payout: "₫580.000",
@@ -194,7 +194,7 @@ export const WORKERS: WorkerRecord[] = [
       {
         id: "SH-901",
         shiftName: "Ca đóng gói sáng",
-        customer: "GoMart Distribution",
+        customer: "Ninja Van",
         schedule: "16/05, 07:00 - 15:00",
         checkInStatus: "Đúng giờ",
         payout: "₫470.000",
@@ -234,7 +234,7 @@ export const WORKERS: WorkerRecord[] = [
       {
         id: "SH-612",
         shiftName: "Ca chăm sóc quầy FMCG",
-        customer: "Highlands Commerce",
+        customer: "GHN Sorting",
         schedule: "19/05, 09:00 - 18:00",
         checkInStatus: "Đúng giờ",
         payout: "₫690.000",
@@ -274,7 +274,7 @@ export const WORKERS: WorkerRecord[] = [
       {
         id: "SH-844",
         shiftName: "Ca kho tăng cường",
-        customer: "GoMart Distribution",
+        customer: "Ninja Van",
         schedule: "11/05, 22:00 - 06:00",
         checkInStatus: "Vắng mặt",
         payout: "₫0",

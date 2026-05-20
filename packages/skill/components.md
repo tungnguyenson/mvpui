@@ -51,10 +51,11 @@ Import all components from `@mvp-ui/ui`.
 
 | Component | Named exports | When to use | Gotcha |
 |---|---|---|---|
+| Accordion | `Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent` | Vertically stacked, expandable panels (FAQ, config groups) | Radix-based; mirrors shadcn API. `type="single"` + `collapsible` for one-at-a-time, `type="multiple"` for many open. `AccordionTrigger` accepts `trailing` slot for badges. |
 | Alert | `Alert`, `AlertTitle`, `AlertDescription` | Inline feedback (success, error, warning, info) | `variant` prop, not `color` |
-| Avatar | `Avatar` | User/entity image representation | `src` optional; falls back to initials or placeholder |
+| Avatar | `Avatar` | User/entity image representation | `src` optional; falls back to initials or placeholder. `state="verified"\|"blocked"` for status badge (mutually exclusive with `status` dot and `count` badge) |
 | AvatarLabelGroup | `AvatarLabelGroup` | Avatar + name + subtitle inline | `size` required (`sm`/`md`/`lg`); extends `AvatarProps` |
-| AvatarProfilePhoto | `AvatarProfilePhoto` | Editable avatar with upload overlay | — |
+| AvatarProfilePhoto | `AvatarProfilePhoto` | Editable avatar with upload overlay | `state="verified"\|"blocked"\|null` (null = no badge) |
 | AvatarCompanyIcon | `AvatarCompanyIcon` | Company logo avatar | — |
 | AvatarCount | `AvatarCount` | "+N" overflow avatar in groups | — |
 | AvatarAddButton | `AvatarAddButton` | Add member button in avatar groups | — |

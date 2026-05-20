@@ -82,6 +82,7 @@ export default defineConfig({
     modal: "src/components/modal.tsx",
     "date-range-picker": "src/components/date-range-picker.tsx",
     carousel: "src/components/carousel.tsx",
+    accordion: "src/components/accordion.tsx",
   },
   format: ["esm", "cjs"],
   dts: true,

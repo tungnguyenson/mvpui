@@ -199,26 +199,48 @@ export interface CustomerBrand {
 
 export const CUSTOMER_LOGOS: Record<string, CustomerBrand> = {
   "highlands-commerce": {
-    full: "/logos/full/boltshift.svg",
-    mark: "/logos/logomark/boltshift.svg",
+    full: "https://business.viec.co/storage/companies/1591/logo.png",
+    mark: "https://business.viec.co/storage/companies/1591/logo.png",
   },
   "gomart-distribution": {
-    full: "/logos/full/catalog.svg",
-    mark: "/logos/logomark/catalog.svg",
+    full: "https://business.viec.co/storage/companies/42/logo.png",
+    mark: "https://business.viec.co/storage/companies/42/logo.png",
   },
   "medistar-clinic": {
-    full: "/logos/full/biosynthesis.svg",
-    mark: "/logos/logomark/biosynthesis.svg",
+    full: "https://business.viec.co/storage/companies/2312/logo.png",
+    mark: "https://business.viec.co/storage/companies/2312/logo.png",
   },
   "nova-event-partners": {
-    full: "/logos/full/contrast-ai.svg",
-    mark: "/logos/logomark/contrast-ai.svg",
+    full: "https://business.viec.co/storage/companies/July2021/logo83799.png",
+    mark: "https://business.viec.co/storage/companies/July2021/logo83799.png",
   },
 };
 
 export function getCustomerLogo(customerId?: string): CustomerBrand | undefined {
   if (!customerId) return undefined;
   return CUSTOMER_LOGOS[customerId];
+}
+
+const SAMPLE_LOGOMARKS = [
+  "/logos/logomark/acme-corp.svg",
+  "/logos/logomark/boltshift.svg",
+  "/logos/logomark/catalog.svg",
+  "/logos/logomark/biosynthesis.svg",
+  "/logos/logomark/contrast-ai.svg",
+  "/logos/logomark/quantum.svg",
+  "/logos/logomark/lightspeed.svg",
+  "/logos/logomark/warpspeed.svg",
+  "/logos/logomark/luminary.svg",
+  "/logos/logomark/prometheus.svg",
+  "/logos/logomark/galileo.svg",
+  "/logos/logomark/spherule.svg",
+  "/logos/logomark/radius.svg",
+  "/logos/logomark/voxel-labs.svg",
+  "/logos/logomark/polymath.svg",
+];
+
+export function getSampleLogomark(seed: string): string {
+  return SAMPLE_LOGOMARKS[hashSeed(seed) % SAMPLE_LOGOMARKS.length] ?? SAMPLE_LOGOMARKS[0]!;
 }
 
 export function getInitials(name: string): string {

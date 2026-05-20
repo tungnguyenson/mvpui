@@ -289,13 +289,13 @@ const CUSTOMER_EXTRAS_OVERRIDES: Partial<
   "highlands-commerce": (base) => ({
     ...base,
     brand: {
-      brandName: "Highlands Commerce",
+      brandName: "GHN Sorting",
       urlSlug: slugUrl("highlands-commerce"),
       urlLabel: "jobs/highlands-commerce",
       serviceTags: SERVICE_TAGS_BASE,
     },
     legal: {
-      legalName: "Công ty cổ phần Highlands Commerce",
+      legalName: "Công ty cổ phần GHN Sorting",
       taxId: "0312987456",
       legalAddress: "27 Lê Duẩn, Phường Bến Nghé, Quận 1, Thành phố Hồ Chí Minh",
       invoiceEmail: "billing@highlands.vn",

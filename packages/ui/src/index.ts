@@ -161,7 +161,7 @@ export type { SectionProps } from "./components/section.js";
 export { Section } from "./components/section.js";
 export type { FeaturedIconProps } from "./components/featured-icon.js";
 export { FeaturedIcon } from "./components/featured-icon.js";
-export type { AvatarProps, AvatarSize } from "./components/avatars/avatar.js";
+export type { AvatarProps, AvatarSize, AvatarState } from "./components/avatars/avatar.js";
 export { Avatar } from "./components/avatars/avatar.js";
 export type { AvatarLabelGroupProps } from "./components/avatars/avatar-label-group.js";
 export { AvatarLabelGroup } from "./components/avatars/avatar-label-group.js";
@@ -258,7 +258,7 @@ export type { DropdownItemProps, DropdownMenuProps, DropdownPopoverProps, Dropdo
 export { Dropdown } from "./components/dropdown.js";
 export type { FileUploadTriggerProps } from "./components/file-upload-trigger.js";
 export { FileUploadTrigger } from "./components/file-upload-trigger.js";
-export type { DrawerProps, DrawerHeaderProps, DrawerBodyProps, DrawerFooterProps, DrawerSide, DrawerSize } from "./components/drawer.js";
+export type { DrawerProps, DrawerHeaderProps, DrawerBodyProps, DrawerFooterProps, DrawerSide, DrawerSize, DrawerBackdrop } from "./components/drawer.js";
 export { Drawer, DrawerHeader, DrawerBody, DrawerFooter } from "./components/drawer.js";
 export type { DatePickerProps } from "./components/date-picker.js";
 export { DatePicker } from "./components/date-picker.js";
@@ -322,6 +322,18 @@ export {
 	CarouselContext,
 	useCarousel,
 } from "./components/carousel.js";
+export type {
+	AccordionProps,
+	AccordionItemProps,
+	AccordionTriggerProps,
+	AccordionContentProps,
+} from "./components/accordion.js";
+export {
+	Accordion,
+	AccordionItem,
+	AccordionTrigger,
+	AccordionContent,
+} from "./components/accordion.js";
 export type { PlayButtonIconProps } from "./components/play-button-icon.js";
 export { PlayButtonIcon } from "./components/play-button-icon.js";
 export type { StarIconProps, RatingStarsProps } from "./components/rating-stars.js";

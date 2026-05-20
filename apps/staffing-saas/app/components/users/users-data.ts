@@ -129,7 +129,7 @@ export const USERS: UserRecord[] = [
       },
       { id: "a-2", at: "Hôm qua 18:40", action: "Mở vi phạm VL-3198" },
     ],
-    notes: "Điều phối ca kho đêm cho GoMart Distribution.",
+    notes: "Điều phối ca kho đêm cho Ninja Van.",
   },
   {
     id: "pham-quoc-bao",

@@ -192,7 +192,7 @@ const MODULES: ModuleCard[] = [
 const HIRING_REQUESTS: HiringRequest[] = [
   {
     id: "HR-2401",
-    customer: "Highlands Commerce",
+    customer: "GHN Sorting",
     role: "CTV bán hàng cuối tuần",
     city: "TP.HCM",
     openSlots: "12/20",
@@ -201,7 +201,7 @@ const HIRING_REQUESTS: HiringRequest[] = [
   },
   {
     id: "HR-2402",
-    customer: "GoMart Distribution",
+    customer: "Ninja Van",
     role: "CTV kho ca đêm",
     city: "Bình Dương",
     openSlots: "8/15",
@@ -210,7 +210,7 @@ const HIRING_REQUESTS: HiringRequest[] = [
   },
   {
     id: "HR-2403",
-    customer: "Medistar Clinic",
+    customer: "Shopee Express Official",
     role: "Lễ tân part-time",
     city: "Hà Nội",
     openSlots: "4/6",

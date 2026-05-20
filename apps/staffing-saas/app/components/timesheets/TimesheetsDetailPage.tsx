@@ -161,11 +161,11 @@ export function TimesheetsDetailPage({ id }: { id: string }) {
                 const logo = getCustomerLogo(record.customerId);
                 if (logo) {
                   return (
-                    <div className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-border-secondary bg-bg p-1">
+                    <div className="mt-0.5 size-6 shrink-0 overflow-hidden rounded-md">
                       <img
                         src={logo.mark}
                         alt={`Logo ${record.customer}`}
-                        className="size-full object-contain"
+                        className="size-full object-cover"
                       />
                     </div>
                   );

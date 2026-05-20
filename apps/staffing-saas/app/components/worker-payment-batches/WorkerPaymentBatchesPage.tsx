@@ -1,94 +1,113 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Button, Input, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, CreditCard, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   BATCH_STATUS_LABELS,
   PAYMENT_BATCHES,
+  type BatchStatus,
   type PaymentBatchRecord,
 } from "./worker-payment-batches-data";
+import { formatRelativeVi, formatVnd } from "./detail/formatters";
 
-const FILTERS = [
+type QuickFilterId = "all" | "running" | "locked" | "completed" | "cancelled";
+
+const QUICK_FILTERS: ReadonlyArray<{ id: QuickFilterId; label: string }> = [
   { id: "all", label: "Tất cả" },
-  { id: "pending", label: "Chờ duyệt" },
-  { id: "approved", label: "Đã duyệt" },
-  { id: "paid", label: "Đã thanh toán" },
-] as const;
-
-const COLUMNS = [
-  { id: "batch", name: "Mã batch", isRowHeader: true as const },
-  { id: "period", name: "Kỳ thanh toán" },
-  { id: "workers", name: "Số CTV" },
-  { id: "amount", name: "Tổng tiền" },
-  { id: "status", name: "Trạng thái" },
-  { id: "payout", name: "Ngày chi trả" },
-  { id: "detail", name: "" },
+  { id: "running", label: "Đang chạy" },
+  { id: "locked", label: "Đã chốt" },
+  { id: "completed", label: "Hoàn thành" },
+  { id: "cancelled", label: "Đã huỷ" },
 ];
 
-function SummaryCard({
-  label,
-  value,
-  description,
-}: {
-  label: string;
-  value: string;
-  description: string;
-}) {
-  return (
-    <div className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
-      <p className="text-sm font-medium text-fg-tertiary">{label}</p>
-      <p className="mt-2 text-2xl font-semibold text-fg">{value}</p>
-      <p className="mt-2 text-sm text-fg-tertiary">{description}</p>
-    </div>
-  );
+function matchesQuickFilter(status: BatchStatus, filter: QuickFilterId): boolean {
+  if (filter === "all") return true;
+  if (filter === "running") return status === "new" || status === "running";
+  return status === filter;
 }
+
+const COLUMNS = [
+  { id: "cycle", name: "Kỳ thanh toán", isRowHeader: true as const },
+  { id: "stats", name: "Thống kê" },
+  { id: "due", name: "Hạn thanh toán" },
+  { id: "amount", name: "Tổng tiền" },
+  { id: "status", name: "Trạng thái" },
+  { id: "action", name: "" },
+];
 
 function BatchRow({ batch }: { batch: PaymentBatchRecord }) {
   const status = BATCH_STATUS_LABELS[batch.status];
+  const overdue =
+    batch.daysRemaining !== undefined &&
+    batch.daysRemaining < 0 &&
+    batch.status !== "completed" &&
+    batch.status !== "cancelled";
 
   return (
     <Table.Row id={batch.id}>
       <Table.Cell>
         <Link
           href={`/worker-payment-batches/${batch.id}`}
-          className="flex items-center gap-3"
+          className="flex flex-col"
         >
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-fg">
-            <CreditCard className="size-5" />
-          </div>
-          <div className="min-w-0">
-            <div className="truncate text-sm font-medium text-fg">{batch.code}</div>
-            <div className="truncate text-sm text-fg-tertiary">{batch.createdBy}</div>
-          </div>
+          <span className="text-sm font-medium text-fg hover:text-fg-brand">
+            {batch.cycleName}
+          </span>
+          <span className="text-xs text-fg-tertiary">{batch.periodRange}</span>
+          <span className="font-mono text-xs text-fg-tertiary">{batch.code}</span>
         </Link>
       </Table.Cell>
       <Table.Cell>
-        <div className="text-sm text-fg">{batch.period}</div>
+        <div className="grid grid-cols-[80px_auto] gap-x-2 gap-y-0.5 text-xs text-fg-tertiary">
+          <span>Số CTV</span>
+          <span className="font-medium text-fg tabular-nums">
+            : {batch.summary.workerCount.toLocaleString("vi-VN")}
+          </span>
+          <span>Số công ty</span>
+          <span className="font-medium text-fg tabular-nums">
+            : {batch.summary.companyCount}
+          </span>
+        </div>
       </Table.Cell>
       <Table.Cell>
-        <div className="text-sm text-fg">{batch.workerCount}</div>
+        <div className="flex flex-col">
+          <span className="text-sm text-fg tabular-nums">{batch.dueDate}</span>
+          {batch.daysRemaining !== undefined && batch.daysRemaining > 0 && (
+            <span className="text-xs text-fg-error">
+              (Còn {batch.daysRemaining} ngày)
+            </span>
+          )}
+          {overdue && (
+            <span className="text-xs text-fg-error">
+              (Quá hạn {Math.abs(batch.daysRemaining ?? 0)} ngày)
+            </span>
+          )}
+        </div>
       </Table.Cell>
       <Table.Cell>
-        <div className="text-sm font-medium text-fg">{batch.netAmount}</div>
+        <div className="text-right text-sm font-medium text-fg tabular-nums">
+          {formatVnd(batch.summary.totalAmount, { suffix: true })}
+        </div>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
-          {status.label}
-        </Badge>
-      </Table.Cell>
-      <Table.Cell>
-        <div className="text-sm text-fg-tertiary">{batch.payoutDate}</div>
+        <div className="flex flex-col gap-1">
+          <Badge color={status.color} type="pill-color" size="sm">
+            {status.label}
+          </Badge>
+          <span className="text-xs text-fg-tertiary">
+            {formatRelativeVi(batch.timeline.updatedAt)}
+          </span>
+        </div>
       </Table.Cell>
       <Table.Cell>
         <Link
           href={`/worker-payment-batches/${batch.id}`}
-          className="flex items-center justify-end text-fg-tertiary transition-colors hover:text-fg"
-          aria-label={`Mở chi tiết ${batch.code}`}
+          className="text-sm font-medium text-fg-brand hover:underline"
         >
-          <ChevronRight className="size-4" />
+          Xem chi tiết
         </Link>
       </Table.Cell>
     </Table.Row>
@@ -97,92 +116,74 @@ function BatchRow({ batch }: { batch: PaymentBatchRecord }) {
 
 export function WorkerPaymentBatchesPage() {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] =
-    useState<(typeof FILTERS)[number]["id"]>("all");
+  const [quickFilter, setQuickFilter] = useState<QuickFilterId>("all");
 
   const filtered = useMemo(() => {
+    const q = search.trim().toLowerCase();
     return PAYMENT_BATCHES.filter((batch) => {
-      const matchesStatus =
-        statusFilter === "all" ? true : batch.status === statusFilter;
-      const matchesSearch =
-        search === "" ||
-        batch.code.toLowerCase().includes(search.toLowerCase()) ||
-        batch.period.toLowerCase().includes(search.toLowerCase());
-      return matchesStatus && matchesSearch;
+      if (!matchesQuickFilter(batch.status, quickFilter)) return false;
+      if (!q) return true;
+      return (
+        batch.code.toLowerCase().includes(q) ||
+        batch.cycleName.toLowerCase().includes(q) ||
+        batch.periodRange.toLowerCase().includes(q)
+      );
     });
-  }, [search, statusFilter]);
-
-  const pendingCount = PAYMENT_BATCHES.filter((b) => b.status === "pending").length;
-  const paidCount = PAYMENT_BATCHES.filter((b) => b.status === "paid").length;
-  const totalWorkers = PAYMENT_BATCHES.reduce((s, b) => s + b.workerCount, 0);
+  }, [search, quickFilter]);
 
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Thanh toán CTV</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Quản lý các batch thanh toán cho cộng tác viên theo từng chu kỳ, từ giai đoạn
-            duyệt nội bộ đến khi hoàn tất chuyển khoản.
-          </p>
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-xl font-semibold text-fg">Kỳ thanh toán</h1>
+            <p className="max-w-3xl text-base text-fg-tertiary">
+              Theo dõi mọi kỳ thù lao đã chốt và đang chạy thanh toán cho CTV.
+            </p>
+          </div>
+          <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
+            Tạo kỳ mới
+          </Button>
         </div>
       }
     >
-      <div className="grid gap-4 lg:grid-cols-3">
-        <SummaryCard
-          label="Batch chờ duyệt"
-          value={`${pendingCount}`}
-          description="Các batch cần kế toán hoặc CFO xem trước khi chạy chi trả."
-        />
-        <SummaryCard
-          label="Batch đã thanh toán"
-          value={`${paidCount}`}
-          description="Đã hoàn tất chuyển khoản trong các chu kỳ gần đây."
-        />
-        <SummaryCard
-          label="Tổng lượt CTV"
-          value={`${totalWorkers}`}
-          description="Số lượt worker được tính lương trong các batch hiển thị."
-        />
-      </div>
-
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
+          <div className="flex flex-wrap gap-2">
+            {QUICK_FILTERS.map((filter) => {
+              const active = filter.id === quickFilter;
+              return (
+                <button
+                  key={filter.id}
+                  type="button"
+                  onClick={() => setQuickFilter(filter.id)}
+                  className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
+                    active
+                      ? "border-border-brand bg-bg-secondary text-fg"
+                      : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
+                  }`}
+                >
+                  {filter.label}
+                </button>
+              );
+            })}
+          </div>
           <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Tìm theo mã batch hoặc kỳ thanh toán"
+              placeholder="Tìm theo code hoặc tên kỳ"
               iconLeading={<Search className="size-4" />}
-              aria-label="Tìm batch thanh toán"
+              aria-label="Tìm kỳ thanh toán"
             />
-            <div className="flex flex-wrap gap-2">
-              {FILTERS.map((filter) => {
-                const active = filter.id === statusFilter;
-                return (
-                  <button
-                    key={filter.id}
-                    type="button"
-                    onClick={() => setStatusFilter(filter.id)}
-                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
-                      active
-                        ? "border-border-brand bg-bg-secondary text-fg"
-                        : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                    }`}
-                  >
-                    {filter.label}
-                  </button>
-                );
-              })}
+            <div className="self-center text-sm text-fg-tertiary">
+              {filtered.length} kỳ phù hợp
             </div>
-          </div>
-          <div className="text-sm text-fg-tertiary">
-            {filtered.length} batch phù hợp với bộ lọc hiện tại.
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <Table aria-label="Danh sách batch thanh toán">
+          <Table aria-label="Danh sách kỳ thanh toán">
             <Table.Header>
               {COLUMNS.map((column) => (
                 <Table.Head
@@ -193,10 +194,26 @@ export function WorkerPaymentBatchesPage() {
                 />
               ))}
             </Table.Header>
-            <Table.Body items={filtered}>
+            <Table.Body
+              items={filtered}
+              renderEmptyState={() => (
+                <div className="flex flex-col items-center gap-2 px-6 py-12 text-fg-tertiary">
+                  <p className="text-sm">Chưa có kỳ thanh toán phù hợp</p>
+                </div>
+              )}
+            >
               {(batch) => <BatchRow batch={batch} />}
             </Table.Body>
           </Table>
+        </div>
+
+        <div className="flex items-center justify-end gap-4 border-t border-border-secondary px-5 py-3 text-sm text-fg-tertiary">
+          <span>
+            1-{filtered.length} of {filtered.length} items
+          </span>
+          <span className="rounded-md border border-border-secondary px-2 py-1 text-xs text-fg">
+            20 / trang
+          </span>
         </div>
       </TableCard.Root>
     </PageScaffold>

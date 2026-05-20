@@ -342,11 +342,11 @@ export const DateRangePicker = ({
 						>
 							<CalendarIcon className="size-4 shrink-0 text-fg-tertiary" />
 							{triggerLabel ? (
-								<span className="flex-1 text-left font-medium text-fg">
+								<span className="flex-1 truncate text-left font-medium text-fg">
 									{triggerLabel}
 								</span>
 							) : (
-								<span className="flex-1 text-left text-fg-tertiary">
+								<span className="flex-1 truncate text-left text-fg-tertiary">
 									Select dates
 								</span>
 							)}

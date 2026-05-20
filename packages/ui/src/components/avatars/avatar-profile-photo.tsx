@@ -11,7 +11,7 @@
 
 import { type FC, type ReactNode, useState } from "react";
 import { cn } from "../../lib/cn.js";
-import { OnlineIndicator, VerifiedTickIcon } from "./avatar.js";
+import { type AvatarState, BlockedXIcon, OnlineIndicator, VerifiedTickIcon } from "./avatar.js";
 
 const PROFILE_DATA = {
   sm: {
@@ -67,12 +67,12 @@ function UserIcon({ className }: { className?: string }) {
 
 export interface AvatarProfilePhotoProps {
   size?: "sm" | "md" | "lg";
-  src?: string | null;
+  src?: string | null | undefined;
   alt?: string;
   initials?: string;
   placeholderIcon?: FC<{ className?: string }>;
   placeholder?: ReactNode;
-  verified?: boolean;
+  state?: AvatarState | null;
   badge?: ReactNode;
   status?: "online" | "offline";
   className?: string;
@@ -85,7 +85,7 @@ export const AvatarProfilePhoto = ({
   initials,
   placeholder,
   placeholderIcon: PlaceholderIcon,
-  verified,
+  state,
   badge,
   status,
   className,
@@ -138,8 +138,11 @@ export const AvatarProfilePhoto = ({
         />
       );
     }
-    if (verified) {
+    if (state === "verified") {
       return <VerifiedTickIcon size="2xl" className={cn("absolute", p.tick, p.badgePos)} />;
+    }
+    if (state === "blocked") {
+      return <BlockedXIcon size="2xl" className={cn("absolute", p.tick, p.badgePos)} />;
     }
     return badge ?? null;
   })();

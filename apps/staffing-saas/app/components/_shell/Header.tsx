@@ -4,10 +4,12 @@ import { Breadcrumbs, Button, Input } from "@mvp-ui/ui";
 import { Bell, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { breadcrumbsForPath } from "./nav";
+import { useBreadcrumbOverride } from "./BreadcrumbContext";
 
 export function Header() {
     const pathname = usePathname();
-    const breadcrumbs = breadcrumbsForPath(pathname);
+    const override = useBreadcrumbOverride();
+    const breadcrumbs = override ?? breadcrumbsForPath(pathname);
 
     return (
         <div className="flex h-16 items-center gap-4 border-b border-border-secondary px-4 md:px-8 bg-bg">

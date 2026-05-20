@@ -147,6 +147,35 @@ export function VerifiedTickIcon({
   );
 }
 
+export function BlockedXIcon({
+  size,
+  className,
+}: {
+  size: AvatarSize;
+  className?: string;
+}) {
+  const s = AVATAR_SIZE_DATA[size];
+  return (
+    <svg
+      className={cn("absolute right-0 bottom-0 z-10", s.verified, className)}
+      viewBox="0 0 10 10"
+      fill="none"
+      aria-label="Blocked"
+    >
+      {/* Solid destructive fill — semantic error red */}
+      <circle cx="5" cy="5" r="4.5" fill="#d92d20" stroke="white" strokeWidth="0.6" /> {/* dark-ok */}
+      <path
+        d="M3.4 3.4 L6.6 6.6 M6.6 3.4 L3.4 6.6"
+        stroke="white"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export type AvatarState = "verified" | "blocked";
+
 function CountBadge({ count }: { count: number }) {
   return (
     <div className="absolute right-0 bottom-0 p-px">
@@ -164,13 +193,13 @@ function CountBadge({ count }: { count: number }) {
 export interface AvatarProps {
   size?: AvatarSize;
   className?: string;
-  src?: string | null;
+  src?: string | null | undefined;
   alt?: string;
   border?: boolean;
   rounded?: boolean;
   badge?: ReactNode;
   status?: "online" | "offline";
-  verified?: boolean;
+  state?: AvatarState | null;
   count?: number;
   initials?: string;
   placeholderIcon?: FC<{ className?: string }>;
@@ -188,7 +217,7 @@ export const Avatar = ({
   border,
   badge,
   status,
-  verified,
+  state,
   count,
   focusable = false,
   rounded = true,
@@ -221,7 +250,8 @@ export const Avatar = ({
 
   const decoration = (() => {
     if (status) return <OnlineIndicator size={size} status={status} className="right-0 bottom-0" />;
-    if (verified) return <VerifiedTickIcon size={size} />;
+    if (state === "verified") return <VerifiedTickIcon size={size} />;
+    if (state === "blocked") return <BlockedXIcon size={size} />;
     if (count) return <CountBadge count={count} />;
     return badge ?? null;
   })();

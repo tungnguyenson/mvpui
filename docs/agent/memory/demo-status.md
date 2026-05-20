@@ -186,6 +186,12 @@ Standalone workspace apps that consume `@mvp-ui/ui` (not docs demo pages).
 |---|---|---|
 | Breadcrumbs | ✅ complete | Figma-only; `variant="text"/"text-with-line"/"button"`; `divider="chevron"/"slash"`; `showHomeIcon`; 5 demo sections |
 
+## Disclosure Components
+
+| Component | Status | Notes |
+|---|---|---|
+| Accordion | ✅ complete | `@radix-ui/react-accordion` + Untitled tokens; mirrors shadcn API (`Accordion`, `AccordionItem`, `AccordionTrigger`, `AccordionContent`). Supports `type="single"`+`collapsible` or `type="multiple"`. `AccordionTrigger` accepts `trailing` slot for badges + `hideChevron` flag. Animation keyframes (`--animate-accordion-down/up`) live in `@mvp-ui/tokens` theme.css driven by Radix `--radix-accordion-content-height`. 4 demo sections |
+
 ## Session log
 
 | Date | Work done |
@@ -213,3 +219,4 @@ Standalone workspace apps that consume `@mvp-ui/ui` (not docs demo pages).
 | 2026-05-20 | `apps/staffing-saas` customers module completed. Added `/customers` listing page with search and status filters plus `/customers/[id]` detail page with company profile, main contact, hiring requests, open shifts, and billing snapshot. `pnpm build` clean. |
 | 2026-05-20 | `apps/staffing-saas` workers module completed. Added `/workers` listing page with search and status filters plus `/workers/[id]` detail page with profile summary, shift history, and cross-links to verification, violations, and payment flows. `pnpm build` clean. |
 | 2026-05-20 | `apps/staffing-saas` reconciliation-config list page added at `/customer-reconciliations` ("Cấu hình đối soát"); new sidebar entry directly under "Khách hàng". Page modeled on legacy "Tổng hợp cấu hình đối soát": filter bar (Tên công ty, Mã số thuế), 10-col table with info-tooltip headers, account-number badge, brand-color company link (detail route TBD), payment-doc warning pills, contact chips on `bg-info-bg`, and Pagination footer over 12 seed rows. Seed data in `customer-reconciliation-configs-data.ts`. `tsc` clean on the new files; dark-safe lint clean. |
+| 2026-05-20 | New `Accordion` component in `@mvp-ui/ui` (`@radix-ui/react-accordion` + Untitled tokens, shadcn-style API). Animation keyframes added to `@mvp-ui/tokens` theme.css. Docs page + nav "Disclosure" section + skill index entry + changeset. `apps/staffing-saas`: replaced legacy `/reward-rules` (rule library demo) with new `/bonuses` (adhoc bonus instances) inspired by the legacy `Thưởng Adhoc` screenshots in `resources/ops-screenshots/bonus/`. List page: filter bar (search, DateRangePicker, status/manager/job-code Selects, refresh), 3 summary cards, 7-col table, Pagination. Detail page: header with status pill + destructive `Hủy thưởng`, `Kết quả thực tế` stat band (CTV requested/approved/qualified + budget max/applied/paid), two-column body — left worker ledger (search + Avatar + paginated Table), right config Accordion (6 sections, multi-open). Seed data in `bonuses-data.ts` is sanitized — synthetic IDs (`BNS-104x`, `JOB-100x`, `W-220xx`), no real partner brands or production amounts. Old `reward-rules` route + components dir deleted; sidebar nav updated `Thưởng → /bonuses`. `tsc` clean on new files; biome lint clean on new files; pre-existing `exactOptionalPropertyTypes` errors in shared assets / other detail pages remain. |

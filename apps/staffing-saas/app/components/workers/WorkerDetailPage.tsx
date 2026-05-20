@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button } from "@mvp-ui/ui";
+import { AvatarProfilePhoto, Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -102,12 +102,14 @@ export function WorkerDetailPage({ id }: { id: string }) {
       header={
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-4">
-            <Avatar
-              size="xl"
+            <AvatarProfilePhoto
+              state={worker.status === "active" ? "verified" : worker.status === "locked" ? "blocked" : null}
+              size="lg"
               src={getAvatarFor(worker.name, worker.id)}
               alt={worker.name}
               initials={getInitials(worker.name)}
             />
+
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-xl font-semibold text-fg">{worker.name}</h1>

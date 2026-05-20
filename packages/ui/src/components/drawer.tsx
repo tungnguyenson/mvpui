@@ -25,12 +25,15 @@ import { cn } from "../lib/cn.js";
 
 export type DrawerSide = "left" | "right";
 export type DrawerSize = "sm" | "md" | "lg";
+export type DrawerBackdrop = "blur" | "dim" | "none";
 
 export interface DrawerProps extends Omit<AriaModalOverlayProps, "className" | "style"> {
 	/** Which edge the drawer slides in from. @default "right" */
 	side?: DrawerSide;
 	/** Width of the drawer panel. @default "md" */
 	size?: DrawerSize;
+	/** Backdrop treatment behind the drawer. @default "blur" */
+	backdrop?: DrawerBackdrop;
 	/** Drawer heading text. When provided, auto-renders a DrawerHeader and sets aria-labelledby. */
 	title?: string;
 	/** Optional subtitle rendered below the title inside the auto-rendered DrawerHeader. */
@@ -116,9 +119,16 @@ DrawerFooter.displayName = "DrawerFooter";
 /*  Drawer root                                                                */
 /* -------------------------------------------------------------------------- */
 
+const backdropClass: Record<DrawerBackdrop, string> = {
+	blur: "bg-fg/40 backdrop-blur-sm",
+	dim: "bg-fg/40",
+	none: "",
+};
+
 export const Drawer = ({
 	side = "right",
 	size = "md",
+	backdrop = "blur",
 	title,
 	description,
 	isDismissable = true,
@@ -139,7 +149,7 @@ export const Drawer = ({
 				cn(
 					"fixed inset-0 z-50 flex",
 					isRight ? "justify-end" : "justify-start",
-					"bg-fg/40 backdrop-blur-sm",
+					backdropClass[backdrop],
 					isEntering && "animate-in fade-in duration-200 ease-out",
 					isExiting && "animate-out fade-out duration-150 ease-in",
 				)

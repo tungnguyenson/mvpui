@@ -1,6 +1,7 @@
 "use client";
 
 import { Tab, TabList, TabPanel, Tabs } from "@mvp-ui/ui";
+import { useSearchParams } from "next/navigation";
 import type { CustomerDetailExtras } from "../customer-detail-data";
 import { OverviewTab } from "./OverviewTab";
 import { PricingTab } from "./PricingTab";
@@ -19,9 +20,15 @@ const TAB_DEFS = [
   { id: "reconciliation", label: "Cấu hình đối soát" },
 ] as const;
 
+const TAB_IDS = TAB_DEFS.map((t) => t.id) as readonly string[];
+
 export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsProps) {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams.get("tab");
+  const initialTab = tabParam && TAB_IDS.includes(tabParam) ? tabParam : "overview";
+
   return (
-    <Tabs defaultSelectedKey="overview" className="gap-6">
+    <Tabs defaultSelectedKey={initialTab} className="gap-6">
       <TabList aria-label="Customer detail tabs" className="gap-6">
         {TAB_DEFS.map((tab) => (
           <Tab key={tab.id} id={tab.id}>

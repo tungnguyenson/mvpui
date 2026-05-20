@@ -1,7 +1,20 @@
 "use client";
 
-import { Badge, Input, Pagination, Table, TableCard, Tooltip, TooltipTrigger } from "@mvp-ui/ui";
-import { Info } from "lucide-react";
+import {
+  Badge,
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerFooter,
+  Input,
+  Pagination,
+  Table,
+  TableCard,
+  Tooltip,
+  TooltipTrigger,
+} from "@mvp-ui/ui";
+import { Info, Pencil } from "lucide-react";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   CUSTOMER_RECONCILIATION_CONFIGS,
@@ -33,10 +46,14 @@ function HeaderWithInfo({ label, tooltipKey }: { label: string; tooltipKey: keyo
   );
 }
 
-function AccountBadge({ value }: { value: string }) {
+function CompanyLogo({ src, size = "sm" }: { src: string; size?: "sm" | "lg" }) {
+  const dim = size === "lg" ? "size-10" : "size-8";
   return (
-    <span className="inline-flex h-6 min-w-9 shrink-0 items-center justify-center rounded-md border border-border-secondary bg-bg-secondary px-1.5 font-mono text-xs font-medium text-fg-tertiary">
-      {value}
+    <span
+      className={`inline-flex ${dim} shrink-0 overflow-hidden rounded-md`}
+    >
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={src} alt="" aria-hidden className="h-full w-full object-cover" />
     </span>
   );
 }
@@ -71,18 +88,14 @@ const COLUMNS: ColumnDef[] = [
   { id: "statementDue", label: "TH ra sao kê", withInfo: true },
   { id: "invoiceDue", label: "TH ra hóa đơn", withInfo: true },
   { id: "paymentTerm", label: "TH thanh toán (ngày)", withInfo: true },
-  { id: "invoiceMethod", label: "Xuất hóa đơn" },
-  { id: "paymentDocs", label: "Hồ sơ thanh toán" },
-  { id: "contacts", label: "Đầu mối liên hệ KH" },
-  { id: "note", label: "Ghi chú" },
 ];
 
 function ConfigRow({ config }: { config: CustomerReconciliationConfig }) {
   return (
     <Table.Row id={config.id}>
       <Table.Cell>
-        <div className="flex items-start gap-3 min-w-60">
-          <AccountBadge value={config.accountNumber} />
+        <div className="flex items-center gap-3 min-w-60">
+          <CompanyLogo src={config.logoUrl} />
           <div className="flex flex-col gap-0.5">
             <span className="text-sm font-medium text-fg-brand leading-snug">
               {config.companyName}
@@ -107,31 +120,73 @@ function ConfigRow({ config }: { config: CustomerReconciliationConfig }) {
       <Table.Cell>
         <div className="text-sm text-fg">{config.paymentTermDays}</div>
       </Table.Cell>
-      <Table.Cell>
-        <div className="text-sm text-fg max-w-90 leading-snug">
-          {config.invoiceIssuanceMethod}
+    </Table.Row>
+  );
+}
+
+function DetailField({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="text-xs font-medium uppercase tracking-wide text-fg-tertiary">
+        {label}
+      </div>
+      <div className="text-sm text-fg">{children}</div>
+    </div>
+  );
+}
+
+function ConfigDetail({ config }: { config: CustomerReconciliationConfig }) {
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="flex items-center gap-3">
+        <CompanyLogo src={config.logoUrl} size="lg" />
+        <div className="flex flex-col gap-0.5">
+          <span className="text-base font-semibold text-fg leading-snug">
+            {config.companyName}
+          </span>
+          {config.brandName && (
+            <span className="text-xs text-fg-tertiary leading-snug">
+              {config.brandName}
+            </span>
+          )}
         </div>
-      </Table.Cell>
-      <Table.Cell>
-        <div className="flex flex-col items-start gap-1.5">
+      </div>
+
+      <div className="grid grid-cols-2 gap-4">
+        <DetailField label="Mã số thuế">
+          <span className="font-mono">{config.taxId}</span>
+        </DetailField>
+        <DetailField label="TH thanh toán (ngày)">
+          {config.paymentTermDays}
+        </DetailField>
+        <DetailField label="TH ra sao kê">{config.statementDueRule}</DetailField>
+        <DetailField label="TH ra hóa đơn">{config.invoiceDueRule}</DetailField>
+      </div>
+
+      <DetailField label="Xuất hóa đơn">
+        <p className="leading-snug">{config.invoiceIssuanceMethod}</p>
+      </DetailField>
+
+      <DetailField label="Hồ sơ thanh toán">
+        <div className="mt-1 flex flex-wrap gap-1.5">
           {config.paymentDocs.map((key) => (
             <Badge key={key} color="warning" type="pill-color" size="sm">
               {PAYMENT_DOC_LABELS[key] ?? key}
             </Badge>
           ))}
         </div>
-      </Table.Cell>
-      <Table.Cell>
-        <div className="flex flex-col gap-1.5 max-w-80">
+      </DetailField>
+
+      <DetailField label="Đầu mối liên hệ KH">
+        <div className="mt-1 flex flex-col gap-1.5">
           {config.contacts.map((contact, index) => (
             <ContactChip key={`${contact.phone}-${index}`} contact={contact} />
           ))}
         </div>
-      </Table.Cell>
-      <Table.Cell>
-        <div className="text-sm text-fg whitespace-nowrap">{config.note ?? ""}</div>
-      </Table.Cell>
-    </Table.Row>
+      </DetailField>
+
+      {config.note && <DetailField label="Ghi chú">{config.note}</DetailField>}
+    </div>
   );
 }
 
@@ -139,6 +194,7 @@ export function CustomerReconciliationConfigsPage() {
   const [companyQuery, setCompanyQuery] = useState("");
   const [taxIdQuery, setTaxIdQuery] = useState("");
   const [page, setPage] = useState(1);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const company = companyQuery.trim().toLowerCase();
@@ -161,6 +217,14 @@ export function CustomerReconciliationConfigsPage() {
   const visible = filtered.slice(startIndex, startIndex + PAGE_SIZE);
   const rangeStart = total === 0 ? 0 : startIndex + 1;
   const rangeEnd = Math.min(startIndex + PAGE_SIZE, total);
+
+  const selectedConfig = useMemo(
+    () =>
+      selectedId
+        ? CUSTOMER_RECONCILIATION_CONFIGS.find((c) => c.id === selectedId) ?? null
+        : null,
+    [selectedId],
+  );
 
   return (
     <PageScaffold
@@ -199,7 +263,10 @@ export function CustomerReconciliationConfigsPage() {
         </div>
 
         <div className="overflow-x-auto">
-          <Table aria-label="Tổng hợp cấu hình đối soát">
+          <Table
+            aria-label="Tổng hợp cấu hình đối soát"
+            onRowAction={(key) => setSelectedId(String(key))}
+          >
             <Table.Header>
               {COLUMNS.map((column) => (
                 <Table.Head
@@ -239,6 +306,33 @@ export function CustomerReconciliationConfigsPage() {
           />
         </div>
       </TableCard.Root>
+
+      <Drawer
+        size="lg"
+        backdrop="dim"
+        isOpen={selectedConfig !== null}
+        onOpenChange={(open) => {
+          if (!open) setSelectedId(null);
+        }}
+        title="Chi tiết cấu hình đối soát"
+        {...(selectedConfig?.companyName && {
+          description: selectedConfig.companyName,
+        })}
+      >
+        <DrawerBody>
+          {selectedConfig && <ConfigDetail config={selectedConfig} />}
+        </DrawerBody>
+        <DrawerFooter>
+          <Button color="secondary" onClick={() => setSelectedId(null)}>
+            Đóng
+          </Button>
+          <Button asChild iconLeading={Pencil}>
+            <Link href="/customers/highlands-commerce?tab=reconciliation">
+              Chỉnh sửa
+            </Link>
+          </Button>
+        </DrawerFooter>
+      </Drawer>
     </PageScaffold>
   );
 }

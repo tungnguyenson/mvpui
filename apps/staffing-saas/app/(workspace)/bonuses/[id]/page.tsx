@@ -1,4 +1,4 @@
-import { RewardRulesDetailPage } from "../../../components/reward-rules";
+import { BonusDetailPage } from "../../../components/bonuses";
 
 export default async function Route({
   params,
@@ -6,5 +6,5 @@ export default async function Route({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <RewardRulesDetailPage id={id} />;
+  return <BonusDetailPage id={id} />;
 }

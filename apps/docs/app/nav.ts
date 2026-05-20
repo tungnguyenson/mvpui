@@ -64,6 +64,10 @@ export const componentSections: NavSection[] = [
     ],
   },
   {
+    title: "Disclosure",
+    items: [{ name: "Accordion", href: "/components/accordion" }],
+  },
+  {
     title: "Notifications",
     items: [
       { name: "Alert", href: "/components/alert" },
