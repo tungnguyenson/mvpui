@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
 import Link from "next/link";
-import { AlertTriangle, ChevronRight, Lock, PauseCircle, Search } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
@@ -10,15 +10,18 @@ import {
   VIOLATION_STATUS_LABELS,
   VIOLATION_WORKERS,
   type ViolationWorkerRecord,
+  type ViolationWorkerStatus,
 } from "./worker-violations-data";
 import { WorkerAvatar } from "../_shared";
 
-const FILTERS = [
+type TabId = Exclude<ViolationWorkerStatus, "normal"> | "all";
+
+const TABS: { id: TabId; label: string }[] = [
   { id: "all", label: "Tất cả" },
   { id: "warning", label: "Đang cảnh cáo" },
   { id: "suspended", label: "Tạm đình chỉ" },
   { id: "locked", label: "Đã khóa" },
-] as const;
+];
 
 const COLUMNS = [
   { id: "worker", name: "CTV", isRowHeader: true as const },
@@ -86,28 +89,26 @@ function ViolationRow({ record }: { record: ViolationWorkerRecord }) {
 
 export function WorkerViolationsPage() {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] =
-    useState<(typeof FILTERS)[number]["id"]>("all");
+  const [tab, setTab] = useState<TabId>("all");
 
   const filtered = useMemo(() => {
     return VIOLATION_WORKERS.filter((record) => {
-      const matchesStatus =
-        statusFilter === "all" ? true : record.status === statusFilter;
+      const matchesStatus = tab === "all" ? true : record.status === tab;
       const matchesSearch =
         search === "" ||
         record.workerName.toLowerCase().includes(search.toLowerCase()) ||
         record.phone.includes(search);
       return matchesStatus && matchesSearch;
     });
-  }, [search, statusFilter]);
+  }, [search, tab]);
 
-  const lockedCount = VIOLATION_WORKERS.filter((r) => r.status === "locked").length;
-  const suspendedCount = VIOLATION_WORKERS.filter(
-    (r) => r.status === "suspended",
-  ).length;
-  const severeCount = VIOLATION_WORKERS.filter(
-    (r) => r.latestSeverity === "severe",
-  ).length;
+  const counts = useMemo(() => {
+    const base = { warning: 0, suspended: 0, locked: 0 };
+    for (const r of VIOLATION_WORKERS) {
+      if (r.status in base) base[r.status as keyof typeof base] += 1;
+    }
+    return { ...base, all: VIOLATION_WORKERS.length };
+  }, []);
 
   return (
     <PageScaffold
@@ -121,39 +122,35 @@ export function WorkerViolationsPage() {
         </div>
       }
     >
-      <div className="grid gap-4 lg:grid-cols-3">
-        <MetricCard
-          label="Workers đang bị khóa"
-          value={`${lockedCount}`}
-          helpText="Tài khoản hiện không nhận ca được do vi phạm nghiêm trọng."
-          iconChip={<Lock className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="error"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Workers tạm đình chỉ"
-          value={`${suspendedCount}`}
-          helpText="Đang trong thời gian xem xét hoặc kỷ luật ngắn hạn."
-          iconChip={<PauseCircle className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="warning"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Vi phạm nghiêm trọng gần đây"
-          value={`${severeCount}`}
-          helpText="Case gần nhất ở mức nghiêm trọng cần đội vận hành theo sát."
-          iconChip={<AlertTriangle className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="error"
-          iconPlacement="inline"
-        />
-      </div>
-
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
+          <Tabs
+            variant="underline"
+            selectedKey={tab}
+            onSelectionChange={(key) => setTab(key as TabId)}
+            className="-mx-4 -mb-4 px-4"
+          >
+            <TabList aria-label="Lọc worker vi phạm theo trạng thái">
+              {TABS.map((t) => {
+                const active = t.id === tab;
+                return (
+                  <Tab key={t.id} id={t.id}>
+                    <span>{t.label}</span>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${active
+                        ? "bg-primary text-primary-fg"
+                        : "bg-bg-secondary text-fg-tertiary"
+                        }`}
+                    >
+                      {counts[t.id]}
+                    </span>
+                  </Tab>
+                );
+              })}
+            </TabList>
+          </Tabs>
+
+          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] mt-4">
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -161,33 +158,14 @@ export function WorkerViolationsPage() {
               iconLeading={<Search className="size-4" />}
               aria-label="Tìm worker vi phạm"
             />
-            <div className="flex flex-wrap gap-2">
-              {FILTERS.map((filter) => {
-                const active = filter.id === statusFilter;
-                return (
-                  <button
-                    key={filter.id}
-                    type="button"
-                    onClick={() => setStatusFilter(filter.id)}
-                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
-                      active
-                        ? "border-border-brand bg-bg-secondary text-fg"
-                        : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                    }`}
-                  >
-                    {filter.label}
-                  </button>
-                );
-              })}
+            <div className="flex items-center text-sm text-fg-tertiary">
+              {filtered.length} worker phù hợp.
             </div>
-          </div>
-          <div className="text-sm text-fg-tertiary">
-            {filtered.length} worker phù hợp với bộ lọc hiện tại.
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <Table aria-label="Danh sách worker vi phạm">
+          <Table key={tab} aria-label="Danh sách worker vi phạm">
             <Table.Header>
               {COLUMNS.map((column) => (
                 <Table.Head

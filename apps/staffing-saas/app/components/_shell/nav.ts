@@ -12,6 +12,7 @@ import {
   ShieldCheck,
   User,
   UserPlus,
+  Users,
 } from "lucide-react";
 import type { FC } from "react";
 
@@ -39,6 +40,7 @@ export const APP_ROUTES = {
   timesheets: "/timesheets",
   reconciliations: "/reconciliations",
   hiringRequests: "/hiring-requests",
+  candidates: "/candidates",
   bonuses: "/bonuses",
   users: "/users",
 } as const;
@@ -70,13 +72,25 @@ export const NAV_SECTIONS: NavSection[] = [
         href: APP_ROUTES.customerReconciliations,
         icon: Receipt,
       },
+
+    ],
+  },
+  {
+    label: "Tuyển dụng",
+    items: [
       {
         id: "hiring-requests",
         label: "Y/c tuyển dụng",
         href: APP_ROUTES.hiringRequests,
         icon: UserPlus,
       },
-    ],
+      {
+        id: "candidates",
+        label: "Ứng viên",
+        href: APP_ROUTES.candidates,
+        icon: Users,
+      },
+    ]
   },
   {
     label: "Cộng tác viên",
@@ -102,7 +116,7 @@ export const NAV_SECTIONS: NavSection[] = [
     ],
   },
   {
-    label: "Ca làm việc",
+    label: "Ca lfullàm việc",
     items: [
       {
         id: "shifts",

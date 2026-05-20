@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Activity, CalendarPlus, Mail, MapPin, Phone, ShieldCheck, UserCog } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
+import { APP_ROUTES } from "../_shell/nav";
 import {
   USER_ROLE_LABELS,
   USER_STATUS_LABELS,
@@ -74,39 +76,49 @@ export function UsersDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-4">
-            <Avatar
-              size="xl"
-              src={getAvatarFor(user.fullName, user.id)}
-              alt={user.fullName}
-              initials={getInitials(user.fullName)}
-            />
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-xl font-semibold text-fg">{user.fullName}</h1>
-                <Badge color={status.color} type="pill-color" size="sm">
-                  {status.label}
-                </Badge>
-                <Badge color="gray" type="pill-color" size="sm">
-                  {USER_ROLE_LABELS[user.role]}
-                </Badge>
+        <div className="flex flex-col gap-4">
+          <SetPageBreadcrumb
+            items={[
+              { label: "Dashboard", href: APP_ROUTES.dashboard },
+              { label: "User", href: APP_ROUTES.users },
+              { label: user.fullName },
+            ]}
+          />
+
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-start gap-4">
+              <Avatar
+                size="xl"
+                src={getAvatarFor(user.fullName, user.id)}
+                alt={user.fullName}
+                initials={getInitials(user.fullName)}
+              />
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-xl font-semibold text-fg">{user.fullName}</h1>
+                  <Badge color={status.color} type="pill-color" size="sm">
+                    {status.label}
+                  </Badge>
+                  <Badge color="gray" type="pill-color" size="sm">
+                    {USER_ROLE_LABELS[user.role]}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-base text-fg-tertiary">
+                  {user.email} • {user.phone}
+                </p>
+                <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{user.notes}</p>
               </div>
-              <p className="mt-1 text-base text-fg-tertiary">
-                {user.email} • {user.phone}
-              </p>
-              <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{user.notes}</p>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/users">
-              <Button color="secondary" size="sm">
-                Quay lại danh sách
+            <div className="flex items-center gap-3">
+              <Link href="/users">
+                <Button color="secondary" size="sm">
+                  Quay lại danh sách
+                </Button>
+              </Link>
+              <Button color="primary" size="sm">
+                Cập nhật quyền
               </Button>
-            </Link>
-            <Button color="primary" size="sm">
-              Cập nhật quyền
-            </Button>
+            </div>
           </div>
         </div>
       }

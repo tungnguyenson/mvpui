@@ -1,23 +1,26 @@
 "use client";
 
-import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, FileSearch, Search, ShieldCheck, ShieldQuestion } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   VERIFICATIONS,
   VERIFICATION_STATUS_LABELS,
   type VerificationRecord,
+  type VerificationStatus,
 } from "./worker-verifications-data";
 import { WorkerAvatar } from "../_shared";
 
-const FILTERS = [
+type TabId = Exclude<VerificationStatus, "rejected"> | "all";
+
+const TABS: { id: TabId; label: string }[] = [
   { id: "all", label: "Tất cả" },
   { id: "verified", label: "Đã xác thực" },
   { id: "in-review", label: "Đang rà soát" },
   { id: "missing-docs", label: "Chờ bổ sung" },
-] as const;
+];
 
 const COLUMNS = [
   { id: "worker", name: "CTV", isRowHeader: true as const },
@@ -86,13 +89,11 @@ function VerificationRow({ record }: { record: VerificationRecord }) {
 
 export function WorkerVerificationsPage() {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] =
-    useState<(typeof FILTERS)[number]["id"]>("all");
+  const [tab, setTab] = useState<TabId>("all");
 
   const filtered = useMemo(() => {
     return VERIFICATIONS.filter((record) => {
-      const matchesStatus =
-        statusFilter === "all" ? true : record.status === statusFilter;
+      const matchesStatus = tab === "all" ? true : record.status === tab;
       const matchesSearch =
         search === "" ||
         record.workerName.toLowerCase().includes(search.toLowerCase()) ||
@@ -100,11 +101,15 @@ export function WorkerVerificationsPage() {
         record.nationalId.includes(search);
       return matchesStatus && matchesSearch;
     });
-  }, [search, statusFilter]);
+  }, [search, tab]);
 
-  const verifiedCount = VERIFICATIONS.filter((r) => r.status === "verified").length;
-  const reviewCount = VERIFICATIONS.filter((r) => r.status === "in-review").length;
-  const missingCount = VERIFICATIONS.filter((r) => r.status === "missing-docs").length;
+  const counts = useMemo(() => {
+    const base = { verified: 0, "in-review": 0, "missing-docs": 0 };
+    for (const r of VERIFICATIONS) {
+      if (r.status in base) base[r.status as keyof typeof base] += 1;
+    }
+    return { ...base, all: VERIFICATIONS.length };
+  }, []);
 
   return (
     <PageScaffold
@@ -118,39 +123,35 @@ export function WorkerVerificationsPage() {
         </div>
       }
     >
-      <div className="grid gap-4 lg:grid-cols-3">
-        <MetricCard
-          label="Đã xác thực"
-          value={`${verifiedCount}`}
-          helpText="Workers đủ điều kiện nhận ca và được khách hàng yêu cầu."
-          iconChip={<ShieldCheck className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="success"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Đang rà soát"
-          value={`${reviewCount}`}
-          helpText="Hồ sơ cần đội vận hành kiểm tra trước khi cho phép vào ca."
-          iconChip={<FileSearch className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="warning"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Chờ bổ sung"
-          value={`${missingCount}`}
-          helpText="Workers còn thiếu tài liệu hoặc thông tin pháp lý quan trọng."
-          iconChip={<ShieldQuestion className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="error"
-          iconPlacement="inline"
-        />
-      </div>
-
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
+          <Tabs
+            variant="underline"
+            selectedKey={tab}
+            onSelectionChange={(key) => setTab(key as TabId)}
+            className="-mx-4 -mb-4 px-4"
+          >
+            <TabList aria-label="Lọc hồ sơ xác thực theo trạng thái">
+              {TABS.map((t) => {
+                const active = t.id === tab;
+                return (
+                  <Tab key={t.id} id={t.id}>
+                    <span>{t.label}</span>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${active
+                        ? "bg-primary text-primary-fg"
+                        : "bg-bg-secondary text-fg-tertiary"
+                        }`}
+                    >
+                      {counts[t.id]}
+                    </span>
+                  </Tab>
+                );
+              })}
+            </TabList>
+          </Tabs>
+
+          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] mt-4">
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -158,33 +159,14 @@ export function WorkerVerificationsPage() {
               iconLeading={<Search className="size-4" />}
               aria-label="Tìm hồ sơ xác thực"
             />
-            <div className="flex flex-wrap gap-2">
-              {FILTERS.map((filter) => {
-                const active = filter.id === statusFilter;
-                return (
-                  <button
-                    key={filter.id}
-                    type="button"
-                    onClick={() => setStatusFilter(filter.id)}
-                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
-                      active
-                        ? "border-border-brand bg-bg-secondary text-fg"
-                        : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                    }`}
-                  >
-                    {filter.label}
-                  </button>
-                );
-              })}
+            <div className="flex items-center text-sm text-fg-tertiary">
+              {filtered.length} hồ sơ phù hợp.
             </div>
-          </div>
-          <div className="text-sm text-fg-tertiary">
-            {filtered.length} hồ sơ phù hợp với bộ lọc hiện tại.
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <Table aria-label="Danh sách hồ sơ xác thực">
+          <Table key={tab} aria-label="Danh sách hồ sơ xác thực">
             <Table.Header>
               {COLUMNS.map((column) => (
                 <Table.Head

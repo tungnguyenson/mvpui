@@ -1,23 +1,26 @@
 "use client";
 
-import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
 import Link from "next/link";
-import { AlertCircle, Calculator, CheckCircle2, ChevronRight, Hourglass, Search } from "lucide-react";
+import { Calculator, ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   RECONCILIATIONS,
   RECON_STATUS_LABELS,
   type ReconciliationRecord,
+  type ReconciliationStatus,
 } from "./reconciliations-data";
 
-const FILTERS = [
+type TabId = ReconciliationStatus | "all";
+
+const TABS: { id: TabId; label: string }[] = [
   { id: "all", label: "Tất cả" },
   { id: "open", label: "Đang đối soát" },
   { id: "pending-approval", label: "Chờ duyệt" },
   { id: "approved", label: "Đã chốt" },
   { id: "disputed", label: "Tranh chấp" },
-] as const;
+];
 
 const COLUMNS = [
   { id: "period", name: "Kỳ đối soát", isRowHeader: true as const },
@@ -81,26 +84,29 @@ function ReconRow({ record }: { record: ReconciliationRecord }) {
 
 export function ReconciliationsPage() {
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] =
-    useState<(typeof FILTERS)[number]["id"]>("all");
+  const [tab, setTab] = useState<TabId>("all");
 
   const filtered = useMemo(() => {
     return RECONCILIATIONS.filter((record) => {
-      const matchesStatus =
-        statusFilter === "all" ? true : record.status === statusFilter;
+      const matchesStatus = tab === "all" ? true : record.status === tab;
       const matchesSearch =
         search === "" ||
         record.code.toLowerCase().includes(search.toLowerCase()) ||
         record.customer.toLowerCase().includes(search.toLowerCase());
       return matchesStatus && matchesSearch;
     });
-  }, [search, statusFilter]);
+  }, [search, tab]);
 
-  const pendingCount = RECONCILIATIONS.filter(
-    (r) => r.status === "pending-approval" || r.status === "open",
-  ).length;
-  const disputedCount = RECONCILIATIONS.filter((r) => r.status === "disputed").length;
-  const approvedCount = RECONCILIATIONS.filter((r) => r.status === "approved").length;
+  const counts = useMemo(() => {
+    const base: Record<ReconciliationStatus, number> = {
+      open: 0,
+      "pending-approval": 0,
+      approved: 0,
+      disputed: 0,
+    };
+    for (const r of RECONCILIATIONS) base[r.status] += 1;
+    return { ...base, all: RECONCILIATIONS.length };
+  }, []);
 
   return (
     <PageScaffold
@@ -114,39 +120,35 @@ export function ReconciliationsPage() {
         </div>
       }
     >
-      <div className="grid gap-4 lg:grid-cols-3">
-        <MetricCard
-          label="Phiếu đang xử lý"
-          value={`${pendingCount}`}
-          helpText="Đang đối chiếu hoặc đợi khách hàng duyệt chênh lệch."
-          iconChip={<Hourglass className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="brand"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Phiếu tranh chấp"
-          value={`${disputedCount}`}
-          helpText="Cần đội vận hành và CSKH phối hợp xử lý ngay."
-          iconChip={<AlertCircle className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="error"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Phiếu đã chốt"
-          value={`${approvedCount}`}
-          helpText="Số đối soát đã được khách hàng phê duyệt và đóng phiếu."
-          iconChip={<CheckCircle2 className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="success"
-          iconPlacement="inline"
-        />
-      </div>
-
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto]">
+          <Tabs
+            variant="underline"
+            selectedKey={tab}
+            onSelectionChange={(key) => setTab(key as TabId)}
+            className="-mx-4 -mb-4 px-4"
+          >
+            <TabList aria-label="Lọc phiếu đối soát theo trạng thái">
+              {TABS.map((t) => {
+                const active = t.id === tab;
+                return (
+                  <Tab key={t.id} id={t.id}>
+                    <span>{t.label}</span>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-xs font-medium ${active
+                        ? "bg-primary text-primary-fg"
+                        : "bg-bg-secondary text-fg-tertiary"
+                        }`}
+                    >
+                      {counts[t.id]}
+                    </span>
+                  </Tab>
+                );
+              })}
+            </TabList>
+          </Tabs>
+
+          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto] mt-4">
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -154,33 +156,14 @@ export function ReconciliationsPage() {
               iconLeading={<Search className="size-4" />}
               aria-label="Tìm đối soát"
             />
-            <div className="flex flex-wrap gap-2">
-              {FILTERS.map((filter) => {
-                const active = filter.id === statusFilter;
-                return (
-                  <button
-                    key={filter.id}
-                    type="button"
-                    onClick={() => setStatusFilter(filter.id)}
-                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
-                      active
-                        ? "border-border-brand bg-bg-secondary text-fg"
-                        : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                    }`}
-                  >
-                    {filter.label}
-                  </button>
-                );
-              })}
+            <div className="flex items-center text-sm text-fg-tertiary">
+              {filtered.length} phiếu phù hợp.
             </div>
-          </div>
-          <div className="text-sm text-fg-tertiary">
-            {filtered.length} phiếu phù hợp với bộ lọc hiện tại.
           </div>
         </div>
 
         <div className="overflow-x-auto">
-          <Table aria-label="Danh sách phiếu đối soát">
+          <Table key={tab} aria-label="Danh sách phiếu đối soát">
             <Table.Header>
               {COLUMNS.map((column) => (
                 <Table.Head

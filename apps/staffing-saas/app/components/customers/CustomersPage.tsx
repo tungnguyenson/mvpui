@@ -496,7 +496,7 @@ export function CustomersPage() {
         </div>
       }
     >
-      <div className="grid gap-4 lg:grid-cols-3">
+      {/* <div className="grid gap-4 lg:grid-cols-3">
         <CustomerSummaryCard
           label="Khách hàng đang tuyển"
           value={`${counts.hiring}`}
@@ -515,7 +515,7 @@ export function CustomersPage() {
           description="Khách đã ký, chờ go-live trong 30-60 ngày."
           icon={Rocket}
         />
-      </div>
+      </div> */}
 
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">

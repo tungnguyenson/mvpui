@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { UserPlus } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
+import { APP_ROUTES } from "../_shell/nav";
 import {
   HIRING_STATUS_LABELS,
   getHiringRequestById,
@@ -20,11 +22,20 @@ export function HiringRequestsDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
-              <UserPlus className="size-7" />
-            </div>
+        <div className="flex flex-col gap-4">
+          <SetPageBreadcrumb
+            items={[
+              { label: "Dashboard", href: APP_ROUTES.dashboard },
+              { label: "Y/c tuyển dụng", href: APP_ROUTES.hiringRequests },
+              { label: `${record.code} • ${record.title}` },
+            ]}
+          />
+
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
+                <UserPlus className="size-7" />
+              </div>
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-xl font-semibold text-fg">{record.title}</h1>
@@ -45,15 +56,16 @@ export function HiringRequestsDetailPage({ id }: { id: string }) {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/hiring-requests">
-              <Button color="secondary" size="sm">
-                Quay lại danh sách
+            <div className="flex items-center gap-3">
+              <Link href="/hiring-requests">
+                <Button color="secondary" size="sm">
+                  Quay lại danh sách
+                </Button>
+              </Link>
+              <Button color="primary" size="sm">
+                Đẩy CTV vào ca
               </Button>
-            </Link>
-            <Button color="primary" size="sm">
-              Đẩy CTV vào ca
-            </Button>
+            </div>
           </div>
         </div>
       }

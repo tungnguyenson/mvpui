@@ -341,7 +341,7 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
     ) : null;
 
   const helpTextNode = helpText ? (
-    <p className="text-sm text-fg-tertiary">{helpText}</p>
+    <p className="text-sm text-muted-fg">{helpText}</p>
   ) : null;
 
   const featuredIconNode = featuredIcon ? (
@@ -443,7 +443,7 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
     "relative flex flex-col overflow-hidden rounded-xl border border-border-secondary shadow-xs",
     variant === "framed" ? "bg-bg-secondary" : "bg-bg",
     isLink &&
-      "group cursor-pointer transition-colors hover:bg-bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-brand",
+    "group cursor-pointer transition-colors hover:bg-bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-brand",
     className,
   );
 

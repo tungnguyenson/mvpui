@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
+import { APP_ROUTES } from "../_shell/nav";
 import {
   BONUS_STATUS_LABELS,
   getBonusById,
@@ -19,42 +21,52 @@ export function BonusDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-3">
-            <Link
-              href="/bonuses"
-              className="inline-flex items-center gap-1 text-sm text-fg-tertiary hover:text-fg"
-            >
-              <ArrowLeft className="size-4" />
-              Quay lại
-            </Link>
-            <div className="flex flex-wrap items-center gap-3">
-              <h1 className="text-xl font-semibold text-fg">{bonus.title}</h1>
-              <Badge color={status.color} type="pill-color" size="sm">
-                {status.label}
-              </Badge>
-              <span className="text-sm text-fg-tertiary">
-                {bonus.id} • Phụ trách {bonus.manager}
-              </span>
+        <div className="flex flex-col gap-4">
+          <SetPageBreadcrumb
+            items={[
+              { label: "Dashboard", href: APP_ROUTES.dashboard },
+              { label: "Thưởng", href: APP_ROUTES.bonuses },
+              { label: bonus.title },
+            ]}
+          />
+
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/bonuses"
+                className="inline-flex items-center gap-1 text-sm text-fg-tertiary hover:text-fg"
+              >
+                <ArrowLeft className="size-4" />
+                Quay lại
+              </Link>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl font-semibold text-fg">{bonus.title}</h1>
+                <Badge color={status.color} type="pill-color" size="sm">
+                  {status.label}
+                </Badge>
+                <span className="text-sm text-fg-tertiary">
+                  {bonus.id} • Phụ trách {bonus.manager}
+                </span>
+              </div>
+              <p className="max-w-3xl text-sm text-fg-tertiary">
+                {bonus.description}
+              </p>
             </div>
-            <p className="max-w-3xl text-sm text-fg-tertiary">
-              {bonus.description}
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-3">
-            <Button color="tertiary" size="sm">
-              Lịch sử thay đổi
-            </Button>
-            {bonus.status === "running" && (
-              <Button color="primary-destructive" size="sm">
-                Hủy thưởng
+            <div className="flex flex-wrap items-center gap-3">
+              <Button color="tertiary" size="sm">
+                Lịch sử thay đổi
               </Button>
-            )}
-            {bonus.status !== "cancelled" && bonus.status !== "ended" && (
-              <Button color="primary" size="sm">
-                Cập nhật
-              </Button>
-            )}
+              {bonus.status === "running" && (
+                <Button color="primary-destructive" size="sm">
+                  Hủy thưởng
+                </Button>
+              )}
+              {bonus.status !== "cancelled" && bonus.status !== "ended" && (
+                <Button color="primary" size="sm">
+                  Cập nhật
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       }

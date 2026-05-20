@@ -3,6 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AlertCircle, AlertTriangle, Building2, CalendarDays, CheckCircle2, ClipboardCheck, Clock, Users } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
+import { APP_ROUTES } from "../_shell/nav";
 import {
   ATTENDANCE_LABELS,
   TIMESHEET_STATUS_LABELS,
@@ -95,38 +97,48 @@ export function TimesheetsDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
-              <Clock className="size-7" />
-            </div>
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-xl font-semibold text-fg">{record.shiftName}</h1>
-                <Badge color={status.color} type="pill-color" size="sm">
-                  {status.label}
-                </Badge>
+        <div className="flex flex-col gap-4">
+          <SetPageBreadcrumb
+            items={[
+              { label: "Dashboard", href: APP_ROUTES.dashboard },
+              { label: "Chấm công", href: APP_ROUTES.timesheets },
+              { label: `${record.shiftCode} • ${record.shiftName}` },
+            ]}
+          />
+
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-start gap-4">
+              <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
+                <Clock className="size-7" />
               </div>
-              <p className="mt-1 text-base text-fg-tertiary">
-                {record.shiftCode} • {record.customer} • {record.date} {record.schedule}
-              </p>
-              <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{record.notes}</p>
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-xl font-semibold text-fg">{record.shiftName}</h1>
+                  <Badge color={status.color} type="pill-color" size="sm">
+                    {status.label}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-base text-fg-tertiary">
+                  {record.shiftCode} • {record.customer} • {record.date} {record.schedule}
+                </p>
+                <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{record.notes}</p>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/timesheets">
-              <Button color="secondary" size="sm">
-                Quay lại danh sách
+            <div className="flex items-center gap-3">
+              <Link href="/timesheets">
+                <Button color="secondary" size="sm">
+                  Quay lại danh sách
+                </Button>
+              </Link>
+              <Link href={`/shifts/${record.shiftId}`}>
+                <Button color="secondary" size="sm">
+                  Mở ca làm việc
+                </Button>
+              </Link>
+              <Button color="primary" size="sm">
+                Chốt chấm công
               </Button>
-            </Link>
-            <Link href={`/shifts/${record.shiftId}`}>
-              <Button color="secondary" size="sm">
-                Mở ca làm việc
-              </Button>
-            </Link>
-            <Button color="primary" size="sm">
-              Chốt chấm công
-            </Button>
+            </div>
           </div>
         </div>
       }

@@ -17,6 +17,8 @@ import {
   type WorkerShiftHistory,
 } from "./workers-data";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
+import { APP_ROUTES } from "../_shell/nav";
 import { getAvatarFor, getInitials } from "../_shared/assets";
 
 function SectionCard({
@@ -88,15 +90,24 @@ export function WorkerDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-4">
-            <AvatarProfilePhoto
-              state={worker.status === "active" ? "verified" : worker.status === "locked" ? "blocked" : null}
-              size="lg"
-              src={getAvatarFor(worker.name, worker.id)}
-              alt={worker.name}
-              initials={getInitials(worker.name)}
-            />
+        <div className="flex flex-col gap-4">
+          <SetPageBreadcrumb
+            items={[
+              { label: "Dashboard", href: APP_ROUTES.dashboard },
+              { label: "Danh sách CTV", href: APP_ROUTES.workers },
+              { label: worker.name },
+            ]}
+          />
+
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-start gap-4">
+              <AvatarProfilePhoto
+                state={worker.status === "active" ? "verified" : worker.status === "locked" ? "blocked" : null}
+                size="lg"
+                src={getAvatarFor(worker.name, worker.id)}
+                alt={worker.name}
+                initials={getInitials(worker.name)}
+              />
 
             <div>
               <div className="flex flex-wrap items-center gap-3">
@@ -118,15 +129,16 @@ export function WorkerDetailPage({ id }: { id: string }) {
               </div>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Link href="/workers">
-              <Button color="secondary" size="sm">
-                Quay lại danh sách
+            <div className="flex items-center gap-3">
+              <Link href="/workers">
+                <Button color="secondary" size="sm">
+                  Quay lại danh sách
+                </Button>
+              </Link>
+              <Button color="primary" size="sm">
+                Giao ca mới
               </Button>
-            </Link>
-            <Button color="primary" size="sm">
-              Giao ca mới
-            </Button>
+            </div>
           </div>
         </div>
       }

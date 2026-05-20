@@ -11,6 +11,8 @@ import {
   UserSquare2,
 } from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
+import { APP_ROUTES } from "../_shell/nav";
 import {
   VERIFICATION_STATUS_LABELS,
   getVerificationById,
@@ -94,39 +96,49 @@ export function WorkerVerificationsDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex items-start gap-4">
-            <WorkerProfilePhoto
-              name={record.workerName}
-              id={record.id}
-              status={record.status}
-              size="sm"
-            />
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-xl font-semibold text-fg">{record.workerName}</h1>
-                <Badge color={status.color} type="pill-color" size="sm">
-                  {status.label}
-                </Badge>
+        <div className="flex flex-col gap-4">
+          <SetPageBreadcrumb
+            items={[
+              { label: "Dashboard", href: APP_ROUTES.dashboard },
+              { label: "Quản lý xác thực", href: APP_ROUTES.workerVerifications },
+              { label: record.workerName },
+            ]}
+          />
+
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="flex items-start gap-4">
+              <WorkerProfilePhoto
+                name={record.workerName}
+                id={record.id}
+                status={record.status}
+                size="sm"
+              />
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-xl font-semibold text-fg">{record.workerName}</h1>
+                  <Badge color={status.color} type="pill-color" size="sm">
+                    {status.label}
+                  </Badge>
+                </div>
+                <p className="mt-1 text-base text-fg-tertiary">
+                  Mã CTV {record.workerId} • {record.district}, {record.city} • Nộp hồ sơ{" "}
+                  {record.submittedAt}
+                </p>
+                <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">
+                  Reviewer phụ trách: {record.reviewer} • Cập nhật gần nhất {record.lastUpdated}
+                </p>
               </div>
-              <p className="mt-1 text-base text-fg-tertiary">
-                Mã CTV {record.workerId} • {record.district}, {record.city} • Nộp hồ sơ{" "}
-                {record.submittedAt}
-              </p>
-              <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">
-                Reviewer phụ trách: {record.reviewer} • Cập nhật gần nhất {record.lastUpdated}
-              </p>
             </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link href="/worker-verifications">
-              <Button color="secondary" size="sm">
-                Quay lại danh sách
+            <div className="flex items-center gap-3">
+              <Link href="/worker-verifications">
+                <Button color="secondary" size="sm">
+                  Quay lại danh sách
+                </Button>
+              </Link>
+              <Button color="primary" size="sm">
+                Duyệt xác thực
               </Button>
-            </Link>
-            <Button color="primary" size="sm">
-              Duyệt xác thực
-            </Button>
+            </div>
           </div>
         </div>
       }
