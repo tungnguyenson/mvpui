@@ -2,8 +2,11 @@
 
 import { Button, Table } from "@mvp-ui/ui";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Pencil, Plus } from "lucide-react";
+import { useMemo } from "react";
 import type { CustomerPosition } from "../customer-detail-data";
+import { PositionEditView } from "./PositionEditView";
 
 interface PositionsTabProps {
   positions: CustomerPosition[];
@@ -16,7 +19,45 @@ const COLUMNS = [
   { id: "actions", name: "" },
 ];
 
-export function PositionsTab({ positions, customerId }: PositionsTabProps) {
+export function PositionsTab({ positions }: PositionsTabProps) {
+  const searchParams = useSearchParams();
+  const positionParam = searchParams.get("position");
+
+  const selected = useMemo<
+    { mode: "create" } | { mode: "edit"; position: CustomerPosition } | null
+  >(() => {
+    if (!positionParam) return null;
+    if (positionParam === "new") return { mode: "create" };
+    const position = positions.find((p) => p.id === positionParam);
+    return position ? { mode: "edit", position } : null;
+  }, [positionParam, positions]);
+
+  const buildHref = (positionId: string | null) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", "positions");
+    if (positionId === null) params.delete("position");
+    else params.set("position", positionId);
+    return `?${params.toString()}`;
+  };
+
+  if (selected) {
+    return (
+      <PositionEditView
+        {...(selected.mode === "edit" ? { position: selected.position } : {})}
+        backHref={buildHref(null)}
+      />
+    );
+  }
+
+  return <PositionsList positions={positions} buildHref={buildHref} />;
+}
+
+interface PositionsListProps {
+  positions: CustomerPosition[];
+  buildHref: (positionId: string | null) => string;
+}
+
+function PositionsList({ positions, buildHref }: PositionsListProps) {
   return (
     <div className="flex flex-col gap-6">
       <div className="rounded-xl border border-border-secondary bg-bg shadow-xs">
@@ -24,10 +65,10 @@ export function PositionsTab({ positions, customerId }: PositionsTabProps) {
           <div>
             <h2 className="text-base font-semibold text-fg">Danh sách vị trí làm việc</h2>
             <p className="mt-1 text-sm text-fg-tertiary">
-              Quản lý các vị trí làm việc khách hàng đang tuyển CTV.
+              Mỗi vị rí đi kèm: Mô tả công việc, Yêu cầu, Chế độ/quyền lợi, Hướng dẫn
             </p>
           </div>
-          <Link href={`/customers/${customerId}/positions/new`}>
+          <Link href={buildHref("new")} scroll={false}>
             <Button
               color="primary"
               size="sm"
@@ -67,9 +108,7 @@ export function PositionsTab({ positions, customerId }: PositionsTabProps) {
                   </p>
                 </Table.Cell>
                 <Table.Cell>
-                  <Link
-                    href={`/customers/${customerId}/positions/${position.id}`}
-                  >
+                  <Link href={buildHref(position.id)} scroll={false}>
                     <Button
                       color="secondary"
                       size="sm"

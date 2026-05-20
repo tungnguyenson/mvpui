@@ -466,10 +466,3 @@ export function getCustomerDetailExtras(customer: CustomerRecord): CustomerDetai
   return override ? override(base, customer) : base;
 }
 
-export function getCustomerPosition(
-  customer: CustomerRecord,
-  positionId: string
-): CustomerPosition | undefined {
-  const extras = getCustomerDetailExtras(customer);
-  return extras.positions.find((p) => p.id === positionId);
-}

@@ -1,7 +1,7 @@
 "use client";
 
-import { Drawer, SidebarNavCollapsible } from "@mvp-ui/ui";
-import { Menu } from "lucide-react";
+import { Drawer, SidebarNavCollapsible, SidebarNavSlim } from "@mvp-ui/ui";
+import { ChevronsLeft, ChevronsRight, Menu } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -26,19 +26,68 @@ const SECTIONS = NAV_SECTIONS.map((section) => ({
   })),
 }));
 
+const SLIM_ITEMS = NAV_SECTIONS.flatMap((section) =>
+  section.items.map((item) => ({
+    id: item.id,
+    label: item.label,
+    href: item.href,
+    icon: item.icon,
+  })),
+);
+
+const SIDEBAR_COLLAPSED_KEY = "staffing-saas:sidebar-collapsed";
+
 const ACCOUNT = {
   name: "Lê Quản Trị",
   email: "admin@staffing.vn",
 };
 
+function BrandMark() {
+  return (
+    <div className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-fg select-none">
+      S
+    </div>
+  );
+}
+
 function Brand() {
   return (
     <div className="flex items-center gap-2.5">
-      <div className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-fg select-none">
-        S
-      </div>
+      <BrandMark />
       <span className="text-sm font-semibold text-fg">Staffing SaaS</span>
     </div>
+  );
+}
+
+function BrandWithToggle({ onToggle }: { onToggle: () => void }) {
+  return (
+    <div className="flex w-full items-center justify-between">
+      <Brand />
+      <button
+        type="button"
+        onClick={onToggle}
+        className="flex size-8 items-center justify-center rounded-lg text-fg-tertiary transition-colors hover:bg-bg-secondary hover:text-fg"
+        aria-label="Thu gọn menu"
+      >
+        <ChevronsLeft className="size-4" />
+      </button>
+    </div>
+  );
+}
+
+function SlimBrandToggle({ onToggle }: { onToggle: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="group relative flex size-9 items-center justify-center rounded-lg transition-colors hover:bg-bg-secondary"
+      aria-label="Mở rộng menu"
+    >
+      <div className="transition-opacity group-hover:opacity-0">
+        <BrandMark />
+      </div>
+      <ChevronsRight className="absolute size-5 text-fg-tertiary opacity-0 transition-opacity group-hover:opacity-100" />
+    </button>
   );
 }
 
@@ -55,7 +104,30 @@ function AppShellInner({ children }: { children: ReactNode }) {
   const router = useRouter();
   const { theme, navTheme } = useAppearance();
   const [navOpen, setNavOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const activeHref = activeHrefForPath(pathname);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const stored = window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY);
+      if (stored === "1") setSidebarCollapsed(true);
+    } catch {
+      // ignore storage errors
+    }
+  }, []);
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, next ? "1" : "0");
+      } catch {
+        // ignore storage errors
+      }
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     if (pathname) {
@@ -125,13 +197,23 @@ function AppShellInner({ children }: { children: ReactNode }) {
         onClick={handleNavClick}
         className="hidden shrink-0 bg-bg md:block"
       >
-        <SidebarNavCollapsible
-          className="border-border-secondary"
-          logo={<Brand />}
-          sections={SECTIONS}
-          activeHref={activeHref}
-          account={account}
-        />
+        {sidebarCollapsed ? (
+          <SidebarNavSlim
+            hoverToReveal={false}
+            logo={<SlimBrandToggle onToggle={toggleSidebar} />}
+            items={SLIM_ITEMS}
+            activeHref={activeHref}
+            account={account}
+          />
+        ) : (
+          <SidebarNavCollapsible
+            className="border-border-secondary"
+            logo={<BrandWithToggle onToggle={toggleSidebar} />}
+            sections={SECTIONS}
+            activeHref={activeHref}
+            account={account}
+          />
+        )}
       </div>
 
       {/* Content */}

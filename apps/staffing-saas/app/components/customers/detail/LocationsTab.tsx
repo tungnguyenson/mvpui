@@ -27,7 +27,7 @@ export function LocationsTab({ locations }: LocationsTabProps) {
   const provinceOptions = useMemo(() => {
     const provinces = Array.from(new Set(locations.map((l) => l.province))).sort();
     return [
-      { id: ALL_PROVINCES, label: "Tất cả" },
+      { id: ALL_PROVINCES, label: "Toàn quốc" },
       ...provinces.map((p) => ({ id: p, label: p })),
     ];
   }, [locations]);
@@ -36,8 +36,8 @@ export function LocationsTab({ locations }: LocationsTabProps) {
     return locations.filter((location) => {
       const matchQuery = query
         ? `${location.shortName} ${location.address}`
-            .toLowerCase()
-            .includes(query.toLowerCase())
+          .toLowerCase()
+          .includes(query.toLowerCase())
         : true;
       const matchProvince =
         province === ALL_PROVINCES ? true : location.province === province;
@@ -58,10 +58,11 @@ export function LocationsTab({ locations }: LocationsTabProps) {
           />
           <Select
             aria-label="Tỉnh/Thành"
-            placeholder="Tất cả"
+            placeholder="Toàn quốc"
             items={provinceOptions}
             selectedKey={province}
             onSelectionChange={(key) => setProvince(String(key))}
+            className="w-48"
           >
             {(item) => <SelectItem id={item.id}>{item.label}</SelectItem>}
           </Select>

@@ -3,6 +3,7 @@
 import { Tab, TabList, TabPanel, Tabs } from "@mvp-ui/ui";
 import { useSearchParams } from "next/navigation";
 import type { CustomerDetailExtras } from "../customer-detail-data";
+import { DocumentsTab } from "./DocumentsTab";
 import { LocationsTab } from "./LocationsTab";
 import { OverviewTab } from "./OverviewTab";
 import { PositionsTab } from "./PositionsTab";
@@ -17,11 +18,12 @@ interface CustomerDetailTabsProps {
 
 const TAB_DEFS = [
   { id: "overview", label: "Tổng quan" },
+  { id: "documents", label: "Hợp đồng" },
   { id: "locations", label: "Địa điểm" },
-  { id: "positions", label: "Vị trí làm việc" },
-  { id: "users", label: "Quản lý user" },
-  { id: "pricing", label: "Cấu hình chi trả & phí" },
+  { id: "positions", label: "Công việc" },
+  { id: "pricing", label: "Cấu hình giá" },
   { id: "reconciliation", label: "Cấu hình đối soát" },
+  { id: "users", label: "Nhân viên" },
 ] as const;
 
 const TAB_IDS = TAB_DEFS.map((t) => t.id) as readonly string[];
@@ -32,8 +34,8 @@ export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsPro
   const initialTab = tabParam && TAB_IDS.includes(tabParam) ? tabParam : "overview";
 
   return (
-    <Tabs defaultSelectedKey={initialTab} className="gap-6">
-      <TabList aria-label="Customer detail tabs" className="gap-6">
+    <Tabs defaultSelectedKey={initialTab} variant="pill" orientation="vertical" className="gap-6">
+      <TabList aria-label="Customer detail tabs" >
         {TAB_DEFS.map((tab) => (
           <Tab key={tab.id} id={tab.id}>
             {tab.label}
@@ -43,6 +45,9 @@ export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsPro
 
       <TabPanel id="overview">
         <OverviewTab extras={extras} />
+      </TabPanel>
+      <TabPanel id="documents">
+        <DocumentsTab documents={extras.documents} />
       </TabPanel>
       <TabPanel id="locations">
         <LocationsTab locations={extras.locations} />
@@ -54,7 +59,11 @@ export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsPro
         <UsersTab users={extras.users} />
       </TabPanel>
       <TabPanel id="pricing">
-        <PricingTab configs={extras.pricingConfigs} customerId={customerId} />
+        <PricingTab
+          configs={extras.pricingConfigs}
+          customerId={customerId}
+          customerName={extras.brand.brandName}
+        />
       </TabPanel>
       <TabPanel id="reconciliation">
         <ReconciliationTab data={extras.reconciliation} />

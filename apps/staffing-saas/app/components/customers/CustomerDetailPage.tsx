@@ -59,17 +59,17 @@ export function CustomerDetailPage({ id }: { id: string }) {
               <div>
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-xl font-semibold text-fg">{extras.brand.brandName}</h1>
-                  <Badge color={status.color} type="pill-color" size="sm">
-                    ● {status.label}
-                  </Badge>
                 </div>
-                <div className="mt-3 flex flex-wrap gap-2">
+                <Badge color={status.color} type="pill-color" size="sm">
+                  ● {status.label}
+                </Badge>
+                {/* <div className="mt-3 flex flex-wrap gap-2">
                   {extras.brand.serviceTags.map((tag) => (
                     <Badge key={tag} color="success" type="pill-color" size="sm">
                       {tag}
                     </Badge>
                   ))}
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -79,7 +79,7 @@ export function CustomerDetailPage({ id }: { id: string }) {
                 </Button>
               </Link>
               <Button color="primary" size="sm">
-                Tạo hiring request
+                Tạo Y/c tuyển dụng
               </Button>
             </div>
           </div>

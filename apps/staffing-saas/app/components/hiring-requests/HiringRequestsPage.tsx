@@ -147,9 +147,11 @@ export function HiringRequestsPage() {
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
-            <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-              Tạo Y/c tuyển dụng mới
-            </Button>
+            <Link href="/hiring-requests/new">
+              <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
+                Tạo Y/c tuyển dụng mới
+              </Button>
+            </Link>
           </div>
         </div>
       }
