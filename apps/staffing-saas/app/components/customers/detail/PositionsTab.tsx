@@ -1,11 +1,13 @@
 "use client";
 
 import { Button, Table } from "@mvp-ui/ui";
+import Link from "next/link";
 import { Pencil, Plus } from "lucide-react";
 import type { CustomerPosition } from "../customer-detail-data";
 
 interface PositionsTabProps {
   positions: CustomerPosition[];
+  customerId: string;
 }
 
 const COLUMNS = [
@@ -14,7 +16,7 @@ const COLUMNS = [
   { id: "actions", name: "" },
 ];
 
-export function PositionsTab({ positions }: PositionsTabProps) {
+export function PositionsTab({ positions, customerId }: PositionsTabProps) {
   return (
     <div className="flex flex-col gap-6">
       <div className="rounded-xl border border-border-secondary bg-bg shadow-xs">
@@ -25,13 +27,15 @@ export function PositionsTab({ positions }: PositionsTabProps) {
               Quản lý các vị trí làm việc khách hàng đang tuyển CTV.
             </p>
           </div>
-          <Button
-            color="primary"
-            size="sm"
-            iconLeading={<Plus className="size-4" />}
-          >
-            Thêm vị trí
-          </Button>
+          <Link href={`/customers/${customerId}/positions/new`}>
+            <Button
+              color="primary"
+              size="sm"
+              iconLeading={<Plus className="size-4" />}
+            >
+              Thêm vị trí
+            </Button>
+          </Link>
         </div>
         <Table aria-label="Danh sách vị trí làm việc">
           <Table.Header>
@@ -63,13 +67,17 @@ export function PositionsTab({ positions }: PositionsTabProps) {
                   </p>
                 </Table.Cell>
                 <Table.Cell>
-                  <Button
-                    color="secondary"
-                    size="sm"
-                    iconLeading={<Pencil className="size-4" />}
+                  <Link
+                    href={`/customers/${customerId}/positions/${position.id}`}
                   >
-                    Sửa
-                  </Button>
+                    <Button
+                      color="secondary"
+                      size="sm"
+                      iconLeading={<Pencil className="size-4" />}
+                    >
+                      Sửa
+                    </Button>
+                  </Link>
                 </Table.Cell>
               </Table.Row>
             )}

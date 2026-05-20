@@ -47,6 +47,9 @@ export interface CustomerPosition {
   id: string;
   name: string;
   description: string;
+  requirements: string;
+  benefits: string;
+  instructions: string;
 }
 
 export interface CustomerLocation {
@@ -222,24 +225,36 @@ const DEFAULT_LOCATIONS: CustomerLocation[] = [
   },
 ];
 
+const POSITION_DETAILS_DEFAULT = {
+  requirements:
+    "- Nam/Nữ 18+, sức khỏe tốt\n- Có kinh nghiệm bán hàng/retail là một lợi thế\n- Trung thực, chăm chỉ, giao tiếp tốt",
+  benefits:
+    "- Thưởng KPI theo doanh thu\n- Thưởng chuyên cần\n- Hỗ trợ ăn trưa khi ca > 6 tiếng",
+  instructions:
+    "- Có mặt trước 15 phút để nhận đồng phục và brief\n- Mang theo CCCD bản gốc\n- Liên hệ quản lý ca tại quầy thông tin trước khi bắt đầu",
+} as const;
+
 const DEFAULT_POSITIONS: CustomerPosition[] = [
   {
     id: "pos-1",
     name: "CTV lấy hàng",
     description:
       "Nhận đơn theo wave, picking hàng tại kệ theo SKU, gom hàng về khu vực soạn đơn. Yêu cầu di chuyển nhiều, đọc được mã SKU và quét scanner.",
+    ...POSITION_DETAILS_DEFAULT,
   },
   {
     id: "pos-2",
     name: "CTV đóng gói",
     description:
       "Soạn hàng theo đơn, kiểm tra số lượng và chất lượng, đóng gói bằng thùng/túi theo SOP, dán nhãn vận chuyển. Yêu cầu cẩn thận, làm việc theo nhịp.",
+    ...POSITION_DETAILS_DEFAULT,
   },
   {
     id: "pos-3",
     name: "CTV giao hàng",
     description:
       "Nhận đơn từ kho, vận chuyển đến địa chỉ khách, thu tiền COD nếu có. Yêu cầu có phương tiện cá nhân, thông thuộc khu vực giao.",
+    ...POSITION_DETAILS_DEFAULT,
   },
 ];
 
@@ -449,4 +464,12 @@ export function getCustomerDetailExtras(customer: CustomerRecord): CustomerDetai
   const base = defaultExtras(customer);
   const override = CUSTOMER_EXTRAS_OVERRIDES[customer.id];
   return override ? override(base, customer) : base;
+}
+
+export function getCustomerPosition(
+  customer: CustomerRecord,
+  positionId: string
+): CustomerPosition | undefined {
+  const extras = getCustomerDetailExtras(customer);
+  return extras.positions.find((p) => p.id === positionId);
 }

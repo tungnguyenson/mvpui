@@ -124,8 +124,11 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       },
     ],
     timeline: [
-      { id: "t-1", at: "12/05/2026", action: "Khách hàng tạo yêu cầu", actor: "GHN Sorting" },
-      { id: "t-2", at: "14/05/2026", action: "Đẩy danh sách shortlist cho khách", actor: "Lê Thuỳ Trang" },
+      { id: "t-1", at: "12/05/2026", action: "Khách hàng tạo yêu cầu (0/15 người)", actor: "GHN Sorting" },
+      { id: "t-2", at: "13/05/2026", action: "Tăng headcount: 15 → 20 người", actor: "Trần Minh Quân (AE)", note: "Khách mở thêm điểm bán tại Vincom Đồng Khởi." },
+      { id: "t-3", at: "14/05/2026", action: "Đẩy danh sách shortlist cho khách", actor: "Lê Thuỳ Trang" },
+      { id: "t-4", at: "16/05/2026", action: "Nhận thêm 5 worker (5/20 người)", actor: "Lê Thuỳ Trang" },
+      { id: "t-5", at: "19/05/2026", action: "Nhận thêm 7 worker (12/20 người)", actor: "Lê Thuỳ Trang" },
     ],
   },
   {
@@ -171,8 +174,11 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       },
     ],
     timeline: [
-      { id: "t-1", at: "10/05/2026", action: "Tạo hiring request", actor: "Ninja Van" },
-      { id: "t-2", at: "13/05/2026", action: "Gửi shortlist worker", actor: "Nguyễn Quốc Đạt" },
+      { id: "t-1", at: "10/05/2026", action: "Tạo hiring request (0/10 người)", actor: "Ninja Van" },
+      { id: "t-2", at: "12/05/2026", action: "Tăng headcount: 10 → 15 người", actor: "Phạm Hoàng Long (Ops)", note: "Khách bổ sung ca đêm cuối tuần." },
+      { id: "t-3", at: "13/05/2026", action: "Gửi shortlist worker", actor: "Nguyễn Quốc Đạt" },
+      { id: "t-4", at: "17/05/2026", action: "Nhận thêm 5 worker (5/15 người)", actor: "Nguyễn Quốc Đạt" },
+      { id: "t-5", at: "20/05/2026", action: "Nhận thêm 3 worker (8/15 người)", actor: "Nguyễn Quốc Đạt" },
     ],
   },
   {
@@ -208,8 +214,10 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       },
     ],
     timeline: [
-      { id: "t-1", at: "08/05/2026", action: "Tạo hiring request", actor: "Shopee Express Official" },
-      { id: "t-2", at: "20/05/2026", action: "Đánh dấu quá hạn", actor: "Hệ thống" },
+      { id: "t-1", at: "08/05/2026", action: "Tạo hiring request (0/6 người)", actor: "Shopee Express Official" },
+      { id: "t-2", at: "12/05/2026", action: "Giảm headcount: 6 → 4 người", actor: "Đỗ Khánh Vy (AM)", note: "Khách điều chỉnh ngân sách, cắt 2 slot." },
+      { id: "t-3", at: "15/05/2026", action: "Nhận 1 worker (1/4 người)", actor: "Đỗ Khánh Vy (AM)" },
+      { id: "t-4", at: "20/05/2026", action: "Đánh dấu quá hạn", actor: "Hệ thống" },
     ],
   },
   {
@@ -244,8 +252,11 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       },
     ],
     timeline: [
-      { id: "t-1", at: "05/05/2026", action: "Tạo hiring request", actor: "Ninja Van" },
-      { id: "t-2", at: "15/05/2026", action: "Đạt đủ headcount", actor: "Lê Thuỳ Trang" },
+      { id: "t-1", at: "05/05/2026", action: "Tạo hiring request (0/8 người)", actor: "Ninja Van" },
+      { id: "t-2", at: "07/05/2026", action: "Tăng headcount: 8 → 10 người", actor: "Lê Quang Thịnh (Warehouse Lead)", note: "Đơn hàng cuối tháng tăng 20%." },
+      { id: "t-3", at: "10/05/2026", action: "Nhận thêm 4 worker (4/10 người)", actor: "Lê Thuỳ Trang" },
+      { id: "t-4", at: "13/05/2026", action: "Nhận thêm 4 worker (8/10 người)", actor: "Lê Thuỳ Trang" },
+      { id: "t-5", at: "15/05/2026", action: "Đạt đủ headcount (10/10 người)", actor: "Lê Thuỳ Trang" },
     ],
   },
 ];

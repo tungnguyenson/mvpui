@@ -48,7 +48,7 @@ export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsPro
         <LocationsTab locations={extras.locations} />
       </TabPanel>
       <TabPanel id="positions">
-        <PositionsTab positions={extras.positions} />
+        <PositionsTab positions={extras.positions} customerId={customerId} />
       </TabPanel>
       <TabPanel id="users">
         <UsersTab users={extras.users} />

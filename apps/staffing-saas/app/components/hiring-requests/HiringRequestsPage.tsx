@@ -140,7 +140,7 @@ export function HiringRequestsPage() {
       header={
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Tuyển dụng</h1>
+            <h1 className="text-xl font-semibold text-fg">Yêu cầu Tuyển dụng</h1>
             <p className="max-w-3xl text-base text-fg-tertiary">
               Theo dõi các hiring requests từ khách hàng và mức độ lấp đầy nhu cầu nhân sự
               theo từng tài khoản và khu vực.

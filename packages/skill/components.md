@@ -78,7 +78,7 @@ Import all components from `@mvp-ui/ui`.
 | Section | `Section` | Settings page content groups | `title`, `description`, `actions` props; adds `border-b` divider |
 | Select | `Select`, `SelectItem` | Single-option dropdown | React Aria; `items` array + render-prop children; use `Select.Item` |
 | Slider | `Slider` | Range / value sliders | React Aria; `value`, `onChange`, `min`, `max`, `step` |
-| Tab / Tabs | `Tabs`, `TabList`, `Tab`, `TabPanel`, `TabVariant` | Tabbed content switching | React Aria; `variant="underline"/"pill"`; `Tab` has `icon` + `value` (trailing neutral pill — counts, labels) |
+| Tab / Tabs | `Tabs`, `TabList`, `Tab`, `TabPanel`, `TabVariant`, `TabOrientation` | Tabbed content switching | React Aria; `variant="underline"/"pill"`, `orientation="horizontal"/"vertical"` (vertical = left-rail layout — underline shows left-line indicator, pill shows brand-tinted active row); `Tab` has `icon` + `value` (trailing neutral pill — counts, labels) |
 | Tag | `Tag`, `TagGroup`, `TagList`, `TagItem`, `TagAvatar` | Filterable label groups, multi-select tags | `TagGroup` manages selection; `TagList` + `TagItem` for display |
 | Tooltip | `Tooltip`, `TooltipTrigger` | Hover label for icon buttons | Wrap trigger in `TooltipTrigger` inside `Tooltip` |
 

@@ -1,0 +1,1 @@
+export { HiringRequestConfigForm } from "./HiringRequestConfigForm";

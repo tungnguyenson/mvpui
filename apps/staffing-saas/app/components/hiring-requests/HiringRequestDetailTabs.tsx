@@ -18,6 +18,7 @@ import type {
 } from "./hiring-requests-data";
 import { getCustomerLogo } from "../_shared/assets";
 import { CandidateFunnelPanel } from "./CandidateFunnelPanel";
+import { HiringRequestConfigForm } from "./config";
 
 interface HiringRequestDetailTabsProps {
   record: HiringRequestRecord;
@@ -179,18 +180,22 @@ function OverviewPanel({
           </ul>
         </SectionCard>
       </div>
-
-      <SectionCard
-        title="Timeline fulfill"
-        description="Lịch sử các bước xử lý hiring request từ khi khách hàng tạo."
-      >
-        <div className="flex flex-col">
-          {record.timeline.map((entry) => (
-            <TimelineItem key={entry.id} entry={entry} />
-          ))}
-        </div>
-      </SectionCard>
     </div>
+  );
+}
+
+function TimelinePanel({ record }: { record: HiringRequestRecord }) {
+  return (
+    <SectionCard
+      title="Timeline fulfill"
+      description="Lịch sử các bước xử lý hiring request từ khi khách hàng tạo."
+    >
+      <div className="flex flex-col">
+        {record.timeline.map((entry) => (
+          <TimelineItem key={entry.id} entry={entry} />
+        ))}
+      </div>
+    </SectionCard>
   );
 }
 
@@ -203,9 +208,11 @@ export function HiringRequestDetailTabs({
     <Tabs variant="underline" size="md" defaultSelectedKey="overview">
       <TabList aria-label="Phần chi tiết hiring request">
         <Tab id="overview">Tổng quan</Tab>
+        <Tab id="config">Cấu hình</Tab>
         <Tab id="funnel" value={record.candidates.length}>
           Ứng viên
         </Tab>
+        <Tab id="timeline">Timeline</Tab>
       </TabList>
       <TabPanel id="overview">
         <OverviewPanel
@@ -214,11 +221,17 @@ export function HiringRequestDetailTabs({
           remaining={remaining}
         />
       </TabPanel>
+      <TabPanel id="config">
+        <HiringRequestConfigForm />
+      </TabPanel>
       <TabPanel id="funnel">
         <CandidateFunnelPanel
           candidates={record.candidates}
           remaining={remaining}
         />
+      </TabPanel>
+      <TabPanel id="timeline">
+        <TimelinePanel record={record} />
       </TabPanel>
     </Tabs>
   );

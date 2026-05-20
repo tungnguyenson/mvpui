@@ -282,6 +282,151 @@ const SECTIONS: DocExample[] = [
 </Tabs>`,
   },
   {
+    id: "vertical-underline",
+    title: "Vertical (underline / line)",
+    description:
+      "Vertical tabs with a left-line indicator on the active tab. Tab list sits to the left of the panel. Default size is md.",
+    preview: (
+      <Tabs defaultSelectedKey="details" orientation="vertical">
+        <TabList>
+          <Tab id="details">My details</Tab>
+          <Tab id="profile">Profile</Tab>
+          <Tab id="password">Password</Tab>
+          <Tab id="team">Team</Tab>
+          <Tab id="notifications" value={2}>
+            Notifications
+          </Tab>
+          <Tab id="api">API</Tab>
+        </TabList>
+        <TabPanel id="details">
+          <p className="text-sm text-fg-secondary">My details panel.</p>
+        </TabPanel>
+        <TabPanel id="profile">
+          <p className="text-sm text-fg-secondary">Profile panel.</p>
+        </TabPanel>
+        <TabPanel id="password">
+          <p className="text-sm text-fg-secondary">Password panel.</p>
+        </TabPanel>
+        <TabPanel id="team">
+          <p className="text-sm text-fg-secondary">Team panel.</p>
+        </TabPanel>
+        <TabPanel id="notifications">
+          <p className="text-sm text-fg-secondary">Notifications panel.</p>
+        </TabPanel>
+        <TabPanel id="api">
+          <p className="text-sm text-fg-secondary">API panel.</p>
+        </TabPanel>
+      </Tabs>
+    ),
+    code: `<Tabs defaultSelectedKey="details" orientation="vertical">
+  <TabList>
+    <Tab id="details">My details</Tab>
+    <Tab id="profile">Profile</Tab>
+    <Tab id="password">Password</Tab>
+    <Tab id="team">Team</Tab>
+    <Tab id="notifications" value={2}>Notifications</Tab>
+    <Tab id="api">API</Tab>
+  </TabList>
+  {/* …panels */}
+</Tabs>`,
+  },
+  {
+    id: "vertical-pill",
+    title: "Vertical (pill / brand-tinted)",
+    description:
+      "Vertical tabs with a brand-tinted active row. Best for left-rail settings navigation.",
+    preview: (
+      <Tabs defaultSelectedKey="details" orientation="vertical" variant="pill">
+        <TabList>
+          <Tab id="details">My details</Tab>
+          <Tab id="profile">Profile</Tab>
+          <Tab id="password">Password</Tab>
+          <Tab id="team">Team</Tab>
+          <Tab id="notifications" value={2}>
+            Notifications
+          </Tab>
+          <Tab id="api">API</Tab>
+        </TabList>
+        <TabPanel id="details">
+          <p className="text-sm text-fg-secondary">My details panel.</p>
+        </TabPanel>
+        <TabPanel id="profile">
+          <p className="text-sm text-fg-secondary">Profile panel.</p>
+        </TabPanel>
+        <TabPanel id="password">
+          <p className="text-sm text-fg-secondary">Password panel.</p>
+        </TabPanel>
+        <TabPanel id="team">
+          <p className="text-sm text-fg-secondary">Team panel.</p>
+        </TabPanel>
+        <TabPanel id="notifications">
+          <p className="text-sm text-fg-secondary">Notifications panel.</p>
+        </TabPanel>
+        <TabPanel id="api">
+          <p className="text-sm text-fg-secondary">API panel.</p>
+        </TabPanel>
+      </Tabs>
+    ),
+    code: `<Tabs defaultSelectedKey="details" orientation="vertical" variant="pill">
+  <TabList>
+    <Tab id="details">My details</Tab>
+    <Tab id="profile">Profile</Tab>
+    <Tab id="password">Password</Tab>
+    <Tab id="team">Team</Tab>
+    <Tab id="notifications" value={2}>Notifications</Tab>
+    <Tab id="api">API</Tab>
+  </TabList>
+  {/* …panels */}
+</Tabs>`,
+  },
+  {
+    id: "vertical-icons-sm",
+    title: "Vertical with icons (sm)",
+    description: "Vertical pill tabs with leading icons in the smaller sm size.",
+    preview: (
+      <Tabs
+        defaultSelectedKey="overview"
+        orientation="vertical"
+        variant="pill"
+        size="sm"
+      >
+        <TabList>
+          <Tab id="overview" icon={<BarChart2 className="size-4" />}>
+            Overview
+          </Tab>
+          <Tab id="team" icon={<Users className="size-4" />}>
+            Team
+          </Tab>
+          <Tab id="settings" icon={<Settings className="size-4" />}>
+            Settings
+          </Tab>
+        </TabList>
+        <TabPanel id="overview">
+          <p className="text-sm text-fg-secondary">Overview panel.</p>
+        </TabPanel>
+        <TabPanel id="team">
+          <p className="text-sm text-fg-secondary">Team panel.</p>
+        </TabPanel>
+        <TabPanel id="settings">
+          <p className="text-sm text-fg-secondary">Settings panel.</p>
+        </TabPanel>
+      </Tabs>
+    ),
+    code: `<Tabs
+  defaultSelectedKey="overview"
+  orientation="vertical"
+  variant="pill"
+  size="sm"
+>
+  <TabList>
+    <Tab id="overview" icon={<BarChart2 className="size-4" />}>Overview</Tab>
+    <Tab id="team" icon={<Users className="size-4" />}>Team</Tab>
+    <Tab id="settings" icon={<Settings className="size-4" />}>Settings</Tab>
+  </TabList>
+  {/* …panels */}
+</Tabs>`,
+  },
+  {
     id: "disabled",
     title: "Disabled tab",
     description: "Individual tabs can be disabled with the isDisabled prop.",
@@ -322,7 +467,7 @@ export default function TabsPage() {
   return (
     <ComponentDocLayout
       name="Tabs"
-      tagline="Accessible tab navigation built on react-aria. Supports underline and pill variants, sm/md sizes, icons, and disabled tabs."
+      tagline="Accessible tab navigation built on react-aria. Supports underline and pill variants, horizontal/vertical orientations, sm/md sizes, icons, and disabled tabs."
       install={{ usage: `import { Tabs, TabList, Tab, TabPanel } from "@mvp-ui/ui";` }}
       sections={SECTIONS}
     />

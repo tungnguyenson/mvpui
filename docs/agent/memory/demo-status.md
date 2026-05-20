@@ -79,7 +79,7 @@ Nav registration: `apps/docs/app/nav.ts`
 
 | Component | Status | Notes |
 |---|---|---|
-| Tabs | ✅ complete | react-aria Tabs; underline/pill variants, sm/md sizes |
+| Tabs | ✅ complete | react-aria Tabs; underline/pill variants, sm/md sizes, horizontal/vertical orientation |
 | Pagination | ✅ complete | custom buildRange(); compact prop; lucide chevrons |
 | EmptyState | ✅ complete | presentational; icon/title/description/actions props |
 | LoadingIndicator | ✅ complete | SVG spinner + dot-pulse; sm/md/lg; primary/secondary |
