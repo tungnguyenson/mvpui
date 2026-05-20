@@ -93,10 +93,10 @@ export function TabList<T extends object>({
       {...ariaTabListProps}
       ref={ref}
       className={cn(
-        "flex",
+        "flex overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         variant === "underline" && "gap-3 border-b border-border",
         variant === "pill" &&
-          "gap-1 rounded-lg bg-bg-secondary p-1 w-max",
+          "gap-1 rounded-lg bg-bg-secondary p-1 w-max max-w-full",
         className,
       )}
     />
@@ -138,7 +138,7 @@ export const Tab = ({
       className={(state) =>
         cn(
           // base
-          "relative inline-flex cursor-pointer items-center gap-2 font-semibold outline-none transition-colors select-none",
+          "relative inline-flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap font-semibold outline-none transition-colors select-none",
           // focus ring
           state.isFocusVisible &&
             "rounded-md ring-2 ring-brand-500/22 ring-offset-1",
