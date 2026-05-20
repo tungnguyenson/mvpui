@@ -1,4 +1,4 @@
-import { WorkerVerificationsDetailPage } from "../../../components/WorkerVerificationsDetailPage";
+import { WorkerVerificationsDetailPage } from "../../../components/worker-verifications";
 
 export default async function Route({
   params,

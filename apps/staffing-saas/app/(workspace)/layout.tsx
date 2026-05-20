@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { AppShell } from "../components/AppShell";
+import { AppShell } from "../components/_shell";
 
 export default function WorkspaceLayout({
   children,

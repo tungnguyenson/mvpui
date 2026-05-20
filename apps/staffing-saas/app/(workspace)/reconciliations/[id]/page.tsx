@@ -1,4 +1,4 @@
-import { ReconciliationsDetailPage } from "../../../components/ReconciliationsDetailPage";
+import { ReconciliationsDetailPage } from "../../../components/reconciliations";
 
 export default async function Route({
   params,

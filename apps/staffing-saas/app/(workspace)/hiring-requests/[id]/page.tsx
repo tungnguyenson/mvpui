@@ -1,4 +1,4 @@
-import { HiringRequestsDetailPage } from "../../../components/HiringRequestsDetailPage";
+import { HiringRequestsDetailPage } from "../../../components/hiring-requests";
 
 export default async function Route({
   params,

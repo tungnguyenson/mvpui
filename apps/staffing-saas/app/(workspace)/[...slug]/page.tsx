@@ -1,5 +1,5 @@
-import { EmptyState } from "../../components/EmptyState";
-import { labelForPath } from "../../components/nav";
+import { EmptyState } from "../../components/_shared";
+import { labelForPath } from "../../components/_shell";
 
 export default async function PendingRoutePage({
   params,

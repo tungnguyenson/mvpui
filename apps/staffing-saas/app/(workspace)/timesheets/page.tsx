@@ -1,4 +1,4 @@
-import { TimesheetsPage } from "../../components/TimesheetsPage";
+import { TimesheetsPage } from "../../components/timesheets";
 
 export default function Route() {
   return <TimesheetsPage />;

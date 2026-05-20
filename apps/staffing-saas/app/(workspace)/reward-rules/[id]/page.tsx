@@ -1,4 +1,4 @@
-import { RewardRulesDetailPage } from "../../../components/RewardRulesDetailPage";
+import { RewardRulesDetailPage } from "../../../components/reward-rules";
 
 export default async function Route({
   params,

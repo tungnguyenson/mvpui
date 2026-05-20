@@ -1,4 +1,4 @@
-import { ShiftsDetailPage } from "../../../components/ShiftsDetailPage";
+import { ShiftsDetailPage } from "../../../components/shifts";
 
 export default async function Route({
   params,

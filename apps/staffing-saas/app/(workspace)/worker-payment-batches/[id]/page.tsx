@@ -1,4 +1,4 @@
-import { WorkerPaymentBatchesDetailPage } from "../../../components/WorkerPaymentBatchesDetailPage";
+import { WorkerPaymentBatchesDetailPage } from "../../../components/worker-payment-batches";
 
 export default async function Route({
   params,

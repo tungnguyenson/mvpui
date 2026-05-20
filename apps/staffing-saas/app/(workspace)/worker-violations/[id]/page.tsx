@@ -1,4 +1,4 @@
-import { WorkerViolationsDetailPage } from "../../../components/WorkerViolationsDetailPage";
+import { WorkerViolationsDetailPage } from "../../../components/worker-violations";
 
 export default async function Route({
   params,

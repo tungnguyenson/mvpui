@@ -1,4 +1,4 @@
-import { TimesheetsDetailPage } from "../../../components/TimesheetsDetailPage";
+import { TimesheetsDetailPage } from "../../../components/timesheets";
 
 export default async function Route({
   params,

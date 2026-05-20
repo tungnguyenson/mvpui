@@ -1,4 +1,4 @@
-import { WorkerDetailPage } from "../../../components/WorkerDetailPage";
+import { WorkerDetailPage } from "../../../components/workers";
 
 export default async function WorkerDetailRoute({
   params,

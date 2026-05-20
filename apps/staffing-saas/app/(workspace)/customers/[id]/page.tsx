@@ -1,4 +1,4 @@
-import { CustomerDetailPage } from "../../../components/CustomerDetailPage";
+import { CustomerDetailPage } from "../../../components/customers";
 
 export default async function CustomerDetailRoute({
   params,
