@@ -36,7 +36,7 @@ function StageColumn({
         </div>
         <span className="text-sm font-medium text-fg-tertiary">{items.length}</span>
       </div>
-      <div className="flex max-h-160 flex-col gap-2 overflow-y-auto p-3">
+      <div className="flex max-h-[calc(100vh-10rem)] flex-col gap-2 overflow-y-auto p-3">
         {items.length === 0 ? (
           <div className="rounded-lg border border-dashed border-border-secondary bg-bg p-4 text-center text-sm text-fg-tertiary">
             Trống
