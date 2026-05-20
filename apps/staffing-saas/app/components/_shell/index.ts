@@ -7,6 +7,13 @@ export {
   useBreadcrumbOverride,
 } from "./BreadcrumbContext";
 export {
+  ThemeProvider,
+  useAppearance,
+  type ThemeMode,
+  type AppearanceMode,
+} from "./ThemeContext";
+export { ThemePicker } from "./ThemePicker";
+export {
   APP_ROUTES,
   NAV_SECTIONS,
   activeHrefForPath,

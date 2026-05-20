@@ -64,11 +64,11 @@ function BatchRow({ batch }: { batch: PaymentBatchRecord }) {
         <div className="grid grid-cols-[80px_auto] gap-x-2 gap-y-0.5 text-xs text-fg-tertiary">
           <span>Số CTV</span>
           <span className="font-medium text-fg tabular-nums">
-            : {batch.summary.workerCount.toLocaleString("vi-VN")}
+            {batch.summary.workerCount.toLocaleString("vi-VN")}
           </span>
           <span>Số công ty</span>
           <span className="font-medium text-fg tabular-nums">
-            : {batch.summary.companyCount}
+            {batch.summary.companyCount}
           </span>
         </div>
       </Table.Cell>
@@ -93,7 +93,7 @@ function BatchRow({ batch }: { batch: PaymentBatchRecord }) {
         </div>
       </Table.Cell>
       <Table.Cell>
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col items-start gap-1">
           <Badge color={status.color} type="pill-color" size="sm">
             {status.label}
           </Badge>
@@ -157,11 +157,10 @@ export function WorkerPaymentBatchesPage() {
                   key={filter.id}
                   type="button"
                   onClick={() => setQuickFilter(filter.id)}
-                  className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${
-                    active
+                  className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${active
                       ? "border-border-brand bg-bg-secondary text-fg"
                       : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                  }`}
+                    }`}
                 >
                   {filter.label}
                 </button>

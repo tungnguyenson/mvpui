@@ -211,6 +211,7 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(
 				data-invalid={invalid ? true : undefined}
 				data-success={!invalid && isSuccess ? true : undefined}
 				className={cn(inputFieldVariants({ size, state }), wrapperClassName, className)}
+				suppressHydrationWarning
 			>
 				{renderIcon(iconLeading, "leading")}
 
