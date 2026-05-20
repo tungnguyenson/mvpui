@@ -1,4 +1,4 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -6,7 +6,6 @@ import {
   CreditCard,
   FileCheck2,
   Phone,
-  ShieldCheck,
   UserSquare2,
 } from "lucide-react";
 import { PageScaffold } from "./PageScaffold";
@@ -16,6 +15,7 @@ import {
   type VerificationDocument,
   type VerificationTimelineEntry,
 } from "./worker-verifications-data";
+import { getAvatarFor, getInitials } from "./assets";
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
@@ -103,9 +103,12 @@ export function WorkerVerificationsDetailPage({ id }: { id: string }) {
       header={
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
-              <ShieldCheck className="size-7" />
-            </div>
+            <Avatar
+              size="xl"
+              src={getAvatarFor(record.workerName, record.id)}
+              alt={record.workerName}
+              initials={getInitials(record.workerName)}
+            />
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-xl font-semibold text-fg">{record.workerName}</h1>

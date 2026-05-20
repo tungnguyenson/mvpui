@@ -1,4 +1,4 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarRange, CircleDollarSign, Gift, Users } from "lucide-react";
@@ -11,6 +11,7 @@ import {
   type RewardEligibleGroup,
   type RewardPayoutSample,
 } from "./reward-rules-data";
+import { getAvatarFor, getInitials } from "./assets";
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
@@ -70,18 +71,26 @@ function PayoutItem({ payout }: { payout: RewardPayoutSample }) {
   return (
     <div className="rounded-xl border border-border-secondary bg-bg-secondary p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          {payout.workerId ? (
-            <Link
-              href={`/workers/${payout.workerId}`}
-              className="text-sm font-semibold text-fg hover:text-fg-brand"
-            >
-              {payout.workerName}
-            </Link>
-          ) : (
-            <p className="text-sm font-semibold text-fg">{payout.workerName}</p>
-          )}
-          <p className="mt-1 text-sm text-fg-tertiary">{payout.context}</p>
+        <div className="flex items-start gap-3">
+          <Avatar
+            size="md"
+            src={getAvatarFor(payout.workerName, payout.workerId)}
+            alt={payout.workerName}
+            initials={getInitials(payout.workerName)}
+          />
+          <div>
+            {payout.workerId ? (
+              <Link
+                href={`/workers/${payout.workerId}`}
+                className="text-sm font-semibold text-fg hover:text-fg-brand"
+              >
+                {payout.workerName}
+              </Link>
+            ) : (
+              <p className="text-sm font-semibold text-fg">{payout.workerName}</p>
+            )}
+            <p className="mt-1 text-sm text-fg-tertiary">{payout.context}</p>
+          </div>
         </div>
         <div className="flex flex-col items-end gap-1">
           <p className="text-sm font-semibold text-fg">{payout.amount}</p>

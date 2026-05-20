@@ -1,4 +1,4 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -17,6 +17,7 @@ import {
   type HiringCandidate,
   type HiringTimelineEntry,
 } from "./hiring-requests-data";
+import { getAvatarFor, getCustomerLogo, getInitials } from "./assets";
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
@@ -53,20 +54,28 @@ function CandidateItem({ candidate }: { candidate: HiringCandidate }) {
   return (
     <div className="rounded-xl border border-border-secondary bg-bg-secondary p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          {candidate.workerId ? (
-            <Link
-              href={`/workers/${candidate.workerId}`}
-              className="text-sm font-semibold text-fg hover:text-fg-brand"
-            >
-              {candidate.workerName}
-            </Link>
-          ) : (
-            <p className="text-sm font-semibold text-fg">{candidate.workerName}</p>
-          )}
-          <p className="mt-1 text-sm text-fg-tertiary">
-            {candidate.city} • {candidate.experience}
-          </p>
+        <div className="flex items-start gap-3">
+          <Avatar
+            size="md"
+            src={getAvatarFor(candidate.workerName, candidate.workerId)}
+            alt={candidate.workerName}
+            initials={getInitials(candidate.workerName)}
+          />
+          <div>
+            {candidate.workerId ? (
+              <Link
+                href={`/workers/${candidate.workerId}`}
+                className="text-sm font-semibold text-fg hover:text-fg-brand"
+              >
+                {candidate.workerName}
+              </Link>
+            ) : (
+              <p className="text-sm font-semibold text-fg">{candidate.workerName}</p>
+            )}
+            <p className="mt-1 text-sm text-fg-tertiary">
+              {candidate.city} • {candidate.experience}
+            </p>
+          </div>
         </div>
         <div className="flex flex-col items-end gap-1">
           <Badge color={status.color} type="pill-color" size="sm">
@@ -168,7 +177,21 @@ export function HiringRequestsDetailPage({ id }: { id: string }) {
         >
           <div className="grid gap-4">
             <div className="flex items-start gap-3">
-              <Building2 className="mt-0.5 size-4 text-fg-brand" />
+              {(() => {
+                const logo = getCustomerLogo(record.customerId);
+                if (logo) {
+                  return (
+                    <div className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-border-secondary bg-bg p-1">
+                      <img
+                        src={logo.mark}
+                        alt={`Logo ${record.customer}`}
+                        className="size-full object-contain"
+                      />
+                    </div>
+                  );
+                }
+                return <Building2 className="mt-0.5 size-4 text-fg-brand" />;
+              })()}
               <div>
                 <p className="text-sm font-medium text-fg">{record.customer}</p>
                 <Link

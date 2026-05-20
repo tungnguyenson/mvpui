@@ -1,10 +1,9 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   AlertTriangle,
   CreditCard,
-  HardHat,
   Phone,
   ShieldCheck,
   Star,
@@ -15,6 +14,7 @@ import {
   type WorkerShiftHistory,
 } from "./workers-data";
 import { PageScaffold } from "./PageScaffold";
+import { getAvatarFor, getInitials } from "./assets";
 
 function SummaryCard({
   label,
@@ -102,9 +102,12 @@ export function WorkerDetailPage({ id }: { id: string }) {
       header={
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
-              <HardHat className="size-7" />
-            </div>
+            <Avatar
+              size="xl"
+              src={getAvatarFor(worker.name, worker.id)}
+              alt={worker.name}
+              initials={getInitials(worker.name)}
+            />
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-xl font-semibold text-fg">{worker.name}</h1>

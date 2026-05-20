@@ -1,4 +1,4 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarRange, CreditCard, FileText, User2 } from "lucide-react";
@@ -8,6 +8,7 @@ import {
   getBatchById,
   type BatchLineItem,
 } from "./worker-payment-batches-data";
+import { getAvatarFor, getInitials } from "./assets";
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
@@ -49,16 +50,24 @@ function LineItem({ item }: { item: BatchLineItem }) {
   return (
     <div className="rounded-xl border border-border-secondary bg-bg-secondary p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <div>
-          <Link
-            href={`/workers/${item.workerId}`}
-            className="text-sm font-semibold text-fg hover:text-fg-brand"
-          >
-            {item.workerName}
-          </Link>
-          <p className="mt-1 text-sm text-fg-tertiary">
-            {item.bank} • {item.bankAccount}
-          </p>
+        <div className="flex items-start gap-3">
+          <Avatar
+            size="md"
+            src={getAvatarFor(item.workerName, item.workerId)}
+            alt={item.workerName}
+            initials={getInitials(item.workerName)}
+          />
+          <div>
+            <Link
+              href={`/workers/${item.workerId}`}
+              className="text-sm font-semibold text-fg hover:text-fg-brand"
+            >
+              {item.workerName}
+            </Link>
+            <p className="mt-1 text-sm text-fg-tertiary">
+              {item.bank} • {item.bankAccount}
+            </p>
+          </div>
         </div>
         <Badge color={tone} type="pill-color" size="sm">
           {item.status}

@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Avatar, Badge, Input, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, Search, User as UserIcon } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "./PageScaffold";
 import {
@@ -11,6 +11,7 @@ import {
   USER_STATUS_LABELS,
   type UserRecord,
 } from "./users-data";
+import { getAvatarFor, getInitials } from "./assets";
 
 const FILTERS = [
   { id: "all", label: "Tất cả" },
@@ -53,9 +54,12 @@ function UserRow({ user }: { user: UserRecord }) {
     <Table.Row id={user.id}>
       <Table.Cell>
         <Link href={`/users/${user.id}`} className="flex items-center gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-fg">
-            <UserIcon className="size-5" />
-          </div>
+          <Avatar
+            size="md"
+            src={getAvatarFor(user.fullName, user.id)}
+            alt={user.fullName}
+            initials={getInitials(user.fullName)}
+          />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium text-fg">{user.fullName}</div>
             <div className="truncate text-sm text-fg-tertiary">{user.email}</div>

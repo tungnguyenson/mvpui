@@ -10,6 +10,7 @@ import {
   type ApprovalEntry,
   type DiscrepancyItem,
 } from "./reconciliations-data";
+import { getCustomerLogo } from "./assets";
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
@@ -148,7 +149,21 @@ export function ReconciliationsDetailPage({ id }: { id: string }) {
         >
           <div className="grid gap-4">
             <div className="flex items-start gap-3">
-              <Building2 className="mt-0.5 size-4 text-fg-brand" />
+              {(() => {
+                const logo = getCustomerLogo(record.customerId);
+                if (logo) {
+                  return (
+                    <div className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-md border border-border-secondary bg-bg p-1">
+                      <img
+                        src={logo.mark}
+                        alt={`Logo ${record.customer}`}
+                        className="size-full object-contain"
+                      />
+                    </div>
+                  );
+                }
+                return <Building2 className="mt-0.5 size-4 text-fg-brand" />;
+              })()}
               <div>
                 <p className="text-sm font-medium text-fg">{record.customer}</p>
                 <Link

@@ -1,7 +1,7 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Avatar, Badge, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Mail, MapPin, Phone, ShieldCheck, User as UserIcon } from "lucide-react";
+import { Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { PageScaffold } from "./PageScaffold";
 import {
   USER_ROLE_LABELS,
@@ -10,6 +10,7 @@ import {
   type UserActivity,
   type UserPermission,
 } from "./users-data";
+import { getAvatarFor, getInitials } from "./assets";
 
 function SummaryCard({ label, value }: { label: string; value: string }) {
   return (
@@ -84,9 +85,12 @@ export function UsersDetailPage({ id }: { id: string }) {
       header={
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
-              <UserIcon className="size-7" />
-            </div>
+            <Avatar
+              size="xl"
+              src={getAvatarFor(user.fullName, user.id)}
+              alt={user.fullName}
+              initials={getInitials(user.fullName)}
+            />
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-xl font-semibold text-fg">{user.fullName}</h1>

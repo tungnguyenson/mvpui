@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Avatar, Badge, Input, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { HardHat, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import {
   WORKERS,
@@ -10,6 +10,7 @@ import {
   type WorkerRecord,
 } from "./workers-data";
 import { PageScaffold } from "./PageScaffold";
+import { getAvatarFor, getInitials } from "./assets";
 
 const FILTERS = [
   { id: "all", label: "Tất cả" },
@@ -52,9 +53,12 @@ function WorkerRow({ worker }: { worker: WorkerRecord }) {
     <Table.Row id={worker.id}>
       <Table.Cell>
         <Link href={`/workers/${worker.id}`} className="flex items-center gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-fg">
-            <HardHat className="size-5" />
-          </div>
+          <Avatar
+            size="md"
+            src={getAvatarFor(worker.name, worker.id)}
+            alt={worker.name}
+            initials={getInitials(worker.name)}
+          />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium text-fg">{worker.name}</div>
             <div className="truncate text-sm text-fg-tertiary">{worker.phone}</div>

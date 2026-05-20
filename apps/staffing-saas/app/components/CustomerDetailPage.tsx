@@ -17,6 +17,7 @@ import {
   type CustomerShift,
 } from "./customers-data";
 import { PageScaffold } from "./PageScaffold";
+import { getCustomerLogo } from "./assets";
 
 function SummaryCard({
   label,
@@ -137,9 +138,25 @@ export function CustomerDetailPage({ id }: { id: string }) {
       header={
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div className="flex items-start gap-4">
-            <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
-              <Building2 className="size-7" />
-            </div>
+            {(() => {
+              const logo = getCustomerLogo(customer.id);
+              if (logo) {
+                return (
+                  <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl border border-border-secondary bg-bg p-2">
+                    <img
+                      src={logo.mark}
+                      alt={`Logo ${customer.name}`}
+                      className="size-full object-contain"
+                    />
+                  </div>
+                );
+              }
+              return (
+                <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
+                  <Building2 className="size-7" />
+                </div>
+              );
+            })()}
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-xl font-semibold text-fg">{customer.name}</h1>

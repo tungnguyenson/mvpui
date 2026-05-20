@@ -10,6 +10,41 @@ import {
   type CustomerRecord,
 } from "./customers-data";
 import { PageScaffold } from "./PageScaffold";
+import { getCustomerLogo } from "./assets";
+
+function CustomerLogo({
+  customer,
+  size,
+}: {
+  customer: CustomerRecord;
+  size: "sm" | "lg";
+}) {
+  const logo = getCustomerLogo(customer.id);
+  const sizeClass = size === "lg" ? "size-14 rounded-2xl" : "size-10 rounded-full";
+  const iconClass = size === "lg" ? "size-7" : "size-5";
+
+  if (logo) {
+    return (
+      <div
+        className={`flex ${sizeClass} shrink-0 items-center justify-center border border-border-secondary bg-bg p-1.5`}
+      >
+        <img
+          src={logo.mark}
+          alt={`Logo ${customer.name}`}
+          className="size-full object-contain"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`flex ${sizeClass} shrink-0 items-center justify-center bg-primary text-primary-fg`}
+    >
+      <Building2 className={iconClass} />
+    </div>
+  );
+}
 
 const FILTERS = [
   { id: "all", label: "Tất cả" },
@@ -52,9 +87,7 @@ function CustomerRow({ customer }: { customer: CustomerRecord }) {
     <Table.Row id={customer.id}>
       <Table.Cell>
         <Link href={`/customers/${customer.id}`} className="flex items-center gap-3">
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-fg">
-            <Building2 className="size-5" />
-          </div>
+          <CustomerLogo customer={customer} size="sm" />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium text-fg">{customer.name}</div>
             <div className="truncate text-sm text-fg-tertiary">

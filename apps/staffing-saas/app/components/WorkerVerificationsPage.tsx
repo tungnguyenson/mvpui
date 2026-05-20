@@ -1,8 +1,8 @@
 "use client";
 
-import { Badge, Input, Table, TableCard } from "@mvp-ui/ui";
+import { Avatar, Badge, Input, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
-import { ChevronRight, Search, ShieldCheck } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "./PageScaffold";
 import {
@@ -10,6 +10,7 @@ import {
   VERIFICATION_STATUS_LABELS,
   type VerificationRecord,
 } from "./worker-verifications-data";
+import { getAvatarFor, getInitials } from "./assets";
 
 const FILTERS = [
   { id: "all", label: "Tất cả" },
@@ -56,9 +57,12 @@ function VerificationRow({ record }: { record: VerificationRecord }) {
           href={`/worker-verifications/${record.id}`}
           className="flex items-center gap-3"
         >
-          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-primary-fg">
-            <ShieldCheck className="size-5" />
-          </div>
+          <Avatar
+            size="md"
+            src={getAvatarFor(record.workerName, record.id)}
+            alt={record.workerName}
+            initials={getInitials(record.workerName)}
+          />
           <div className="min-w-0">
             <div className="truncate text-sm font-medium text-fg">{record.workerName}</div>
             <div className="truncate text-sm text-fg-tertiary">
