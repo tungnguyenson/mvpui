@@ -1,11 +1,10 @@
 import {
   AlertTriangle,
   Building2,
-  Calculator,
   Calendar,
+  Calculator,
   Clock,
   CreditCard,
-  DollarSign,
   Gift,
   HardHat,
   LayoutDashboard,
@@ -27,48 +26,180 @@ export interface NavSection {
   items: NavItem[];
 }
 
-export const DASHBOARD_HREF = "#dashboard";
+export const APP_ROUTES = {
+  dashboard: "/",
+  customers: "/customers",
+  workers: "/workers",
+  workerVerifications: "/worker-verifications",
+  workerViolations: "/worker-violations",
+  workerPaymentBatches: "/worker-payment-batches",
+  shifts: "/shifts",
+  timesheets: "/timesheets",
+  reconciliations: "/reconciliations",
+  hiringRequests: "/hiring-requests",
+  rewardRules: "/reward-rules",
+  users: "/users",
+} as const;
 
 export const NAV_SECTIONS: NavSection[] = [
   {
     label: "",
     items: [
-      { id: "dashboard", label: "Dashboard", href: DASHBOARD_HREF, icon: LayoutDashboard },
-      { id: "kh-list", label: "Khách hàng", href: "#khach-hang", icon: Building2 },
+      {
+        id: "dashboard",
+        label: "Dashboard",
+        href: APP_ROUTES.dashboard,
+        icon: LayoutDashboard,
+      }
+    ],
+  },
+  {
+    label: "",
+    items: [
+      {
+        id: "customers",
+        label: "Khách hàng",
+        href: APP_ROUTES.customers,
+        icon: Building2,
+      },
     ],
   },
   {
     label: "Cộng tác viên",
     items: [
-      { id: "ctv-list", label: "Danh sách CTV", href: "#ctv", icon: HardHat },
-      { id: "ctv-xac-thuc", label: "Quản lý xác thực", href: "#xac-thuc", icon: ShieldCheck },
-      { id: "ctv-vi-pham", label: "Quản lý vi phạm", href: "#vi-pham", icon: AlertTriangle },
-      { id: "ctv-thanh-toan", label: "Thanh toán CTV", href: "#thanh-toan", icon: CreditCard },
+      {
+        id: "workers",
+        label: "Danh sách CTV",
+        href: APP_ROUTES.workers,
+        icon: HardHat,
+      },
+      {
+        id: "worker-verifications",
+        label: "Quản lý xác thực",
+        href: APP_ROUTES.workerVerifications,
+        icon: ShieldCheck,
+      },
+      {
+        id: "worker-violations",
+        label: "Quản lý vi phạm",
+        href: APP_ROUTES.workerViolations,
+        icon: AlertTriangle,
+      },
+      {
+        id: "worker-payment-batches",
+        label: "Thanh toán CTV",
+        href: APP_ROUTES.workerPaymentBatches,
+        icon: CreditCard,
+      },
     ],
   },
   {
     label: "Ca làm việc",
     items: [
-      { id: "ca-lich", label: "Lịch làm việc", href: "#lich-lam-viec", icon: Calendar },
-      { id: "ca-cham-cong", label: "Chấm công", href: "#cham-cong", icon: Clock },
-      { id: "ca-doi-soat", label: "Đối soát", href: "#doi-soat", icon: Calculator },
-      { id: "ca-tuyen-dung", label: "Tuyển dụng", href: "#tuyen-dung", icon: UserPlus },
+      {
+        id: "shifts",
+        label: "Lịch làm việc",
+        href: APP_ROUTES.shifts,
+        icon: Calendar,
+      },
+      {
+        id: "timesheets",
+        label: "Chấm công",
+        href: APP_ROUTES.timesheets,
+        icon: Clock,
+      },
+      {
+        id: "reconciliations",
+        label: "Đối soát",
+        href: APP_ROUTES.reconciliations,
+        icon: Calculator,
+      },
+      {
+        id: "hiring-requests",
+        label: "Tuyển dụng",
+        href: APP_ROUTES.hiringRequests,
+        icon: UserPlus,
+      },
     ],
   },
   {
     label: "Cấu hình",
     items: [
-      { id: "cf-thuong", label: "Thưởng", href: "#thuong", icon: Gift },
-      { id: "cf-user", label: "User", href: "#user", icon: User },
-      { id: "cf-gia", label: "Chính sách giá", href: "#chinh-sach-gia", icon: DollarSign },
+      {
+        id: "reward-rules",
+        label: "Thưởng",
+        href: APP_ROUTES.rewardRules,
+        icon: Gift,
+      },
+      {
+        id: "users",
+        label: "User",
+        href: APP_ROUTES.users,
+        icon: User,
+      },
     ],
   },
 ];
 
-const HREF_TO_LABEL = new Map<string, string>(
-  NAV_SECTIONS.flatMap((s) => s.items.map((i) => [i.href, i.label] as const)),
+export interface AppBreadcrumb {
+  label: string;
+  href?: string;
+}
+
+const PATH_TO_LABEL = new Map<string, string>(
+  NAV_SECTIONS.flatMap((section) =>
+    section.items.map((item) => [item.href, item.label] as const),
+  ),
 );
 
-export function labelForHref(href: string): string {
-  return HREF_TO_LABEL.get(href) ?? "Trang";
+function normalizePathname(pathname: string): string {
+  if (pathname === "/") return pathname;
+  return pathname.replace(/\/+$/, "");
+}
+
+export function activeHrefForPath(pathname: string): string {
+  const normalized = normalizePathname(pathname);
+  if (PATH_TO_LABEL.has(normalized)) {
+    return normalized;
+  }
+
+  const match = [...PATH_TO_LABEL.keys()].find((href) =>
+    normalized.startsWith(`${href}/`),
+  );
+  return match ?? APP_ROUTES.dashboard;
+}
+
+export function labelForPath(pathname: string): string {
+  const normalized = normalizePathname(pathname);
+  if (PATH_TO_LABEL.has(normalized)) {
+    return PATH_TO_LABEL.get(normalized) ?? "Trang";
+  }
+
+  const match = [...PATH_TO_LABEL.entries()].find(([href]) =>
+    normalized.startsWith(`${href}/`),
+  );
+  if (!match) return "Trang";
+  return `Chi tiết ${match[1].toLowerCase()}`;
+}
+
+export function breadcrumbsForPath(pathname: string): AppBreadcrumb[] {
+  const normalized = normalizePathname(pathname);
+  if (normalized === APP_ROUTES.dashboard) {
+    return [{ label: "Dashboard" }];
+  }
+
+  const activeHref = activeHrefForPath(normalized);
+  const sectionLabel = PATH_TO_LABEL.get(activeHref) ?? "Trang";
+  if (normalized === activeHref) {
+    return [
+      { label: "Dashboard", href: APP_ROUTES.dashboard },
+      { label: sectionLabel },
+    ];
+  }
+
+  return [
+    { label: "Dashboard", href: APP_ROUTES.dashboard },
+    { label: sectionLabel, href: activeHref },
+    { label: "Chi tiết" },
+  ];
 }

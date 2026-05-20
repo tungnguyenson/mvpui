@@ -26,6 +26,7 @@ export interface SidebarNavAccountDef {
 	name: string;
 	email: string;
 	avatarSrc?: string;
+	onLogout?: () => void;
 }
 
 /* -------------------------------------------------------------------------- */

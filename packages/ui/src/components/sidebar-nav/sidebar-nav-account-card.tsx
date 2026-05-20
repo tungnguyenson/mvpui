@@ -12,6 +12,7 @@
 import { cn } from "../../lib/cn.js";
 import { initials } from "./shared.js";
 import type { SidebarNavAccountDef } from "./shared.js";
+import { LogOut } from "lucide-react";
 
 export type { SidebarNavAccountDef };
 
@@ -44,8 +45,19 @@ export function SidebarNavAccountCard({
 			)}
 			<div className="min-w-0 flex-1">
 				<p className="truncate font-semibold text-fg">{account.name}</p>
-				<p className="truncate text-fg-tertiary">{account.email}</p>
+				<p className="truncate text-fg-tertiary text-xs">{account.email}</p>
 			</div>
+			{account.onLogout && (
+				<button
+					type="button"
+					onClick={account.onLogout}
+					className="flex size-8 shrink-0 items-center justify-center rounded-lg text-fg-tertiary transition-all duration-150 hover:bg-bg-secondary hover:text-error-fg cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-brand-500/22"
+					title="Đăng xuất"
+					aria-label="Đăng xuất"
+				>
+					<LogOut className="size-4" />
+				</button>
+			)}
 		</div>
 	);
 }

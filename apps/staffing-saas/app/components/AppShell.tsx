@@ -2,10 +2,11 @@
 
 import { Drawer, SidebarNavCollapsible } from "@mvp-ui/ui";
 import { Menu } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Dashboard } from "./Dashboard";
-import { EmptyState } from "./EmptyState";
-import { DASHBOARD_HREF, NAV_SECTIONS, labelForHref } from "./nav";
+import { useEffect, useState, type ReactNode } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { NAV_SECTIONS, activeHrefForPath } from "./nav";
+import { Header } from "./Header";
+import { logoutAction } from "../login/actions";
 
 const SECTIONS = NAV_SECTIONS.map((section) => ({
   label: section.label,
@@ -33,23 +34,28 @@ function Brand() {
   );
 }
 
-export function AppShell() {
-  const [activeHref, setActiveHref] = useState(DASHBOARD_HREF);
+export function AppShell({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const router = useRouter();
   const [navOpen, setNavOpen] = useState(false);
+  const activeHref = activeHrefForPath(pathname);
 
-  // Sidebar items are real anchors (#hash). Native hash navigation keeps
-  // them keyboard-accessible; we just mirror location.hash into state.
   useEffect(() => {
-    function sync() {
-      setActiveHref(window.location.hash || DASHBOARD_HREF);
+    if (pathname) {
       setNavOpen(false);
     }
-    sync();
-    window.addEventListener("hashchange", sync);
-    return () => window.removeEventListener("hashchange", sync);
-  }, []);
+  }, [pathname]);
 
-  const isDashboard = activeHref === DASHBOARD_HREF;
+  const handleLogout = async () => {
+    await logoutAction();
+    router.push("/login");
+    router.refresh();
+  };
+
+  const account = {
+    ...ACCOUNT,
+    onLogout: handleLogout,
+  };
 
   return (
     <div className="flex h-screen flex-col overflow-hidden bg-bg md:flex-row">
@@ -73,19 +79,14 @@ export function AppShell() {
           logo={<Brand />}
           sections={SECTIONS}
           activeHref={activeHref}
-          account={ACCOUNT}
+          account={account}
         />
       </div>
 
       {/* Content — light themed */}
-      <main className="min-w-0 flex-1 overflow-y-auto bg-bg">
-        {isDashboard ? (
-          <Dashboard />
-        ) : (
-          <div className="flex min-h-full flex-col">
-            <EmptyState title={labelForHref(activeHref)} />
-          </div>
-        )}
+      <main className="min-w-0 flex-1 overflow-y-auto bg-bg-secondary">
+        <Header />
+        {children}
       </main>
 
       {/* Mobile nav drawer — dark themed */}
@@ -97,13 +98,13 @@ export function AppShell() {
         aria-label="Menu điều hướng"
         showCloseButton
       >
-        <div data-theme="dark" className="h-full bg-bg">
+        <div data-theme="dark" className="h-full ">
           <SidebarNavCollapsible
             className="w-full border-r-0"
             logo={<Brand />}
             sections={SECTIONS}
             activeHref={activeHref}
-            account={ACCOUNT}
+            account={account}
           />
         </div>
       </Drawer>
