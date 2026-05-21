@@ -20,8 +20,8 @@ const FILTERS = [
 ] as const;
 
 const COLUMNS = [
-  { id: "shift", name: "Ca làm việc", isRowHeader: true as const },
   { id: "customer", name: "Khách hàng" },
+  { id: "shift", name: "Ca làm việc", isRowHeader: true as const },
   { id: "schedule", name: "Lịch" },
   { id: "fill", name: "Tiến độ" },
   { id: "status", name: "Trạng thái" },
@@ -170,11 +170,10 @@ export function ShiftsPage() {
                     key={filter.id}
                     type="button"
                     onClick={() => setStatusFilter(filter.id)}
-                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${
-                      active
-                        ? "border-border-brand bg-bg-secondary text-fg"
-                        : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                    }`}
+                    className={`rounded-full border px-3 py-2 text-sm font-medium transition-colors ${active
+                      ? "border-border-brand bg-bg-secondary text-fg"
+                      : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
+                      }`}
                   >
                     {filter.label}
                   </button>

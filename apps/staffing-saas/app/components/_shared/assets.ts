@@ -205,6 +205,8 @@ const sameLogo = (path: string): CustomerBrand => ({ full: VIEC(path), mark: VIE
 export const CUSTOMER_LOGOS: Record<string, CustomerBrand> = {
   "highlands-commerce": sameLogo("1591/logo.png"),
   "gomart-distribution": sameLogo("42/logo.png"),
+  "ghn-sorting": sameLogo("1591/logo.png"),
+  "ninja-van": sameLogo("42/logo.png"),
   "medistar-clinic": sameLogo("2312/logo.png"),
   "nova-event-partners": sameLogo("July2021/logo83799.png"),
   "ghtk-logistics": sameLogo("1553/logo.jpg"),

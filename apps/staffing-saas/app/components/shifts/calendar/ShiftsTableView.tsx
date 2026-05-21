@@ -16,8 +16,8 @@ import {
 } from "./lib/date-utils";
 
 const COLUMNS = [
-  { id: "shift", name: "Ca làm việc", isRowHeader: true as const },
   { id: "customer", name: "Khách hàng / Site" },
+  { id: "shift", name: "Ca làm việc", isRowHeader: true as const },
   { id: "schedule", name: "Lịch" },
   { id: "fill", name: "Tiến độ" },
   { id: "operator", name: "Người ĐP" },
@@ -165,25 +165,13 @@ function ShiftTableRow({ shift, isSelected, onSelect }: RowProps) {
         isSelected && "bg-info-bg/40",
       )}
     >
-      <Table.Cell>
-        <div className="flex min-w-0 flex-col">
-          <span className="truncate text-sm font-semibold text-fg">
-            {shift.name}
-          </span>
-          <span
-            className="truncate text-xs text-fg-tertiary tabular-nums"
-            title={status.label}
-          >
-            {shift.code}
-          </span>
-        </div>
-      </Table.Cell>
+
       <Table.Cell>
         <div className="flex min-w-0 items-center gap-2">
           <Avatar
             size="sm"
             rounded={false}
-            src={getCustomerLogo(shift.customerId) ?? null}
+            src={getCustomerLogo(shift.customerId)?.mark ?? null}
             alt={shift.customer}
             initials={shift.customer.slice(0, 2).toUpperCase()}
             className="shrink-0"
@@ -196,6 +184,19 @@ function ShiftTableRow({ shift, isSelected, onSelect }: RowProps) {
               {shift.site} · {shift.region}
             </span>
           </div>
+        </div>
+      </Table.Cell>
+      <Table.Cell>
+        <div className="flex min-w-0 flex-col">
+          <span className="truncate text-sm font-semibold text-fg">
+            {shift.name}
+          </span>
+          <span
+            className="truncate text-xs text-fg-tertiary tabular-nums"
+            title={status.label}
+          >
+            {shift.code}
+          </span>
         </div>
       </Table.Cell>
       <Table.Cell>

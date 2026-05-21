@@ -135,7 +135,7 @@ export function extractCustomerOptions(shifts: ShiftRecord[]): CustomerOption[] 
     if (existing) {
       existing.shiftCount += 1;
     } else {
-      const logoUrl = getCustomerLogo(shift.customerId);
+      const logoUrl = getCustomerLogo(shift.customerId)?.mark;
       map.set(shift.customerId, {
         id: shift.customerId,
         name: shift.customer,

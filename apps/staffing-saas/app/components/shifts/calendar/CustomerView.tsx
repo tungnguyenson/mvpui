@@ -106,6 +106,37 @@ export function CustomerView({
     [days, rows],
   );
 
+  const dayStaffTotals = useMemo(
+    () =>
+      days.map((_, i) =>
+        rows.reduce(
+          (acc, r) => {
+            for (const shift of r.byDay[i]!) {
+              acc.required += shift.requiredCount;
+              acc.assigned += shift.assignedCount;
+            }
+            return acc;
+          },
+          { required: 0, assigned: 0 },
+        ),
+      ),
+    [days, rows],
+  );
+
+  const weekTotals = useMemo(
+    () =>
+      rows.reduce(
+        (acc, r) => {
+          acc.shifts += r.totalShifts;
+          acc.required += r.totalRequired;
+          acc.assigned += r.totalAssigned;
+          return acc;
+        },
+        { shifts: 0, required: 0, assigned: 0 },
+      ),
+    [rows],
+  );
+
   const today = new Date();
   const todayMidnight = new Date(
     today.getFullYear(),
@@ -202,6 +233,57 @@ export function CustomerView({
             />
           );
         })}
+
+        {/* Footer totals */}
+        <div className="sticky left-0 z-10 flex flex-col justify-center border-r border-border-secondary bg-bg-secondary px-3 py-2.5">
+          <div className="text-[11px] font-semibold uppercase tracking-wider text-fg-tertiary">
+            Tổng tuần
+          </div>
+          <div className="text-sm font-semibold tabular-nums text-fg">
+            {weekTotals.assigned}/{weekTotals.required}
+            <span className="ml-1 text-[11px] font-medium text-fg-tertiary">
+              · {weekTotals.shifts} ca
+            </span>
+          </div>
+          {weekTotals.required - weekTotals.assigned > 0 && (
+            <div className="text-[11px] font-semibold tabular-nums text-fg-error">
+              Thiếu {weekTotals.required - weekTotals.assigned}
+            </div>
+          )}
+        </div>
+        {days.map((day, di) => {
+          const totals = dayStaffTotals[di]!;
+          const shiftCount = dayTotals[di]!;
+          const missing = totals.required - totals.assigned;
+          const isToday = isSameDay(day, today);
+          return (
+            <div
+              key={`ftr-${day.toISOString()}`}
+              className={cn(
+                "flex flex-col justify-center border-r border-border-secondary bg-bg-secondary px-3 py-2.5",
+                isToday && "bg-info-bg/40",
+              )}
+            >
+              {shiftCount === 0 ? (
+                <span className="text-xs text-fg-tertiary">—</span>
+              ) : (
+                <>
+                  <div className="text-sm font-semibold tabular-nums text-fg">
+                    {totals.assigned}/{totals.required}
+                  </div>
+                  <div className="text-[11px] tabular-nums text-fg-tertiary">
+                    {shiftCount} ca
+                    {missing > 0 && (
+                      <span className="ml-1 font-semibold text-fg-error">
+                        · thiếu {missing}
+                      </span>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -235,9 +317,9 @@ function CustomerRowGroup({
         )}
       >
         <Avatar
-          size="sm"
+          size="md"
           rounded={false}
-          src={getCustomerLogo(row.id) ?? null}
+          src={getCustomerLogo(row.id)?.mark ?? null}
           alt={row.name}
           initials={row.initials}
           className="shrink-0"
@@ -299,6 +381,7 @@ interface MiniShiftRowProps {
 function MiniShiftRow({ shift, isSelected, onSelect }: MiniShiftRowProps) {
   const start = new Date(shift.startAtMs);
   const end = new Date(shift.endAtMs);
+  const logoUrl = getCustomerLogo(shift.customerId)?.mark;
   return (
     <button
       type="button"
@@ -311,10 +394,20 @@ function MiniShiftRow({ shift, isSelected, onSelect }: MiniShiftRowProps) {
         isSelected && "ring-2 ring-border-brand",
       )}
     >
-      <span
-        aria-hidden="true"
-        className={cn("size-1.5 shrink-0 rounded-full", STATUS_DOT[shift.status])}
-      />
+      {logoUrl ? (
+        <img
+          src={logoUrl}
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+          className="size-3.5 shrink-0 rounded-sm object-contain"
+        />
+      ) : (
+        <span
+          aria-hidden="true"
+          className={cn("size-1.5 shrink-0 rounded-full", STATUS_DOT[shift.status])}
+        />
+      )}
       <span className="font-semibold text-fg-secondary">
         {formatTimeRangeCompact(start, end)}
       </span>

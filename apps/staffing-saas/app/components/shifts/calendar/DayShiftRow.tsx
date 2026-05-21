@@ -2,7 +2,7 @@
 
 import { Avatar } from "@mvp-ui/ui";
 import { ChevronRight } from "lucide-react";
-import type { PlannedCheckIn, ShiftRecord, ShiftStatus } from "../shifts-data";
+import { getCustomerLogo, type PlannedCheckIn, type ShiftRecord, type ShiftStatus } from "../shifts-data";
 import { workerAvatarUrl } from "./lib/avatars";
 import { cn } from "./lib/cn";
 import { formatTimeRangeCompact } from "./lib/date-utils";
@@ -63,6 +63,7 @@ export function DayShiftRow({
   const end = new Date(shift.endAtMs);
 
   const ctxKey = ctx.urgent ? "upcoming-urgent" : ctx.state;
+  const customerLogo = getCustomerLogo(shift.customerId)?.mark;
   const ratioColor =
     ctx.state === "done" || ctx.state === "ongoing" || ctx.state === "ending-soon"
       ? attended >= shift.requiredCount
@@ -96,25 +97,35 @@ export function DayShiftRow({
       </span>
       <span
         className={cn(
-          "inline-flex h-6 items-center justify-center rounded-full px-2 text-xs font-semibold tabular-nums",
+          "inline-flex h-6 items-center justify-center whitespace-nowrap rounded-full px-2 text-xs font-semibold tabular-nums",
           CTX_STYLES[ctxKey],
         )}
       >
         {ctx.label}
       </span>
-      <div className="min-w-0">
-        <div className="flex items-center gap-2">
-          <span className="truncate text-sm font-semibold text-fg">
-            {shift.name}
-          </span>
-          {issue && (
-            <span className="inline-flex shrink-0 items-center rounded-md bg-error-bg px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-fg-error">
-              {issue}
+      <div className="flex min-w-0 items-center gap-2.5">
+        <Avatar
+          size="sm"
+          rounded={false}
+          src={customerLogo ?? null}
+          alt={shift.customer}
+          initials={shift.customer.slice(0, 2).toUpperCase()}
+          className="shrink-0"
+        />
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <span className="truncate text-sm font-semibold text-fg">
+              {shift.name}
             </span>
-          )}
-        </div>
-        <div className="truncate text-xs text-fg-tertiary">
-          {shift.customer} · {shift.site}
+            {issue && (
+              <span className="inline-flex shrink-0 items-center rounded-md bg-error-bg px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-fg-error">
+                {issue}
+              </span>
+            )}
+          </div>
+          <div className="truncate text-xs text-fg-tertiary">
+            {shift.customer} · {shift.site}
+          </div>
         </div>
       </div>
       <div className="flex flex-col items-end leading-tight">

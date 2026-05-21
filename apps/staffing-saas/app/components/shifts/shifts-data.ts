@@ -113,20 +113,7 @@ export const REGION_OPTIONS = [
 
 export type Region = (typeof REGION_OPTIONS)[number];
 
-export const CUSTOMER_LOGOS: Record<string, string> = {
-  "ghn-sorting": "https://logo.clearbit.com/ghn.vn",
-  "ninja-van": "https://logo.clearbit.com/ninjavan.co",
-  "shopee-express": "https://logo.clearbit.com/shopee.vn",
-  "highlands-coffee": "https://logo.clearbit.com/highlandscoffee.com.vn",
-  "lazada-logistics": "https://logo.clearbit.com/lazada.vn",
-  "pizza-4ps": "https://logo.clearbit.com/pizza4ps.com",
-  "cgv-cinemas": "https://logo.clearbit.com/cgv.vn",
-  "jt-express": "https://logo.clearbit.com/jtexpress.vn",
-};
-
-export function getCustomerLogo(customerId: string): string | undefined {
-  return CUSTOMER_LOGOS[customerId];
-}
+export { getCustomerLogo } from "../_shared/assets";
 
 export const SHIFTS: ShiftRecord[] = generateShifts(new Date());
 
