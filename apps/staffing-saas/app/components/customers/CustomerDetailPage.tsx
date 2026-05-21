@@ -78,9 +78,11 @@ export function CustomerDetailPage({ id }: { id: string }) {
                   Quay lại danh sách
                 </Button>
               </Link>
-              <Button color="primary" size="sm">
-                Tạo Y/c tuyển dụng
-              </Button>
+              <Link href={`/hiring-requests/new?customerId=${customer.id}`}>
+                <Button color="primary" size="sm">
+                  Tạo Y/c tuyển dụng
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

@@ -489,9 +489,11 @@ export function CustomersPage() {
             </p>
           </div>
           <div className="flex shrink-0 items-center gap-3">
-            <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-              Tạo Khách hàng mới
-            </Button>
+            <Link href="/customers/new">
+              <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
+                Tạo Khách hàng mới
+              </Button>
+            </Link>
           </div>
         </div>
       }

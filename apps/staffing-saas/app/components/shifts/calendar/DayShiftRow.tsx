@@ -3,6 +3,7 @@
 import { Avatar } from "@mvp-ui/ui";
 import { ChevronRight } from "lucide-react";
 import type { PlannedCheckIn, ShiftRecord, ShiftStatus } from "../shifts-data";
+import { workerAvatarUrl } from "./lib/avatars";
 import { cn } from "./lib/cn";
 import { formatTimeRangeCompact } from "./lib/date-utils";
 import {
@@ -162,10 +163,17 @@ function AvatarStack({ avatars, more }: AvatarStackProps) {
           key={`${a.workerId}-${i}`}
           title={a.tooltip}
           className={cn(
-            "-ml-1.5 inline-flex size-6 items-center justify-center rounded-full border-2 border-bg bg-bg-tertiary text-[10px] font-bold text-fg-secondary first:ml-0",
+            "relative -ml-1.5 inline-block overflow-hidden rounded-full border-2 border-bg first:ml-0",
           )}
         >
-          {a.initials}
+          <img
+            src={a.avatarUrl}
+            alt={a.tooltip}
+            className="size-6 object-cover"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
         </span>
       ))}
       {more > 0 && (
@@ -180,6 +188,7 @@ function AvatarStack({ avatars, more }: AvatarStackProps) {
 interface PreviewAvatar {
   workerId: string;
   initials: string;
+  avatarUrl: string;
   tooltip: string;
 }
 
@@ -192,6 +201,7 @@ function pickPreviewAvatars(
     return shift.assignments.slice(0, MAX_AVATARS).map((a) => ({
       workerId: a.workerId,
       initials: makeInitials(a.workerName),
+      avatarUrl: workerAvatarUrl(a.workerId),
       tooltip: `${a.workerName} — đã đăng ký`,
     }));
   }
@@ -199,6 +209,7 @@ function pickPreviewAvatars(
   return checkIns.map((c: PlannedCheckIn) => ({
     workerId: c.workerId,
     initials: c.initials,
+    avatarUrl: workerAvatarUrl(c.workerId),
     tooltip: `${c.workerName} · ${fmt(c.scheduledAtMs)}${c.late ? " · trễ" : ""}`,
   }));
 }

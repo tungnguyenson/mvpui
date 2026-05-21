@@ -1,7 +1,8 @@
 "use client";
 
+import { Avatar } from "@mvp-ui/ui";
 import { useMemo } from "react";
-import type { ShiftRecord, ShiftStatus } from "../shifts-data";
+import { getCustomerLogo, type ShiftRecord, type ShiftStatus } from "../shifts-data";
 import { cn } from "./lib/cn";
 import {
   WEEKDAY_LABELS_VI,
@@ -123,7 +124,7 @@ export function CustomerView({
   return (
     <div className="overflow-x-auto rounded-lg border border-border-secondary bg-bg">
       <div
-        className="grid min-w-[900px]"
+        className="grid min-w-225"
         style={{
           gridTemplateColumns: "220px repeat(7, minmax(140px, 1fr))",
         }}
@@ -233,9 +234,14 @@ function CustomerRowGroup({
           altBg,
         )}
       >
-        <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-md border border-border-secondary bg-bg text-xs font-bold text-fg-secondary">
-          {row.initials}
-        </span>
+        <Avatar
+          size="sm"
+          rounded={false}
+          src={getCustomerLogo(row.id) ?? null}
+          alt={row.name}
+          initials={row.initials}
+          className="shrink-0"
+        />
         <div className="min-w-0 flex-1">
           <div className="truncate text-sm font-semibold text-fg">
             {row.name}
@@ -258,7 +264,7 @@ function CustomerRowGroup({
           <div
             key={`${row.id}-${day.toISOString()}`}
             className={cn(
-              "flex min-h-[68px] flex-col gap-1.5 border-r border-b border-border-secondary px-2 py-2",
+              "flex min-h-17 flex-col gap-1.5 border-r border-b border-border-secondary px-2 py-2",
               altBg,
               isToday && "bg-info-bg/30",
               isPast && "opacity-65",

@@ -22,8 +22,14 @@ import {
   type CustomerShift,
 } from "../customers/customer-detail-data";
 
-export function HiringRequestCreatePage() {
-  const [customerId, setCustomerId] = useState<string>("");
+interface HiringRequestCreatePageProps {
+  initialCustomerId?: string;
+}
+
+export function HiringRequestCreatePage({
+  initialCustomerId,
+}: HiringRequestCreatePageProps = {}) {
+  const [customerId, setCustomerId] = useState<string>(initialCustomerId ?? "");
   const [shiftId, setShiftId] = useState<string>("");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");

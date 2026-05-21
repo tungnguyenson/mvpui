@@ -36,6 +36,15 @@ interface FilterSidebarProps {
     initials: string;
     avatarUrl?: string;
   }>;
+  customerOptions: Array<{
+    id: string;
+    name: string;
+    shiftCount: number;
+    logoUrl?: string;
+  }>;
+  customerIds: string[];
+  onCustomerIdsChange: (next: string[]) => void;
+  showCustomerSection: boolean;
   collapsed: boolean;
   onCollapsedChange: (next: boolean) => void;
 }
@@ -56,6 +65,10 @@ export function FilterSidebar({
   onChange,
   regionOptions,
   operatorOptions,
+  customerOptions,
+  customerIds,
+  onCustomerIdsChange,
+  showCustomerSection,
   collapsed,
   onCollapsedChange,
 }: FilterSidebarProps) {
@@ -139,6 +152,55 @@ export function FilterSidebar({
           onClick={() => onCollapsedChange(true)}
         />
       </div>
+
+      {showCustomerSection && (
+        <Section title="Khách hàng">
+          <MultiSelect
+            items={customerOptions.map((c) =>
+              c.logoUrl
+                ? {
+                    id: c.id,
+                    label: c.name,
+                    supportingText: `${c.shiftCount} ca`,
+                    avatarUrl: c.logoUrl,
+                  }
+                : {
+                    id: c.id,
+                    label: c.name,
+                    supportingText: `${c.shiftCount} ca`,
+                  },
+            )}
+            selectedKeys={new Set(customerIds)}
+            onSelectionChange={(keys) => {
+              if (keys === "all") {
+                onCustomerIdsChange(customerOptions.map((c) => c.id));
+              } else {
+                onCustomerIdsChange(Array.from(keys, String));
+              }
+            }}
+            placeholder="Tất cả khách hàng"
+            showFooter
+            showSearch={false}
+            onReset={() => onCustomerIdsChange([])}
+            onSelectAll={() =>
+              onCustomerIdsChange(customerOptions.map((c) => c.id))
+            }
+          >
+            {(item) => (
+              <SelectItem
+                id={item.id}
+                label={item.label}
+                supportingText={item.supportingText}
+                {...("avatarUrl" in item && item.avatarUrl
+                  ? { avatarUrl: item.avatarUrl }
+                  : {})}
+              >
+                {item.label}
+              </SelectItem>
+            )}
+          </MultiSelect>
+        </Section>
+      )}
 
       <Section title="Tìm kiếm">
         <Input

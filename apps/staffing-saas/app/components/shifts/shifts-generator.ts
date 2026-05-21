@@ -8,7 +8,13 @@ import {
   startOfWeekMonday,
   type WeekDay,
 } from "./calendar/lib/date-utils";
-import { OPERATORS, type ShiftAssignment, type ShiftRecord, type ShiftStatus } from "./shifts-data";
+import {
+  OPERATORS,
+  type PlannedCheckIn,
+  type ShiftAssignment,
+  type ShiftRecord,
+  type ShiftStatus,
+} from "./shifts-data";
 import { SHIFT_TEMPLATES, type ShiftTemplate } from "./shifts-templates";
 
 const DEFAULT_WINDOW_WEEKS = 4;
@@ -33,7 +39,8 @@ function buildShiftCode(prefix: string, templateId: string, date: Date): string 
 }
 
 function formatPayRate(vnd: number, unit: "giờ" | "ca"): string {
-  return `₫${vnd.toLocaleString("vi-VN")} / ${unit}`;
+  const u = unit === "giờ" ? "h" : "ca";
+  return `${vnd.toLocaleString("vi-VN")}đ/${u}`;
 }
 
 function buildScheduleLabel(template: ShiftTemplate, day: Date): string {
@@ -67,6 +74,51 @@ function buildAssignments(
   return result;
 }
 
+function nameInitials(name: string): string {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return "?";
+  const first = parts[0]!;
+  const last = parts[parts.length - 1]!;
+  return (first.charAt(0) + last.charAt(0)).toUpperCase();
+}
+
+function buildPlannedCheckIns(
+  shiftId: string,
+  assigned: ShiftAssignment[],
+  startMs: number,
+): PlannedCheckIn[] {
+  const out: PlannedCheckIn[] = [];
+  for (let i = 0; i < assigned.length; i++) {
+    const a = assigned[i]!;
+    let hash = 0;
+    const seed = `${shiftId}-${a.workerId}-${i}`;
+    for (let j = 0; j < seed.length; j++) {
+      hash = (hash * 31 + seed.charCodeAt(j)) | 0;
+    }
+    const abs = Math.abs(hash);
+    const noShow = abs % 25 === 0;
+    let offsetMin: number;
+    if (noShow) {
+      offsetMin = 30;
+    } else if (abs % 6 === 0) {
+      offsetMin = (abs % 30) + 10;
+    } else {
+      offsetMin = -((abs % 15) + 1);
+    }
+    const scheduledAtMs = startMs + offsetMin * 60_000;
+    out.push({
+      workerId: a.workerId,
+      workerName: a.workerName,
+      initials: nameInitials(a.workerName),
+      scheduledAtMs,
+      late: offsetMin > 5,
+      noShow,
+    });
+  }
+  out.sort((a, b) => a.scheduledAtMs - b.scheduledAtMs);
+  return out;
+}
+
 function pickOperator(template: ShiftTemplate, day: Date) {
   const seed = `${template.templateId}-${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
   let hash = 0;
@@ -88,9 +140,16 @@ function instantiate(template: ShiftTemplate, day: Date): ShiftRecord {
 
   const status = resolveStatus(template.status, assignedCount, template.required);
   const operator = pickOperator(template, day);
+  const shiftId = buildShiftId(template.templateId, day);
+  const assignments = buildAssignments(template, assignedCount, day);
+  const plannedCheckIns = buildPlannedCheckIns(
+    shiftId,
+    assignments,
+    startAt.getTime(),
+  );
 
   return {
-    id: buildShiftId(template.templateId, day),
+    id: shiftId,
     code: buildShiftCode(template.codePrefix, template.templateId, day),
     name: template.name,
     customer: template.customer,
@@ -110,8 +169,9 @@ function instantiate(template: ShiftTemplate, day: Date): ShiftRecord {
     payRateNote: template.payRateNote,
     requirements: template.requirements,
     notes: template.notes,
-    assignments: buildAssignments(template, assignedCount, day),
+    assignments,
     operator,
+    plannedCheckIns,
   };
 }
 

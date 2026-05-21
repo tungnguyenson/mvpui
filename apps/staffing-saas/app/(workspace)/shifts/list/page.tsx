@@ -1,5 +1,5 @@
-import { ShiftsPage } from "../../../components/shifts";
+import { redirect } from "next/navigation";
 
 export default function Route() {
-  return <ShiftsPage />;
+  redirect("/shifts?display=table");
 }

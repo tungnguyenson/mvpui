@@ -1,8 +1,9 @@
-import type { ShiftRecord, ShiftStatus } from "../../shifts-data";
+import { getCustomerLogo, type ShiftRecord, type ShiftStatus } from "../../shifts-data";
 
 export type FillBucket = "low" | "mid" | "full";
 export type TimeBucket = "morning" | "afternoon" | "evening" | "night";
-export type CalendarView = "week" | "day" | "month" | "customer" | "table";
+export type DisplayMode = "calendar" | "table";
+export type CalendarView = "week" | "day" | "customer";
 
 export interface ShiftFilters {
   search: string;
@@ -85,12 +86,13 @@ export const TIME_BUCKET_RANGES: Record<TimeBucket, string> = {
 
 export function applyFilters(
   shifts: ShiftRecord[],
-  customerId: string | null,
+  customerIds: string[],
   filters: ShiftFilters,
 ): ShiftRecord[] {
   const search = filters.search.trim().toLowerCase();
   return shifts.filter((shift) => {
-    if (customerId && shift.customerId !== customerId) return false;
+    if (customerIds.length > 0 && !customerIds.includes(shift.customerId))
+      return false;
     if (filters.regions.length > 0 && !filters.regions.includes(shift.region))
       return false;
     if (filters.statuses.length > 0 && !filters.statuses.includes(shift.status))
@@ -123,6 +125,7 @@ export interface CustomerOption {
   id: string;
   name: string;
   shiftCount: number;
+  logoUrl?: string;
 }
 
 export function extractCustomerOptions(shifts: ShiftRecord[]): CustomerOption[] {
@@ -132,10 +135,12 @@ export function extractCustomerOptions(shifts: ShiftRecord[]): CustomerOption[] 
     if (existing) {
       existing.shiftCount += 1;
     } else {
+      const logoUrl = getCustomerLogo(shift.customerId);
       map.set(shift.customerId, {
         id: shift.customerId,
         name: shift.customer,
         shiftCount: 1,
+        ...(logoUrl ? { logoUrl } : {}),
       });
     }
   }
