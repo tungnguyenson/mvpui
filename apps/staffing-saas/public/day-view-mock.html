@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mock — "Ngày" view operational</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --bg-2: #f9fafb;
+        --bg-3: #f2f4f7;
+        --fg: #101828;
+        --fg-2: #344054;
+        --fg-3: #667085;
+        --fg-brand: #2b5fa1;
+        --primary: #2b5fa1;
+        --border: #d0d5dd;
+        --border-2: #eaecf0;
+        --border-brand: #2b5fa1;
+        --success-fg: #027a48;
+        --success-bg: #ecfdf3;
+        --warning-fg: #b54708;
+        --warning-bg: #fffaeb;
+        --error-fg: #b42318;
+        --error-bg: #fef3f2;
+        --brand-500: #3b6fb0;
+        --brand-700: #234d82;
+        --brand-900: #142d4b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-2);
+        color: var(--fg);
+        margin: 0;
+        padding: 24px;
+      }
+      h1 { font-size: 18px; margin: 0 0 4px; }
+      h2 {
+        font-size: 12px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .06em;
+        color: var(--fg-3);
+        margin: 28px 0 8px;
+      }
+      .sub { font-size: 13px; color: var(--fg-3); margin: 0 0 12px; }
+      .frame {
+        background: var(--bg);
+        border: 1px solid var(--border-2);
+        border-radius: 12px;
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+
+      /* ========== KPI strip ========== */
+      .kpi {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 1px;
+        background: var(--border-2);
+      }
+      .kpi-cell {
+        background: var(--bg);
+        padding: 12px 14px;
+        cursor: pointer;
+      }
+      .kpi-cell:hover { background: var(--bg-2); }
+      .kpi-cell .label {
+        font-size: 11px; color: var(--fg-3);
+        text-transform: uppercase; letter-spacing: .04em;
+        font-weight: 600;
+      }
+      .kpi-cell .val {
+        font-size: 20px; font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        margin-top: 4px;
+      }
+      .kpi-cell .val.warn { color: var(--warning-fg); }
+      .kpi-cell .val.err { color: var(--error-fg); }
+      .kpi-cell .val.ok { color: var(--success-fg); }
+      .kpi-cell .delta { font-size: 11px; color: var(--fg-3); margin-top: 2px; }
+
+      /* ========== Status tabs ========== */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        padding: 8px 12px;
+        background: var(--bg);
+        border-top: 1px solid var(--border-2);
+        border-bottom: 1px solid var(--border-2);
+      }
+      .tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 13px; font-weight: 600;
+        color: var(--fg-3);
+        cursor: pointer;
+      }
+      .tab:hover { background: var(--bg-2); color: var(--fg); }
+      .tab.active { background: var(--bg-3); color: var(--fg); }
+      .tab .cnt {
+        background: var(--bg);
+        font-size: 11px;
+        padding: 1px 7px;
+        border-radius: 9999px;
+        border: 1px solid var(--border-2);
+        font-variant-numeric: tabular-nums;
+      }
+      .tab.active .cnt { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+      /* ========== Sort/group bar ========== */
+      .sort-bar {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 8px 12px;
+        font-size: 12px; color: var(--fg-3);
+        background: var(--bg-2);
+      }
+      .sort-bar .grp {
+        display: inline-flex; gap: 8px; align-items: center;
+      }
+      .sort-bar select {
+        font-size: 12px;
+        padding: 3px 6px;
+        background: var(--bg);
+        border: 1px solid var(--border-2);
+        border-radius: 4px;
+      }
+
+      /* ========== Row list ========== */
+      .row-list {
+        background: var(--bg);
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 12px 90px 110px minmax(220px, 1fr) 130px 180px 130px 28px;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border-2);
+        cursor: pointer;
+        min-height: 56px;
+      }
+      .row:hover { background: var(--bg-2); }
+      .row.selected { background: rgba(43,95,161,.05); border-left: 3px solid var(--primary); padding-left: 11px; }
+      .row .dot {
+        width: 8px; height: 8px; border-radius: 9999px;
+      }
+      .dot.full { background: var(--success-fg); }
+      .dot.open { background: var(--warning-fg); }
+      .dot.crit { background: var(--error-fg); }
+      .dot.closed { background: var(--fg-3); }
+
+      .row .time {
+        font-size: 13px; font-weight: 600;
+        color: var(--fg-2);
+        font-variant-numeric: tabular-nums;
+      }
+      .row .ctx {
+        display: inline-flex; align-items: center; gap: 4px;
+        font-size: 11px; font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 9999px;
+      }
+      .ctx.upcoming    { background: var(--warning-bg); color: var(--warning-fg); }
+      .ctx.upcoming.urgent { background: var(--error-bg); color: var(--error-fg); }
+      .ctx.ongoing     { background: var(--success-bg); color: var(--success-fg); }
+      .ctx.ending      { background: #eef4ff; color: var(--fg-brand); }
+      .ctx.done        { background: var(--bg-3); color: var(--fg-3); }
+
+      .row .info { min-width: 0; }
+      .row .info .name {
+        font-size: 13px; font-weight: 600;
+        color: var(--fg);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .row .info .sub2 {
+        font-size: 11px; color: var(--fg-3);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+
+      .row .ratio {
+        font-size: 13px; font-weight: 700;
+        color: var(--fg);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .row .ratio .lbl {
+        font-size: 10px; color: var(--fg-3);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+        display: block;
+        margin-top: 2px;
+      }
+      .row .ratio .a-warn { color: var(--warning-fg); }
+      .row .ratio .a-err  { color: var(--error-fg); }
+      .row .ratio .a-ok   { color: var(--success-fg); }
+
+      .row .avs {
+        display: flex; align-items: center;
+      }
+      .row .av {
+        width: 24px; height: 24px;
+        border-radius: 9999px;
+        border: 2px solid var(--bg);
+        background: var(--bg-3);
+        margin-left: -6px;
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 10px; font-weight: 700;
+        color: var(--fg-2);
+      }
+      .row .av:first-child { margin-left: 0; }
+      .row .av.more {
+        background: var(--bg-2);
+        color: var(--fg-3);
+        border-color: var(--bg);
+      }
+      .row .av.empty {
+        background: transparent;
+        color: var(--fg-3);
+        font-style: italic;
+        font-weight: 500;
+        font-size: 11px;
+        border: 1px dashed var(--border-2);
+      }
+
+      .row .op {
+        display: flex; align-items: center; gap: 6px;
+        min-width: 0;
+      }
+      .row .op .op-av {
+        width: 22px; height: 22px;
+        border-radius: 9999px;
+        background: var(--bg-3);
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 10px; font-weight: 700;
+        color: var(--fg-2);
+        flex: 0 0 auto;
+      }
+      .row .op .op-name {
+        font-size: 11px; color: var(--fg-3);
+        font-weight: 600;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+
+      .row .chev {
+        color: var(--fg-3);
+        text-align: right;
+      }
+
+      /* ========== Issue badge ========== */
+      .row .issue {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: var(--error-bg);
+        color: var(--error-fg);
+        font-weight: 700;
+        margin-left: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Mock — "Ngày" view (operational, status-driven)</h1>
+    <p class="sub">Thứ Năm, 21/05/2026. Compact rows ~56px. Tab filter giảm scroll.</p>
+
+    <div class="frame">
+      <!-- KPI strip -->
+      <div class="kpi">
+        <div class="kpi-cell">
+          <div class="label">Yêu cầu</div>
+          <div class="val">75</div>
+          <div class="delta">12 ca trong ngày</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="label">Đăng ký</div>
+          <div class="val">63</div>
+          <div class="delta">84% yêu cầu</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="label">Đã tới</div>
+          <div class="val ok">28</div>
+          <div class="delta">44% đăng ký</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="label">Fill rate</div>
+          <div class="val warn">37%</div>
+          <div class="delta">↓ 8% so với t.bình</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="label">Vắng / Trễ</div>
+          <div class="val err">3 / 5</div>
+          <div class="delta">cần xử lý gấp</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="label">Cảnh báo</div>
+          <div class="val err">3 ⚠</div>
+          <div class="delta">ca thiếu &gt;50%</div>
+        </div>
+      </div>
+
+      <!-- Status tabs -->
+      <div class="tabs">
+        <div class="tab">Sắp tới <span class="cnt">3</span></div>
+        <div class="tab active">Đang diễn ra <span class="cnt">5</span></div>
+        <div class="tab">Sắp kết thúc <span class="cnt">2</span></div>
+        <div class="tab">Đã kết thúc <span class="cnt">2</span></div>
+      </div>
+
+      <!-- Sort bar -->
+      <div class="sort-bar">
+        <span>Sắp xếp: theo cảnh báo (ca có issue lên đầu)</span>
+        <div class="grp">
+          Sort:
+          <select><option>Cảnh báo (DESC)</option><option>Thời gian</option><option>Khách hàng</option><option>Operator</option></select>
+        </div>
+      </div>
+
+      <!-- Row list — Đang diễn ra -->
+      <div class="row-list" id="list-ongoing"></div>
+    </div>
+
+    <h2>Tab "Sắp tới" — countdown context</h2>
+    <div class="frame">
+      <div class="row-list" id="list-upcoming"></div>
+    </div>
+
+    <h2>Tab "Đã kết thúc" — final attendance</h2>
+    <div class="frame">
+      <div class="row-list" id="list-done"></div>
+    </div>
+
+    <script>
+      function avHtml(items, more = 0) {
+        if (items.length === 0) return `<span class="av empty">chưa ai</span>`;
+        let out = items.map(i => `<span class="av" title="${i.name}${i.t ? ' · ' + i.t : ''}">${i.initials}</span>`).join("");
+        if (more > 0) out += `<span class="av more">+${more}</span>`;
+        return out;
+      }
+      function opHtml(op) {
+        return `<span class="op-av">${op.initials}</span><span class="op-name">${op.name}</span>`;
+      }
+      function row(r) {
+        const ratio = `<span class="${r.ratioClass||''}">${r.attended}</span> / ${r.registered} / ${r.required}`;
+        return `
+          <div class="row ${r.selected ? "selected" : ""}">
+            <span class="dot ${r.status}"></span>
+            <span class="time">${r.time}</span>
+            <span class="ctx ${r.ctxClass}">${r.ctx}</span>
+            <div class="info">
+              <div class="name">${r.name} ${r.issue ? `<span class="issue">${r.issue}</span>` : ""}</div>
+              <div class="sub2">${r.sub}</div>
+            </div>
+            <div class="ratio">
+              ${ratio}
+              <span class="lbl">Tới / ĐK / YC</span>
+            </div>
+            <div class="avs">${avHtml(r.avatars, r.avatarMore || 0)}</div>
+            <div class="op">${opHtml(r.operator)}</div>
+            <div class="chev">›</div>
+          </div>`;
+      }
+
+      const ONGOING = [
+        {
+          status: "crit", time: "06–14h", ctxClass: "ongoing", ctx: "⏱ còn 4h12m",
+          name: "Ca xử lý hàng đêm",
+          sub: "GHN Quận 12 · Hà Huy Giáp",
+          attended: 4, registered: 6, required: 15,
+          ratioClass: "a-err",
+          avatars: [{initials:"PD",name:"Phan Đức · 22:01"},{initials:"LH",name:"Lê Hoàng · 22:05"},{initials:"NT",name:"Nguyễn Trí · 22:18"},{initials:"VK",name:"Vũ Khôi · 22:34"}],
+          avatarMore: 0,
+          operator: { initials: "TB", name: "Trần T.Bình" },
+          issue: "9 trống · 2 trễ", selected: true,
+        },
+        {
+          status: "crit", time: "13–22h", ctxClass: "ongoing", ctx: "⏱ còn 6h45m",
+          name: "Ca soát vé Vincom Hải Phòng",
+          sub: "CGV Vincom Hải Phòng",
+          attended: 3, registered: 5, required: 8,
+          ratioClass: "a-err",
+          avatars: [{initials:"NV",name:"Nguyễn Vinh · 13:02"},{initials:"PT",name:"Phạm Thi · 13:07"},{initials:"HM",name:"Hà My · 13:20"}],
+          avatarMore: 0,
+          operator: { initials: "HM", name: "Nguyễn H.Mai" },
+          issue: "5 trống",
+        },
+        {
+          status: "open", time: "06–14h", ctxClass: "ongoing", ctx: "⏱ còn 4h12m",
+          name: "Ca phân loại hàng sáng",
+          sub: "GHN Trung tâm Q7 KCN Tân Thuận",
+          attended: 21, registered: 23, required: 25,
+          ratioClass: "a-warn",
+          avatars: [{initials:"QT",name:"Quang Tùng · 06:32"},{initials:"NL",name:"Nguyễn Lan · 06:28"},{initials:"PH",name:"Phạm Hằng · 06:25"},{initials:"DK",name:"Đào Khôi · 06:18"},{initials:"BA",name:"Bùi Anh · 06:15"}],
+          avatarMore: 16,
+          operator: { initials: "QT", name: "Đỗ Q.Tùng" },
+        },
+        {
+          status: "full", time: "14–22h", ctxClass: "ongoing", ctx: "⏱ vừa bắt đầu",
+          name: "Ca phân loại hàng chiều",
+          sub: "GHN Trung tâm Q7 KCN Tân Thuận",
+          attended: 18, registered: 22, required: 22,
+          ratioClass: "a-warn",
+          avatars: [{initials:"PV",name:"Phan Việt · 14:04"},{initials:"LN",name:"Lý Nam · 14:02"},{initials:"NH",name:"Nguyễn Hà · 14:01"},{initials:"TQ",name:"Trần Quân · 14:00"}],
+          avatarMore: 14,
+          operator: { initials: "HL", name: "Vũ H.Linh" },
+        },
+        {
+          status: "full", time: "07–15h", ctxClass: "ongoing", ctx: "⏱ còn 3h42m",
+          name: "Ca chia hàng ngày Ninja",
+          sub: "Ninja Van Bình Tân",
+          attended: 12, registered: 12, required: 12,
+          ratioClass: "a-ok",
+          avatars: [{initials:"BQ",name:"Bùi Quân · 07:08"},{initials:"LH",name:"Lê Hùng · 07:04"},{initials:"PD",name:"Phạm Đức · 07:00"},{initials:"NL",name:"Nguyễn Lan · 06:58"}],
+          avatarMore: 8,
+          operator: { initials: "NK", name: "Lê N.Khánh" },
+        },
+      ];
+
+      const UPCOMING = [
+        {
+          status: "crit", time: "22–06h", ctxClass: "upcoming urgent", ctx: "▶ 7h27m · thiếu",
+          name: "Ca kho đêm A (Ninja VSIP)",
+          sub: "Ninja Van DC1, KCN VSIP1",
+          attended: 0, registered: 11, required: 15,
+          ratioClass: "a-err",
+          avatars: [{initials:"LC",name:"Lê Cường — đã confirm"},{initials:"TT",name:"Trần Thắng — đã confirm"},{initials:"NL",name:"Nguyễn Lan — đã confirm"},{initials:"PD",name:"Phạm Đức — chưa confirm"}],
+          avatarMore: 7,
+          operator: { initials: "TH", name: "Phạm T.Hòa" },
+          issue: "4 trống · 2 chưa confirm",
+        },
+        {
+          status: "open", time: "17–23h", ctxClass: "upcoming", ctx: "▶ 2h27m",
+          name: "Ca phục vụ nhà hàng tối",
+          sub: "Pizza 4P's Lê Thánh Tôn Q1",
+          attended: 0, registered: 7, required: 10,
+          ratioClass: "a-warn",
+          avatars: [{initials:"NT",name:"Nguyễn Thuỳ — đã confirm"},{initials:"LT",name:"Lê Tú — đã confirm"},{initials:"PH",name:"Phạm Hằng — đã confirm"}],
+          avatarMore: 4,
+          operator: { initials: "QT", name: "Đỗ Q.Tùng" },
+        },
+        {
+          status: "open", time: "12–20h", ctxClass: "upcoming", ctx: "▶ 18p · sắp tới",
+          name: "Ca bán vé trong tuần",
+          sub: "CGV Vincom Đồng Khởi",
+          attended: 0, registered: 6, required: 6,
+          ratioClass: "a-ok",
+          avatars: [{initials:"NT",name:"Ngô Trúc — đã confirm"},{initials:"DM",name:"Đào Mai — đã confirm"},{initials:"LB",name:"Lý Bảo — đã confirm"},{initials:"HV",name:"Hoàng Việt — đã confirm"}],
+          avatarMore: 2,
+          operator: { initials: "HL", name: "Vũ H.Linh" },
+        },
+      ];
+
+      const DONE = [
+        {
+          status: "closed", time: "06–14h", ctxClass: "done", ctx: "✓ 14:02 hoàn tất",
+          name: "Ca pha chế sáng Highlands",
+          sub: "Highlands Bitexco Q1",
+          attended: 4, registered: 4, required: 4,
+          ratioClass: "a-ok",
+          avatars: [{initials:"LB",name:"Lê Bình"},{initials:"TT",name:"Trần T.Tâm"},{initials:"NH",name:"Nguyễn H."},{initials:"PT",name:"Phạm Thư"}],
+          avatarMore: 0,
+          operator: { initials: "NK", name: "Lê N.Khánh" },
+        },
+        {
+          status: "closed", time: "10–15h", ctxClass: "done", ctx: "✓ 15:00 hoàn tất",
+          name: "Ca CSKH Đà Nẵng (sáng)",
+          sub: "Shopee Express Hải Châu",
+          attended: 7, registered: 8, required: 10,
+          ratioClass: "a-warn",
+          avatars: [{initials:"NT",name:"Nguyễn Toàn"},{initials:"PH",name:"Phạm Hồng"},{initials:"LD",name:"Lê Diệu"}],
+          avatarMore: 4,
+          operator: { initials: "HM", name: "Nguyễn H.Mai" },
+          issue: "1 vắng · 3 trễ",
+        },
+      ];
+
+      document.getElementById("list-ongoing").innerHTML  = ONGOING.map(row).join("");
+      document.getElementById("list-upcoming").innerHTML = UPCOMING.map(row).join("");
+      document.getElementById("list-done").innerHTML     = DONE.map(row).join("");
+    </script>
+  </body>
+</html>
