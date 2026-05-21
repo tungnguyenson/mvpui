@@ -30,6 +30,12 @@ interface FilterSidebarProps {
   filters: ShiftFilters;
   onChange: (next: ShiftFilters) => void;
   regionOptions: string[];
+  operatorOptions: Array<{
+    id: string;
+    name: string;
+    initials: string;
+    avatarUrl?: string;
+  }>;
   collapsed: boolean;
   onCollapsedChange: (next: boolean) => void;
 }
@@ -49,6 +55,7 @@ export function FilterSidebar({
   filters,
   onChange,
   regionOptions,
+  operatorOptions,
   collapsed,
   onCollapsedChange,
 }: FilterSidebarProps) {
@@ -88,6 +95,8 @@ export function FilterSidebar({
   const setSearch = (v: string) => onChange({ ...filters, search: v });
 
   const setRegions = (next: string[]) => onChange({ ...filters, regions: next });
+  const setOperators = (next: string[]) =>
+    onChange({ ...filters, operators: next });
 
   const toggleStatus = (status: ShiftStatus, on: boolean) => {
     const set = new Set(filters.statuses);
@@ -160,6 +169,39 @@ export function FilterSidebar({
         >
           {(item) => (
             <SelectItem id={item.id} label={item.label}>
+              {item.label}
+            </SelectItem>
+          )}
+        </MultiSelect>
+      </Section>
+
+      <Section title="Người điều phối">
+        <MultiSelect
+          items={operatorOptions.map((o) =>
+            o.avatarUrl
+              ? { id: o.id, label: o.name, avatarUrl: o.avatarUrl }
+              : { id: o.id, label: o.name },
+          )}
+          selectedKeys={new Set(filters.operators)}
+          onSelectionChange={(keys) => {
+            if (keys === "all") {
+              setOperators(operatorOptions.map((o) => o.id));
+            } else {
+              setOperators(Array.from(keys, String));
+            }
+          }}
+          placeholder="Tất cả người điều phối"
+          showFooter
+          showSearch={false}
+          onReset={() => setOperators([])}
+          onSelectAll={() => setOperators(operatorOptions.map((o) => o.id))}
+        >
+          {(item) => (
+            <SelectItem
+              id={item.id}
+              label={item.label}
+              {...(item.avatarUrl ? { avatarUrl: item.avatarUrl } : {})}
+            >
               {item.label}
             </SelectItem>
           )}

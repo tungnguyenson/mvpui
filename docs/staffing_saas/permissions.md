@@ -39,10 +39,12 @@ Resource ko cần đủ 7 action — matrix render N/A ô ko áp dụng (vd `aud
 
 ### Special permissions (đứng ngoài matrix)
 
-- `impersonate.user` — login as user khác
-- `roles.manage` — CRUD role definitions
-- `system.config` — sửa setting toàn org
-- `audit.view_all` — xem audit log cross-user
+- `impersonate:user` — login as user khác
+- `roles:manage` — CRUD role definitions
+- `system:config` — sửa setting toàn org
+- `audit:view_all` — xem audit log cross-user
+- `users:assign_role` — gán/gỡ role cho user (subject to ceiling, xem §8)
+- `users:invite_admin` — bypass ceiling, chỉ Org Admin (xem §8)
 
 ---
 
@@ -254,10 +256,135 @@ Phase 1 chỉ stub `can()` đọc từ fixture. Phase 2 wire vào provider + imp
 
 ---
 
-## 7. Câu hỏi mở (cần chốt trước Phase 1)
+## 7. Quyết định đã chốt
 
-1. Role có hierarchy ko? (Org Admin > Manager > Recruiter inherit) hay flat?
-2. Custom role có thể bằng/cao hơn system role? Hay luôn ≤ org_admin?
-3. 1 user = 1 role hay multi-role union permission?
-4. Permission key naming: `resource.action` snake hay `resource:action` colon?
-5. Phase 1 có cần i18n EN ko hay VN only?
+### 7.1. Role hierarchy — **FLAT** (Phase 1 + 2)
+
+- 6 role hiện tại domain disjoint (Recruiter ≠ Finance ≠ Ops), ko cần inherit.
+- Re-evaluate sang hierarchy khi role count >15 hoặc xuất hiện ladder rõ ràng.
+- Ghi nhận Phase 3 (tương lai): thêm field `parent_role_id`, permission check union từ root → leaf.
+
+### 7.2. Custom role ≤ `org_admin` — **ENFORCED**
+
+- Khi tạo / sửa custom role: matrix tự ẩn hoặc disable các permission ko thuộc subset của `org_admin`.
+- `super_admin` permission (cross-org, billing global, system config root) ko hiện trong UI custom.
+- Validation server-side mock: trả 422 nếu payload chứa perm ngoài subset.
+
+### 7.3. Multi-role per user — **YES**
+
+- User có array `roleIds: string[]`.
+- Effective permission = **union** mọi role.
+- UI:
+  - `/users` row: nhiều badge role (max 3 hiển thị + `+N`).
+  - Assign dialog = multi-select, ko phải single dropdown.
+  - User detail: list role với button Remove từng cái.
+- Conflict: ko có "deny override", chỉ allow union (đơn giản, đủ cho staffing).
+- Time-bound (Phase 2) áp dụng per-assignment, ko per-role.
+
+### 7.4. Permission key naming — **`resource:action`** (colon, lowercase)
+
+- Format: `customers:edit`, `shifts:approve`, `hiring_requests:create`.
+- Special: `impersonate:user`, `roles:manage`, `system:config`, `audit:view_all`.
+- Lý do: match Auth0 / OPA / Permit.io chuẩn; colon phân biệt namespace vs JS property; CASL có thể parse split `:` sau.
+- TS type:
+  ```ts
+  type Resource = 'customers' | 'shifts' | 'hiring_requests' | ...;
+  type Action = 'view' | 'create' | 'edit' | 'delete' | 'approve' | 'assign' | 'export';
+  type Permission = `${Resource}:${Action}` | 'impersonate:user' | 'roles:manage' | 'system:config' | 'audit:view_all';
+  ```
+
+### 7.5. i18n — **VN only** (Phase 1 + 2)
+
+- Mọi label hardcode tiếng Việt.
+- Permission catalog JSON có field `label_vi` only, ko `label_en`.
+- Khi cần EN sau: thêm field `label_en` + i18n provider, ko refactor lớn.
+
+---
+
+## 8. User creation + privilege escalation prevention
+
+> Nguyên tắc: **"Ko thể grant cái mình ko có"** (AWS IAM `iam:PassRole`, GitHub org perm pattern).
+
+### 8.1. Tách permission
+
+| Permission | Mục đích |
+|---|---|
+| `users:create` | Mời user mới (email invite). Default role = `viewer` (lowest), ko đổi được nếu thiếu `users:assign_role` |
+| `users:edit` | Sửa profile (name, email, status). Subject to ceiling — ko sửa nổi user có role cao hơn mình |
+| `users:delete` | Deactivate user. Subject to ceiling |
+| `users:assign_role` | Gán / gỡ role. Subject to ceiling (rule §8.2) |
+| `users:invite_admin` | **Bypass ceiling**, chỉ Org Admin. Cho phép mời user role bất kỳ ≤ org_admin |
+
+### 8.2. Ceiling rule (chống escalation)
+
+User X gán role Y cho user Z **chỉ khi** `Y.permissions ⊆ effective(X).permissions`.
+
+```ts
+function canAssignRole(assigner: User, targetRole: Role): boolean {
+  if (assigner.permissions.has('users:invite_admin')) return targetRole.key !== 'super_admin';
+  const assignerPerms = effectivePermissions(assigner); // union all roles
+  return targetRole.permissions.every(p => assignerPerms.has(p));
+}
+```
+
+Apply cho cả 3 thao tác:
+- **Assign role mới** cho user — check trước khi save
+- **Remove role** khỏi user — chỉ remove nổi role assigner có quyền re-grant (đối xứng, tránh "gỡ rồi ko gán lại được")
+- **Edit role definition** — nếu role có member, sửa permission của role check ceiling theo từng assigner-of-member
+
+### 8.3. Edge cases (bắt buộc handle)
+
+| Case | Xử lý |
+|---|---|
+| Self-escalation (gán role cao hơn cho chính mình) | Hard block, bất kể quyền. Error: `Ko thể tự nâng quyền` |
+| Self-demote khỏi role cuối cùng có `users:assign_role` | Warning modal — confirm rồi ai gán quyền tiếp? |
+| Remove role cuối cùng của Org Admin trong org | Hard block. Error: `Đây là Org Admin cuối cùng` |
+| Org Admin xóa account của Org Admin khác | Cho phép, audit log |
+| User chỉ có `users:create` (ko có `assign_role`) | Dialog mời lock role = `viewer`, dropdown disabled |
+| User multi-role, ceiling = union | Tính `effective(assigner)` = union mọi role active của assigner |
+| Time-bound role expired → user mất `assign_role` | Mọi action mới bị block; record cũ giữ nguyên (ko revoke retroactive) |
+
+### 8.4. UI patterns
+
+**Dialog "Mời user"**:
+```
+┌────────────────────────────────────────────────────────────┐
+│ Mời thành viên                                             │
+├────────────────────────────────────────────────────────────┤
+│ Email      [_______________________________]               │
+│ Họ tên     [_______________________________]               │
+│ Vai trò    [▾ Recruiter                        ]           │
+│            ────────────────────────────────                │
+│            ☑ Viewer                                        │
+│            ☑ Recruiter                                     │
+│            ☑ Ops Manager                                   │
+│            ☒ Finance   🔒 Cần quyền `finance:*` để gán    │
+│            ☒ Org Admin 🔒 Cần `users:invite_admin`         │
+│                                                            │
+│ Tin nhắn   [tùy chọn]                                      │
+│                                                            │
+│                              [Hủy] [Gửi lời mời]           │
+└────────────────────────────────────────────────────────────┘
+```
+
+- Role list **filter** chỉ enable role assignable
+- Disable role + lock icon + tooltip lý do (perm thiếu)
+- Bulk assign: dropdown filter giống
+
+**Server validation (mock)**:
+```ts
+// POST /api/users/invite { email, roleIds }
+// → 403 { code: 'PRIVILEGE_ESCALATION', missing: ['finance:edit', 'finance:approve'] }
+```
+
+Toast hiển thị: `Ko thể gán "Finance" — bạn thiếu: Sửa Tài chính, Duyệt Tài chính`.
+
+### 8.5. Audit signal (Phase 2)
+
+- Mọi attempt fail `PRIVILEGE_ESCALATION` log riêng với severity `warn`.
+- Dashboard admin có badge "5 attempt tuần này" — phát hiện user cố nâng quyền.
+
+### 8.6. Phase split
+
+- **Phase 1**: ceiling rule cho assign + invite dialog filter + self-escalation block + last-admin block. Audit log fail = console.warn stub.
+- **Phase 2**: full audit signal, edit-role-with-members ceiling check, permission request flow để user xin role vượt ceiling.

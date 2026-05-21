@@ -10,6 +10,7 @@ export interface ShiftFilters {
   statuses: ShiftStatus[];
   fillBuckets: FillBucket[];
   timeBuckets: TimeBucket[];
+  operators: string[];
 }
 
 export const DEFAULT_FILTERS: ShiftFilters = {
@@ -18,6 +19,7 @@ export const DEFAULT_FILTERS: ShiftFilters = {
   statuses: [],
   fillBuckets: [],
   timeBuckets: [],
+  operators: [],
 };
 
 export const FILL_BUCKET_LABELS: Record<FillBucket, string> = {
@@ -40,6 +42,7 @@ export function countActiveFilters(filters: ShiftFilters): number {
   if (filters.statuses.length > 0) n++;
   if (filters.fillBuckets.length > 0) n++;
   if (filters.timeBuckets.length > 0) n++;
+  if (filters.operators.length > 0) n++;
   return n;
 }
 
@@ -102,6 +105,11 @@ export function applyFilters(
       !filters.timeBuckets.includes(getTimeBucket(shift))
     )
       return false;
+    if (
+      filters.operators.length > 0 &&
+      !filters.operators.includes(shift.operator.id)
+    )
+      return false;
     if (search.length > 0) {
       const hay =
         `${shift.name} ${shift.code} ${shift.site}`.toLowerCase();
@@ -138,4 +146,34 @@ export function extractRegionOptions(shifts: ShiftRecord[]): string[] {
   const set = new Set<string>();
   for (const shift of shifts) set.add(shift.region);
   return Array.from(set).sort((a, b) => a.localeCompare(b));
+}
+
+export interface OperatorOption {
+  id: string;
+  name: string;
+  initials: string;
+  avatarUrl: string;
+  shiftCount: number;
+}
+
+export function extractOperatorOptions(
+  shifts: ShiftRecord[],
+): OperatorOption[] {
+  const map = new Map<string, OperatorOption>();
+  for (const shift of shifts) {
+    const op = shift.operator;
+    const existing = map.get(op.id);
+    if (existing) {
+      existing.shiftCount += 1;
+    } else {
+      map.set(op.id, {
+        id: op.id,
+        name: op.name,
+        initials: op.initials,
+        avatarUrl: op.avatarUrl,
+        shiftCount: 1,
+      });
+    }
+  }
+  return Array.from(map.values()).sort((a, b) => a.name.localeCompare(b.name));
 }

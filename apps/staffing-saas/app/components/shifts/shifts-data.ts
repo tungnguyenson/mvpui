@@ -10,6 +10,13 @@ export interface ShiftAssignment {
   status: "Đã xác nhận" | "Dự bị" | "Đã huỷ";
 }
 
+export interface ShiftOperator {
+  id: string;
+  name: string;
+  initials: string;
+  avatarUrl: string;
+}
+
 export interface ShiftRecord {
   id: string;
   code: string;
@@ -32,7 +39,47 @@ export interface ShiftRecord {
   requirements: string[];
   notes: string;
   assignments: ShiftAssignment[];
+  operator: ShiftOperator;
 }
+
+export const OPERATORS: ShiftOperator[] = [
+  {
+    id: "op-binh-tran",
+    name: "Trần Thanh Bình",
+    initials: "TB",
+    avatarUrl: "https://i.pravatar.cc/120?img=12",
+  },
+  {
+    id: "op-mai-nguyen",
+    name: "Nguyễn Hồng Mai",
+    initials: "HM",
+    avatarUrl: "https://i.pravatar.cc/120?img=45",
+  },
+  {
+    id: "op-tung-do",
+    name: "Đỗ Quang Tùng",
+    initials: "QT",
+    avatarUrl: "https://i.pravatar.cc/120?img=33",
+  },
+  {
+    id: "op-linh-vu",
+    name: "Vũ Hà Linh",
+    initials: "HL",
+    avatarUrl: "https://i.pravatar.cc/120?img=47",
+  },
+  {
+    id: "op-khanh-le",
+    name: "Lê Nam Khánh",
+    initials: "NK",
+    avatarUrl: "https://i.pravatar.cc/120?img=15",
+  },
+  {
+    id: "op-hoa-pham",
+    name: "Phạm Thị Hòa",
+    initials: "TH",
+    avatarUrl: "https://i.pravatar.cc/120?img=49",
+  },
+];
 
 export const SHIFT_STATUS_LABELS: Record<
   ShiftStatus,

@@ -10,7 +10,9 @@ import {
   type ShiftFilters,
   type TimeBucket,
 } from "../calendar/lib/filter-state";
-import { SHIFT_STATUS_LABELS, type ShiftStatus } from "../shifts-data";
+import { OPERATORS, SHIFT_STATUS_LABELS, type ShiftStatus } from "../shifts-data";
+
+const OPERATOR_NAME_BY_ID = new Map(OPERATORS.map((o) => [o.id, o.name]));
 
 interface FilterChipsProps {
   filters: ShiftFilters;
@@ -34,6 +36,11 @@ export function FilterChips({ filters, onChange }: FilterChipsProps) {
     onChange({
       ...filters,
       timeBuckets: filters.timeBuckets.filter((x) => x !== b),
+    });
+  const removeOperator = (id: string) =>
+    onChange({
+      ...filters,
+      operators: filters.operators.filter((x) => x !== id),
     });
   const clearSearch = () => onChange({ ...filters, search: "" });
 
@@ -95,6 +102,17 @@ export function FilterChips({ filters, onChange }: FilterChipsProps) {
           onButtonClick={() => removeTime(b)}
         >
           {TIME_BUCKET_LABELS[b]}
+        </BadgeWithButton>
+      ))}
+      {filters.operators.map((id) => (
+        <BadgeWithButton
+          key={`op-${id}`}
+          color="indigo"
+          type="pill-color"
+          size="sm"
+          onButtonClick={() => removeOperator(id)}
+        >
+          ĐP: {OPERATOR_NAME_BY_ID.get(id) ?? id}
         </BadgeWithButton>
       ))}
       <Button

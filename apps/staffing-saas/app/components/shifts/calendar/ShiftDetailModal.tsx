@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Avatar,
   Badge,
   Button,
   Dialog,
@@ -108,6 +109,23 @@ function ShiftDetailContent({
             min={0}
             max={shift.requiredCount}
           />
+        </section>
+
+        <section className="mt-6 flex items-center gap-3 rounded-lg border border-border-secondary p-3">
+          <Avatar
+            size="md"
+            src={shift.operator.avatarUrl}
+            alt={shift.operator.name}
+            initials={shift.operator.initials}
+          />
+          <div className="flex flex-col">
+            <span className="text-xs font-medium uppercase tracking-wide text-fg-tertiary">
+              Người điều phối
+            </span>
+            <span className="text-sm font-semibold text-fg">
+              {shift.operator.name}
+            </span>
+          </div>
         </section>
 
         {shift.requirements.length > 0 && (

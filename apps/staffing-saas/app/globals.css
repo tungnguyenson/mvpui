@@ -4,6 +4,10 @@
 /* Scan UI package source so Tailwind generates utilities for CVA class strings */
 @source "../../../packages/ui/src/**/*.{ts,tsx}";
 
+/* Map Tailwind `dark:` variant to the project's [data-theme="dark"] convention
+   instead of the default `prefers-color-scheme: dark` media query. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 /* --------------------------------------------------------------------------
    Consumer brand-token override — Untitled UI purple → corporate blue.
 

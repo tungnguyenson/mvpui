@@ -12,6 +12,7 @@ import {
   applyFilters,
   DEFAULT_FILTERS,
   extractCustomerOptions,
+  extractOperatorOptions,
   extractRegionOptions,
   type CalendarView,
   type ShiftFilters,
@@ -38,6 +39,7 @@ const COLLAPSE_STORAGE_KEY = "shifts.calendar.filterCollapsed";
 export function ShiftsCalendarPage() {
   const customerOptions = useMemo(() => extractCustomerOptions(SHIFTS), []);
   const regionOptions = useMemo(() => extractRegionOptions(SHIFTS), []);
+  const operatorOptions = useMemo(() => extractOperatorOptions(SHIFTS), []);
 
   const [anchor, setAnchor] = useState<Date>(() => new Date());
   const [view, setView] = useState<CalendarView>("week");
@@ -168,6 +170,7 @@ export function ShiftsCalendarPage() {
           filters={filters}
           onChange={setFilters}
           regionOptions={regionOptions}
+          operatorOptions={operatorOptions}
           collapsed={sidebarCollapsed}
           onCollapsedChange={setSidebarCollapsed}
         />

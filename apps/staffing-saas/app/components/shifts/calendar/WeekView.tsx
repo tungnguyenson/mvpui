@@ -201,7 +201,7 @@ function ColumnHeader({ dayIndex, date, count, isToday }: ColumnHeaderProps) {
         "flex items-center justify-between gap-2 rounded-lg px-3 py-2.5 shadow-xs",
         isToday
           ? "bg-bg text-fg ring-2 ring-border-brand ring-inset"
-          : "bg-linear-to-b from-brand-700 to-brand-900 text-bg", // dark-ok: brand identity gradient, same in both themes
+          : "bg-linear-to-b from-brand-700 to-brand-900 text-white dark:from-brand-500 dark:to-brand-700", // dark-ok: brand gradient header — text stays light on brand surface in both themes
       )}
     >
       <div className="flex min-w-0 flex-col leading-tight">

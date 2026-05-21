@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mock — ShiftCard operator placement</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --bg-2: #f9fafb;
+        --bg-3: #f2f4f7;
+        --fg: #101828;
+        --fg-2: #344054;
+        --fg-3: #667085;
+        --fg-brand: #2b5fa1;
+        --primary: #2b5fa1;
+        --border: #d0d5dd;
+        --border-2: #eaecf0;
+        --border-brand: #2b5fa1;
+        --success-fg: #027a48;
+        --warning-fg: #b54708;
+        --error-fg: #b42318;
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-2);
+        color: var(--fg);
+        margin: 0;
+        padding: 24px;
+      }
+      h1 { font-size: 18px; margin: 0 0 16px; }
+      h2 {
+        font-size: 12px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .06em;
+        color: var(--fg-3);
+        margin: 28px 0 8px;
+      }
+      .sub { font-size: 13px; color: var(--fg-3); margin: 0 0 8px; }
+      .row { display: grid; grid-template-columns: repeat(4, 200px); gap: 12px; }
+      .card {
+        background: var(--bg);
+        border: 1px solid var(--border-2);
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 1px 2px rgba(16,24,40,.04);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        position: relative;
+      }
+      .card.crit { border-left: 4px solid var(--error-fg); }
+      .top { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+      .time { font-size: 11px; font-weight: 600; color: var(--fg-2); font-variant-numeric: tabular-nums; }
+      .dot { width: 8px; height: 8px; border-radius: 9999px; }
+      .dot.full { background: var(--success-fg); }
+      .dot.crit { background: var(--error-fg); }
+      .name { font-size: 13px; font-weight: 700; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .site { font-size: 11px; color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .bar-row { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+      .progress { flex: 1; height: 6px; background: var(--bg-3); border-radius: 4px; overflow: hidden; }
+      .progress > span { display: block; height: 100%; border-radius: 4px; }
+      .p-full > span { background: var(--success-fg); width: 100%; }
+      .p-crit > span { background: var(--error-fg);  width: 50%; }
+      .ratio { font-size: 11px; color: var(--fg-2); font-variant-numeric: tabular-nums; font-weight: 600; }
+      .avatar {
+        width: 22px; height: 22px;
+        border-radius: 9999px;
+        background: var(--bg-3);
+        color: var(--fg-2);
+        font-size: 10px; font-weight: 700;
+        display: inline-flex; align-items: center; justify-content: center;
+        border: 1px solid var(--border-2);
+        flex: 0 0 auto;
+      }
+      .avatar.lg { width: 24px; height: 24px; font-size: 11px; }
+      .label { color: var(--fg-3); font-size: 11px; }
+
+      /* V1 — bottom-right alone (current) */
+      .v1 .av-bottom { display: flex; justify-content: flex-end; padding-top: 4px; }
+
+      /* V2 — inline with progress row, before ratio */
+      .v2 .bar-row { flex-wrap: nowrap; }
+
+      /* V3 — top-right replacing the dot, status ring on avatar */
+      .v3 .top .dot { display: none; }
+      .v3 .av-ring {
+        position: relative;
+      }
+      .v3 .av-ring::after {
+        content: "";
+        position: absolute;
+        right: -2px; bottom: -2px;
+        width: 8px; height: 8px;
+        border-radius: 9999px;
+        border: 1.5px solid var(--bg);
+      }
+      .v3 .av-ring.full::after { background: var(--success-fg); }
+      .v3 .av-ring.crit::after { background: var(--error-fg); }
+
+      /* V4 — inline at top-left of card, before time */
+      .v4 .top { gap: 6px; }
+      .v4 .top .av-inline { flex: 0 0 auto; }
+
+      /* V5 — bottom row with operator name (compact) */
+      .v5 .op-row {
+        display: flex; align-items: center; gap: 6px;
+        padding-top: 6px; border-top: 1px solid var(--border-2);
+      }
+      .v5 .op-name {
+        font-size: 11px; color: var(--fg-2); font-weight: 600;
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+
+      /* V6 — absolute overlap bottom-right (sticker style) */
+      .v6 .card { padding-bottom: 14px; }
+      .v6 .av-abs {
+        position: absolute;
+        right: -6px; bottom: -6px;
+        box-shadow: 0 1px 4px rgba(16,24,40,.12);
+        background: var(--bg);
+        border: 2px solid var(--bg);
+      }
+
+      /* V7 — replace dot, no avatar (just operator initials text) */
+      .v7 .top .av-text {
+        font-size: 10px; font-weight: 700; color: var(--fg-3);
+        padding: 2px 6px;
+        background: var(--bg-3);
+        border-radius: 4px;
+      }
+      .v7 .top .dot { display: none; }
+
+      /* V8 — avatar in name row (right of name) */
+      .v8 .name-row {
+        display: flex; align-items: center; gap: 6px;
+      }
+      .v8 .name-row .name { flex: 1; }
+    </style>
+  </head>
+  <body>
+    <h1>Mock — Avatar người điều phối, 8 vị trí khác nhau</h1>
+    <p class="sub">Bỏ khoảng trắng dưới đáy (current = V1). Mỗi variant 3 card: full / critical / full.</p>
+
+    <h2>V1. Bottom-right alone (current — dư whitespace dưới)</h2>
+    <div class="row v1" id="row-v1"></div>
+
+    <h2>V2. Inline trong progress row, trước ratio</h2>
+    <div class="row v2" id="row-v2"></div>
+
+    <h2>V3. Top-right, replace status dot — avatar mang status ring corner</h2>
+    <div class="row v3" id="row-v3"></div>
+
+    <h2>V4. Top-left, trước time (như prefix)</h2>
+    <div class="row v4" id="row-v4"></div>
+
+    <h2>V5. Footer riêng với tên operator inline (mượn 1 dòng)</h2>
+    <div class="row v5" id="row-v5"></div>
+
+    <h2>V6. Sticker absolute bottom-right (overlap card)</h2>
+    <div class="row v6" id="row-v6"></div>
+
+    <h2>V7. Initials chip top-right (text only, no avatar circle)</h2>
+    <div class="row v7" id="row-v7"></div>
+
+    <h2>V8. Avatar trong name row (cạnh tên ca)</h2>
+    <div class="row v8" id="row-v8"></div>
+
+    <script>
+      const ITEMS = [
+        { time: "12:00 – 20:00", name: "Ca bán vé trong tuần", site: "CGV Vincom Đồng Khởi", st: "full", ratio: "6/6",  op: "TB" },
+        { time: "12:00 – 20:00", name: "Ca bán vé trong tuần", site: "CGV Vincom Đồng Khởi", st: "full", ratio: "6/6",  op: "TH" },
+        { time: "13:00 – 22:00", name: "Ca soát vé Vincom Hải Phòng", site: "CGV Vincom Hải Phòng", st: "crit", ratio: "4/8", op: "TH" },
+        { time: "06:00 – 14:00", name: "Ca phân loại hàng sáng",     site: "Trung tâm phân loại Q7",  st: "full", ratio: "23/25", op: "QT" },
+      ];
+      const OP_NAMES = { TB: "Trần Thanh Bình", TH: "Phạm Thị Hòa", QT: "Đỗ Quang Tùng", HL: "Vũ Hà Linh" };
+
+      function base(it) {
+        const crit = it.st === "crit";
+        return {
+          klass: `card${crit ? " crit" : ""}`,
+          dotCls: `dot ${it.st}`,
+          pCls:   `progress p-${it.st}`,
+        };
+      }
+      function htmlV1(it) { const b = base(it); return `
+        <div class="${b.klass}">
+          <div class="top"><span class="time">${it.time}</span><span class="${b.dotCls}"></span></div>
+          <div class="name">${it.name}</div>
+          <div class="site">${it.site}</div>
+          <div class="bar-row"><div class="${b.pCls}"><span></span></div><span class="ratio">${it.ratio}</span></div>
+          <div class="av-bottom"><div class="avatar" title="${OP_NAMES[it.op]||it.op}">${it.op}</div></div>
+        </div>`; }
+      function htmlV2(it) { const b = base(it); return `
+        <div class="${b.klass}">
+          <div class="top"><span class="time">${it.time}</span><span class="${b.dotCls}"></span></div>
+          <div class="name">${it.name}</div>
+          <div class="site">${it.site}</div>
+          <div class="bar-row">
+            <div class="${b.pCls}"><span></span></div>
+            <div class="avatar" title="${OP_NAMES[it.op]||it.op}">${it.op}</div>
+            <span class="ratio">${it.ratio}</span>
+          </div>
+        </div>`; }
+      function htmlV3(it) { const b = base(it); return `
+        <div class="${b.klass}">
+          <div class="top">
+            <span class="time">${it.time}</span>
+            <div class="avatar av-ring ${it.st}" title="${OP_NAMES[it.op]||it.op}">${it.op}</div>
+          </div>
+          <div class="name">${it.name}</div>
+          <div class="site">${it.site}</div>
+          <div class="bar-row"><div class="${b.pCls}"><span></span></div><span class="ratio">${it.ratio}</span></div>
+        </div>`; }
+      function htmlV4(it) { const b = base(it); return `
+        <div class="${b.klass}">
+          <div class="top">
+            <div class="avatar av-inline" title="${OP_NAMES[it.op]||it.op}">${it.op}</div>
+            <span class="time" style="flex:1">${it.time}</span>
+            <span class="${b.dotCls}"></span>
+          </div>
+          <div class="name">${it.name}</div>
+          <div class="site">${it.site}</div>
+          <div class="bar-row"><div class="${b.pCls}"><span></span></div><span class="ratio">${it.ratio}</span></div>
+        </div>`; }
+      function htmlV5(it) { const b = base(it); return `
+        <div class="${b.klass}">
+          <div class="top"><span class="time">${it.time}</span><span class="${b.dotCls}"></span></div>
+          <div class="name">${it.name}</div>
+          <div class="site">${it.site}</div>
+          <div class="bar-row"><div class="${b.pCls}"><span></span></div><span class="ratio">${it.ratio}</span></div>
+          <div class="op-row">
+            <div class="avatar" title="${OP_NAMES[it.op]||it.op}">${it.op}</div>
+            <span class="op-name">${OP_NAMES[it.op]||it.op}</span>
+          </div>
+        </div>`; }
+      function htmlV6(it) { const b = base(it); return `
+        <div class="${b.klass}" style="position:relative">
+          <div class="top"><span class="time">${it.time}</span><span class="${b.dotCls}"></span></div>
+          <div class="name">${it.name}</div>
+          <div class="site">${it.site}</div>
+          <div class="bar-row"><div class="${b.pCls}"><span></span></div><span class="ratio">${it.ratio}</span></div>
+          <div class="avatar av-abs" title="${OP_NAMES[it.op]||it.op}">${it.op}</div>
+        </div>`; }
+      function htmlV7(it) { const b = base(it); return `
+        <div class="${b.klass}">
+          <div class="top">
+            <span class="time">${it.time}</span>
+            <span class="av-text" title="${OP_NAMES[it.op]||it.op}">${it.op}</span>
+          </div>
+          <div class="name">${it.name}</div>
+          <div class="site">${it.site}</div>
+          <div class="bar-row"><div class="${b.pCls}"><span></span></div><span class="ratio">${it.ratio}</span></div>
+        </div>`; }
+      function htmlV8(it) { const b = base(it); return `
+        <div class="${b.klass}">
+          <div class="top"><span class="time">${it.time}</span><span class="${b.dotCls}"></span></div>
+          <div class="name-row">
+            <span class="name">${it.name}</span>
+            <div class="avatar" title="${OP_NAMES[it.op]||it.op}">${it.op}</div>
+          </div>
+          <div class="site">${it.site}</div>
+          <div class="bar-row"><div class="${b.pCls}"><span></span></div><span class="ratio">${it.ratio}</span></div>
+        </div>`; }
+
+      function render(id, fn) {
+        document.getElementById(id).innerHTML = ITEMS.map(fn).join("");
+      }
+      render("row-v1", htmlV1);
+      render("row-v2", htmlV2);
+      render("row-v3", htmlV3);
+      render("row-v4", htmlV4);
+      render("row-v5", htmlV5);
+      render("row-v6", htmlV6);
+      render("row-v7", htmlV7);
+      render("row-v8", htmlV8);
+    </script>
+  </body>
+</html>

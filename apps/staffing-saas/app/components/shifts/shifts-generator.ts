@@ -8,7 +8,7 @@ import {
   startOfWeekMonday,
   type WeekDay,
 } from "./calendar/lib/date-utils";
-import type { ShiftAssignment, ShiftRecord, ShiftStatus } from "./shifts-data";
+import { OPERATORS, type ShiftAssignment, type ShiftRecord, type ShiftStatus } from "./shifts-data";
 import { SHIFT_TEMPLATES, type ShiftTemplate } from "./shifts-templates";
 
 const DEFAULT_WINDOW_WEEKS = 4;
@@ -67,6 +67,16 @@ function buildAssignments(
   return result;
 }
 
+function pickOperator(template: ShiftTemplate, day: Date) {
+  const seed = `${template.templateId}-${day.getFullYear()}-${day.getMonth()}-${day.getDate()}`;
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = (hash * 31 + seed.charCodeAt(i)) | 0;
+  }
+  const idx = Math.abs(hash) % OPERATORS.length;
+  return OPERATORS[idx]!;
+}
+
 function instantiate(template: ShiftTemplate, day: Date): ShiftRecord {
   const startAt = buildDateAtHour(day, template.startHour);
   const endDay = template.overnight ? addDays(day, 1) : day;
@@ -77,6 +87,7 @@ function instantiate(template: ShiftTemplate, day: Date): ShiftRecord {
   );
 
   const status = resolveStatus(template.status, assignedCount, template.required);
+  const operator = pickOperator(template, day);
 
   return {
     id: buildShiftId(template.templateId, day),
@@ -100,6 +111,7 @@ function instantiate(template: ShiftTemplate, day: Date): ShiftRecord {
     requirements: template.requirements,
     notes: template.notes,
     assignments: buildAssignments(template, assignedCount, day),
+    operator,
   };
 }
 
