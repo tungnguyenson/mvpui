@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CalendarDays, Rows3 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { CustomerScopePicker } from "./calendar/CustomerScopePicker";
+import { CustomerView } from "./calendar/CustomerView";
 import { ShiftDetailModal } from "./calendar/ShiftDetailModal";
 import { WeekNavigator } from "./calendar/WeekNavigator";
 import { WeekView } from "./calendar/WeekView";
@@ -86,14 +87,16 @@ export function ShiftsCalendarPage() {
     [weekStart, weekEndExclusive],
   );
 
+  const effectiveCustomerId = view === "customer" ? null : customerId;
+
   const filteredShifts = useMemo(
-    () => applyFilters(weekShifts, customerId, filters),
-    [weekShifts, customerId, filters],
+    () => applyFilters(weekShifts, effectiveCustomerId, filters),
+    [weekShifts, effectiveCustomerId, filters],
   );
 
   const totalInScope = useMemo(
-    () => applyFilters(weekShifts, customerId, DEFAULT_FILTERS).length,
-    [weekShifts, customerId],
+    () => applyFilters(weekShifts, effectiveCustomerId, DEFAULT_FILTERS).length,
+    [weekShifts, effectiveCustomerId],
   );
 
   const handleViewChange = (key: string | number) => {
@@ -164,7 +167,17 @@ export function ShiftsCalendarPage() {
               onSelectShift={setSelectedShift}
             />
           )}
-          {view !== "week" && <ComingSoonPanel view={view} />}
+          {view === "customer" && (
+            <CustomerView
+              anchor={anchor}
+              shifts={filteredShifts}
+              selectedShiftId={selectedShift?.id ?? null}
+              onSelectShift={setSelectedShift}
+            />
+          )}
+          {view !== "week" && view !== "customer" && (
+            <ComingSoonPanel view={view} />
+          )}
         </main>
         <FilterSidebar
           filters={filters}

@@ -97,6 +97,12 @@ export function formatTimeRange(start: Date, end: Date): string {
   return `${formatTimeHHmm(start)} – ${formatTimeHHmm(end)}`;
 }
 
+export function formatTimeRangeCompact(start: Date, end: Date): string {
+  const h1 = String(start.getHours()).padStart(2, "0");
+  const h2 = String(end.getHours()).padStart(2, "0");
+  return `${h1}–${h2}h`;
+}
+
 export function buildDateAtHour(day: Date, hour: number, minute = 0): Date {
   const d = startOfDay(day);
   d.setHours(hour, minute, 0, 0);

@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mock — "Theo KH" resource view</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --bg-2: #f9fafb;
+        --bg-3: #f2f4f7;
+        --fg: #101828;
+        --fg-2: #344054;
+        --fg-3: #667085;
+        --fg-brand: #2b5fa1;
+        --primary: #2b5fa1;
+        --border: #d0d5dd;
+        --border-2: #eaecf0;
+        --border-brand: #2b5fa1;
+        --success-fg: #027a48;
+        --warning-fg: #b54708;
+        --error-fg: #b42318;
+        --brand-500: #3b6fb0;
+        --brand-700: #234d82;
+        --brand-900: #142d4b;
+      }
+      * { box-sizing: border-box; }
+      body {
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-2);
+        color: var(--fg);
+        margin: 0;
+        padding: 24px;
+      }
+      h1 { font-size: 18px; margin: 0 0 4px; }
+      h2 {
+        font-size: 12px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .06em;
+        color: var(--fg-3);
+        margin: 28px 0 8px;
+      }
+      .sub { font-size: 13px; color: var(--fg-3); margin: 0 0 12px; }
+      .section {
+        background: var(--bg);
+        border: 1px solid var(--border-2);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+        overflow: auto;
+      }
+
+      /* Resource grid */
+      .resource {
+        display: grid;
+        grid-template-columns: 220px repeat(7, minmax(140px, 1fr));
+        column-gap: 0;
+        row-gap: 0;
+      }
+      .corner {
+        position: sticky;
+        left: 0;
+        z-index: 3;
+        background: var(--bg-2);
+        border-right: 1px solid var(--border-2);
+        border-bottom: 1px solid var(--border-2);
+        padding: 10px;
+        font-size: 11px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: .06em;
+        color: var(--fg-3);
+      }
+      .day-hdr {
+        background: linear-gradient(180deg, var(--brand-700) 0%, var(--brand-900) 100%);
+        color: #fff;
+        padding: 8px 10px;
+        border-right: 1px solid var(--border-2);
+        border-bottom: 1px solid var(--border-2);
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .day-hdr.today {
+        background: var(--bg);
+        color: var(--fg);
+        outline: 2px solid var(--border-brand);
+        outline-offset: -2px;
+      }
+      .day-hdr .dow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; opacity: .85; }
+      .day-hdr .date { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+      .day-hdr.today .date { color: var(--fg-brand); }
+      .day-hdr .cnt {
+        background: rgba(255,255,255,.18);
+        font-size: 11px; font-weight: 700;
+        padding: 1px 8px; border-radius: 9999px;
+      }
+      .day-hdr.today .cnt {
+        background: #eaf1f9;
+        color: var(--fg-brand);
+      }
+
+      /* Customer row label (sticky left) */
+      .cust-cell {
+        position: sticky;
+        left: 0;
+        z-index: 2;
+        background: var(--bg);
+        border-right: 1px solid var(--border-2);
+        border-bottom: 1px solid var(--border-2);
+        padding: 10px;
+        display: flex; align-items: center; gap: 10px;
+      }
+      .cust-cell .logo {
+        width: 32px; height: 32px;
+        border-radius: 6px;
+        background: var(--bg-3);
+        display: inline-flex; align-items: center; justify-content: center;
+        font-size: 11px; font-weight: 700;
+        color: var(--fg-2);
+        border: 1px solid var(--border-2);
+        flex: 0 0 auto;
+      }
+      .cust-cell .meta { min-width: 0; }
+      .cust-cell .name { font-size: 13px; font-weight: 700; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .cust-cell .sub2 { font-size: 11px; color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .cust-cell.alt { background: var(--bg-2); }
+
+      /* Day cells (intersection) */
+      .day-cell {
+        border-right: 1px solid var(--border-2);
+        border-bottom: 1px solid var(--border-2);
+        padding: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-height: 60px;
+        background: var(--bg);
+      }
+      .day-cell.alt { background: var(--bg-2); }
+      .day-cell.today { background: rgba(43,95,161,.04); }
+      .day-cell.past { opacity: .65; }
+      .day-cell.empty {
+        align-items: center;
+        justify-content: center;
+        color: var(--fg-3);
+        font-size: 11px;
+      }
+
+      /* Mini shift card */
+      .mini {
+        background: var(--bg);
+        border: 1px solid var(--border-2);
+        border-left-width: 3px;
+        border-radius: 5px;
+        padding: 4px 6px;
+        display: flex; align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        cursor: pointer;
+      }
+      .mini:hover { border-color: var(--border-brand); }
+      .mini.crit { border-left-color: var(--error-fg); }
+      .mini.full { border-left-color: var(--success-fg); }
+      .mini.open { border-left-color: var(--warning-fg); }
+      .mini .time { font-weight: 600; color: var(--fg-2); font-variant-numeric: tabular-nums; }
+      .mini .ratio { color: var(--fg-3); margin-left: auto; font-variant-numeric: tabular-nums; }
+      .mini .dot {
+        width: 6px; height: 6px; border-radius: 9999px;
+        flex: 0 0 auto;
+      }
+      .mini.full .dot { background: var(--success-fg); }
+      .mini.crit .dot { background: var(--error-fg); }
+      .mini.open .dot { background: var(--warning-fg); }
+
+      /* Row footer aggregate */
+      .row-foot {
+        position: sticky; left: 0;
+        z-index: 2;
+        background: var(--bg-2);
+        border-right: 1px solid var(--border-2);
+        padding: 8px 10px;
+        font-size: 11px;
+        color: var(--fg-3);
+      }
+      .row-foot strong { color: var(--fg); font-variant-numeric: tabular-nums; }
+
+      /* Variant 2 — compact list (no mini cards, just counts) */
+      .v2 .cell-count {
+        font-size: 14px; font-weight: 700;
+        color: var(--fg);
+        text-align: center;
+        font-variant-numeric: tabular-nums;
+      }
+      .v2 .cell-count.zero { color: var(--fg-3); font-weight: 500; }
+      .v2 .cell-count.crit { color: var(--error-fg); }
+      .v2 .cell-count.full { color: var(--success-fg); }
+      .v2 .day-cell { justify-content: center; align-items: center; min-height: 48px; }
+      .v2 .sub-dots {
+        display: flex; gap: 3px; margin-top: 3px;
+      }
+      .v2 .sub-dots .sd { width: 6px; height: 6px; border-radius: 9999px; }
+      .v2 .sd.crit { background: var(--error-fg); }
+      .v2 .sd.open { background: var(--warning-fg); }
+      .v2 .sd.full { background: var(--success-fg); }
+    </style>
+  </head>
+  <body>
+    <h1>Mock — "Theo KH" resource view</h1>
+    <p class="sub">Rows = customer, Cols = 7 ngày tuần 18–24/05/2026. Today = T5 (21/05). Cell = ca trong ngày của KH đó.</p>
+
+    <h2>V1 — Mini cards trong cell (default đề xuất)</h2>
+    <div class="section">
+      <div class="resource" id="grid-v1"></div>
+    </div>
+
+    <h2>V2 — Count-only cells (heatmap nhẹ, dùng khi muốn nhìn tổng quan nhanh)</h2>
+    <div class="section v2">
+      <div class="resource" id="grid-v2"></div>
+    </div>
+
+    <script>
+      const DAYS = [
+        { dow: "T2", date: "18/05", past: true,  today: false },
+        { dow: "T3", date: "19/05", past: true,  today: false },
+        { dow: "T4", date: "20/05", past: true,  today: false },
+        { dow: "T5", date: "21/05", past: false, today: true  },
+        { dow: "T6", date: "22/05", past: false, today: false },
+        { dow: "T7", date: "23/05", past: false, today: false },
+        { dow: "CN", date: "24/05", past: false, today: false },
+      ];
+
+      // [time, status, ratio]
+      function s(time, st, ratio) { return { time, st, ratio }; }
+      const SCHEDULE = [
+        { id: "ghn", name: "GHN Sorting", sub: "5 sites · TP.HCM, BD", logo: "GHN", week: [
+          [s("06–14","open","23/25"), s("14–22","full","22/22"), s("22–06","crit","6/15")],
+          [s("06–14","open","23/25"), s("14–22","full","22/22"), s("22–06","crit","6/15")],
+          [s("06–14","open","23/25"), s("14–22","full","22/22"), s("22–06","crit","6/15")],
+          [s("06–14","open","23/25"), s("14–22","full","22/22"), s("22–06","crit","6/15")],
+          [s("06–14","open","23/25"), s("14–22","full","22/22"), s("22–06","crit","6/15")],
+          [s("08–17","open","14/18")],
+          [s("08–17","open","14/18"), s("10–18","crit","5/8")],
+        ]},
+        { id: "ninja", name: "Ninja Van", sub: "2 sites · BD, TP.HCM", logo: "NJV", week: [
+          [s("07–15","open","10/12")],
+          [s("07–15","open","10/12")],
+          [s("07–15","open","10/12"), s("13–20","full","18/18")],
+          [s("07–15","open","10/12"), s("13–20","full","18/18")],
+          [s("07–15","open","10/12"), s("13–20","full","18/18"), s("22–06","crit","11/15")],
+          [s("13–20","full","18/18"), s("22–06","crit","11/15")],
+          [s("22–06","crit","11/15")],
+        ]},
+        { id: "shopee", name: "Shopee Express", sub: "3 sites · HN, ĐN", logo: "SPX", week: [
+          [s("13–18","full","6/6"), s("06–14","open","26/30")],
+          [s("13–18","full","6/6"), s("06–14","open","26/30")],
+          [s("13–18","full","6/6"), s("06–14","open","26/30"), s("08–17","open","7/10")],
+          [s("13–18","full","6/6"), s("06–14","open","26/30"), s("08–17","open","7/10")],
+          [s("13–18","full","6/6"), s("06–14","open","26/30"), s("08–17","open","7/10")],
+          [s("06–14","open","26/30")],
+          [],
+        ]},
+        { id: "lazada", name: "Lazada Logistics", sub: "2 sites · BD, HN", logo: "LZD", week: [
+          [s("08–17","open","30/35"), s("07–15","open","23/25")],
+          [s("08–17","open","30/35"), s("07–15","open","23/25")],
+          [s("08–17","open","30/35"), s("07–15","open","23/25"), s("22–06","crit","9/20")],
+          [s("08–17","open","30/35"), s("07–15","open","23/25"), s("22–06","crit","9/20")],
+          [s("08–17","open","30/35"), s("07–15","open","23/25"), s("22–06","crit","9/20")],
+          [],
+          [],
+        ]},
+        { id: "highlands", name: "Highlands Coffee", sub: "3 stores · TP.HCM, HN", logo: "HLC", week: [
+          [s("06–14","full","4/4"), s("14–22","open","4/6"), s("07–15","open","4/5")],
+          [s("06–14","full","4/4"), s("14–22","open","4/6"), s("07–15","open","4/5")],
+          [s("06–14","full","4/4"), s("14–22","open","4/6"), s("07–15","open","4/5")],
+          [s("06–14","full","4/4"), s("14–22","open","4/6"), s("07–15","open","4/5")],
+          [s("06–14","full","4/4"), s("14–22","open","4/6"), s("07–15","open","4/5")],
+          [s("06–14","full","4/4"), s("14–22","open","4/6"), s("07–15","open","4/5")],
+          [s("06–14","full","4/4"), s("14–22","open","4/6"), s("07–15","open","4/5")],
+        ]},
+      ];
+
+      function miniHtml(c) {
+        return `<div class="mini ${c.st}">
+          <span class="dot"></span>
+          <span class="time">${c.time}</span>
+          <span class="ratio">${c.ratio}</span>
+        </div>`;
+      }
+
+      function aggSt(items) {
+        if (items.length === 0) return { cls: "zero", n: 0 };
+        const hasCrit = items.some(i => i.st === "crit");
+        const allFull = items.every(i => i.st === "full");
+        if (hasCrit) return { cls: "crit", n: items.length };
+        if (allFull) return { cls: "full", n: items.length };
+        return { cls: "", n: items.length };
+      }
+
+      function renderV1() {
+        const el = document.getElementById("grid-v1");
+        let html = `<div class="corner">Khách hàng</div>`;
+        DAYS.forEach(d => {
+          const total = SCHEDULE.reduce((s, c, i) => {
+            const idx = DAYS.indexOf(d);
+            return s + (c.week[idx] || []).length;
+          }, 0);
+          html += `<div class="day-hdr ${d.today ? "today" : ""}">
+            <div><div class="dow">${d.dow}</div><div class="date">${d.date}</div></div>
+            <span class="cnt">${total}</span>
+          </div>`;
+        });
+        SCHEDULE.forEach((c, ri) => {
+          const altCls = ri % 2 === 1 ? "alt" : "";
+          html += `<div class="cust-cell ${altCls}">
+            <span class="logo">${c.logo}</span>
+            <div class="meta">
+              <div class="name">${c.name}</div>
+              <div class="sub2">${c.sub}</div>
+            </div>
+          </div>`;
+          c.week.forEach((items, di) => {
+            const day = DAYS[di];
+            const cls = [
+              "day-cell",
+              altCls,
+              day.today ? "today" : "",
+              day.past ? "past" : "",
+              items.length === 0 ? "empty" : "",
+            ].filter(Boolean).join(" ");
+            const content = items.length === 0
+              ? "—"
+              : items.map(miniHtml).join("");
+            html += `<div class="${cls}">${content}</div>`;
+          });
+        });
+        el.innerHTML = html;
+      }
+
+      function renderV2() {
+        const el = document.getElementById("grid-v2");
+        let html = `<div class="corner">Khách hàng</div>`;
+        DAYS.forEach(d => {
+          const total = SCHEDULE.reduce((s, c) => s + (c.week[DAYS.indexOf(d)] || []).length, 0);
+          html += `<div class="day-hdr ${d.today ? "today" : ""}">
+            <div><div class="dow">${d.dow}</div><div class="date">${d.date}</div></div>
+            <span class="cnt">${total}</span>
+          </div>`;
+        });
+        SCHEDULE.forEach((c, ri) => {
+          const altCls = ri % 2 === 1 ? "alt" : "";
+          html += `<div class="cust-cell ${altCls}">
+            <span class="logo">${c.logo}</span>
+            <div class="meta">
+              <div class="name">${c.name}</div>
+              <div class="sub2">${c.sub}</div>
+            </div>
+          </div>`;
+          c.week.forEach((items, di) => {
+            const day = DAYS[di];
+            const a = aggSt(items);
+            const cls = [
+              "day-cell",
+              altCls,
+              day.today ? "today" : "",
+              day.past ? "past" : "",
+            ].filter(Boolean).join(" ");
+            const dotHtml = items.length === 0 ? "" :
+              `<div class="sub-dots">${items.map(i => `<span class="sd ${i.st}"></span>`).join("")}</div>`;
+            html += `<div class="${cls}">
+              <span class="cell-count ${a.cls}">${a.n === 0 ? "—" : a.n}</span>
+              ${dotHtml}
+            </div>`;
+          });
+        });
+        el.innerHTML = html;
+      }
+
+      renderV1();
+      renderV2();
+    </script>
+  </body>
+</html>
