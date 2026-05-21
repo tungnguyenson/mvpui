@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mock — Calendar column headers</title>
+    <style>
+      :root {
+        --bg: #ffffff;
+        --bg-2: #f9fafb;
+        --bg-3: #f2f4f7;
+        --fg: #101828;
+        --fg-2: #344054;
+        --fg-3: #667085;
+        --fg-brand: #2b5fa1;
+        --primary: #2b5fa1;
+        --primary-hover: #3b6fb0;
+        --primary-fg: #ffffff;
+        --border: #d0d5dd;
+        --border-2: #eaecf0;
+        --border-brand: #2b5fa1;
+        --brand-400: #4e7fbf;
+        --brand-500: #3b6fb0;
+        --brand-600: #2b5fa1;
+        --brand-700: #234d82;
+        --brand-800: #1b3b63;
+        --brand-900: #142d4b;
+        --brand-950: #0c1b2e;
+        --success-bg: #ecfdf3;
+        --success-fg: #027a48;
+        --warning-bg: #fffaeb;
+        --warning-fg: #b54708;
+        --error-bg: #fef3f2;
+        --error-fg: #b42318;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body {
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg-2);
+        color: var(--fg);
+        padding: 24px;
+      }
+      h1 { font-size: 18px; margin: 0 0 4px; }
+      h2 {
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: var(--fg-3);
+        margin: 32px 0 12px;
+      }
+      .sub {
+        font-size: 13px;
+        color: var(--fg-3);
+        margin: 0 0 16px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 10px;
+      }
+      .col { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+      .card {
+        background: var(--bg);
+        border: 1px solid var(--border-2);
+        border-radius: 8px;
+        padding: 10px 10px 12px;
+        box-shadow: 0 1px 2px rgba(16,24,40,.04);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .card.crit { border-left: 4px solid var(--error-fg); }
+      .card .top { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+      .time { font-size: 11px; font-weight: 600; color: var(--fg-2); font-variant-numeric: tabular-nums; }
+      .badge {
+        font-size: 10px;
+        font-weight: 600;
+        padding: 1px 8px;
+        border-radius: 9999px;
+      }
+      .b-open    { background: var(--warning-bg); color: var(--warning-fg); border: 1px solid #fec84b40; }
+      .b-full    { background: var(--success-bg); color: var(--success-fg); border: 1px solid #6ce9a640; }
+      .b-crit    { background: var(--error-bg);   color: var(--error-fg);   border: 1px solid #fda29b40; }
+      .name { font-size: 13px; font-weight: 600; color: var(--fg); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .site { font-size: 11px; color: var(--fg-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .bar { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+      .progress { flex: 1; height: 6px; background: var(--bg-3); border-radius: 4px; overflow: hidden; }
+      .progress > span { display: block; height: 100%; border-radius: 4px; }
+      .p-open  > span { background: var(--warning-fg); width: 78%; }
+      .p-full  > span { background: var(--success-fg); width: 100%; }
+      .p-crit  > span { background: var(--error-fg);   width: 40%; }
+      .ratio { font-size: 11px; color: var(--fg-2); font-variant-numeric: tabular-nums; font-weight: 500; }
+      .section {
+        background: var(--bg);
+        border: 1px solid var(--border-2);
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
+      }
+
+      /* ===== Variant A — inverted refined (shared) ===== */
+      .va .col { position: relative; }
+      .va .col-bg {
+        position: absolute; inset: 0; top: 56px;
+        background: rgba(52, 64, 84, .04);
+        border-radius: 8px;
+        z-index: 0;
+      }
+      .va .col.today .col-bg { background: rgba(43, 95, 161, .06); }
+      .va .col > * { position: relative; z-index: 1; }
+      .va .hdr {
+        border-radius: 8px;
+        padding: 8px 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 1px 2px rgba(16,24,40,.06);
+        color: var(--bg);
+      }
+      .va .col.today .hdr {
+        background: var(--bg);
+        color: var(--fg);
+        outline: 2px solid var(--border-brand);
+        outline-offset: -2px;
+      }
+      .va .col.past { opacity: .65; }
+      .va .hdr .dow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; opacity: .85; }
+      .va .hdr .date { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; }
+      .va .hdr .cnt {
+        background: rgba(255,255,255,.16);
+        color: inherit;
+        font-size: 11px;
+        font-weight: 700;
+        padding: 1px 8px;
+        border-radius: 9999px;
+        min-width: 22px;
+        text-align: center;
+      }
+      .va .col.today .hdr .cnt {
+        background: rgba(43, 95, 161, .12);
+        color: var(--fg-brand);
+      }
+      /* A1 — neutral dark */
+      .va1 .col:not(.today) .hdr { background: var(--fg-2); }
+      /* A2 — brand-tinted dark (brand-900) */
+      .va2 .col:not(.today) .hdr { background: var(--brand-900); }
+      .va2 .col.past .hdr { background: var(--brand-800); }
+      /* A3 — brand-fill (brand-600 full) */
+      .va3 .col:not(.today) .hdr { background: var(--primary); }
+      .va3 .col:not(.today) .hdr .cnt { background: rgba(255,255,255,.22); }
+      .va3 .col.today .hdr { outline-color: var(--fg); }
+      /* A4 — gradient brand → neutral */
+      .va4 .col:not(.today) .hdr {
+        background: linear-gradient(135deg, var(--brand-700) 0%, var(--fg) 100%);
+      }
+      /* A5 — brand-tinted dark, lighter (brand-800) */
+      .va5 .col:not(.today) .hdr { background: var(--brand-800); }
+      .va5 .col.past .hdr { background: var(--brand-700); }
+      /* A6 — gradient brand → brand deep */
+      .va6 .col:not(.today) .hdr {
+        background: linear-gradient(180deg, var(--brand-700) 0%, var(--brand-900) 100%);
+      }
+
+      /* ===== Variant B — flat minimal ===== */
+      .vb .col { padding-bottom: 0; }
+      .vb .hdr {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        padding: 0 4px 8px;
+        border-bottom: 1px solid var(--border-2);
+      }
+      .vb .col.today .hdr {
+        border-bottom: 2px solid var(--border-brand);
+        padding-bottom: 7px;
+      }
+      .vb .hdr .l { display: flex; flex-direction: column; gap: 2px; }
+      .vb .dow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--fg-3); }
+      .vb .date { font-size: 14px; font-weight: 700; color: var(--fg); font-variant-numeric: tabular-nums; }
+      .vb .col.today .date { color: var(--fg-brand); }
+      .vb .cnt { font-size: 11px; color: var(--fg-3); font-variant-numeric: tabular-nums; }
+      .vb .col.today .cnt { color: var(--fg-brand); font-weight: 600; }
+      .vb .col.past .hdr { opacity: .6; }
+
+      /* ===== Variant C — sticky chip ===== */
+      .vc .hdr-row {
+        display: flex;
+        justify-content: flex-start;
+        padding: 0 0 4px;
+      }
+      .vc .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 3px 10px 3px 10px;
+        background: var(--bg);
+        border: 1px solid var(--border-2);
+        border-radius: 9999px;
+        box-shadow: 0 1px 2px rgba(16,24,40,.04);
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--fg-2);
+      }
+      .vc .col.today .chip {
+        background: var(--primary);
+        color: var(--primary-fg);
+        border-color: var(--primary);
+      }
+      .vc .chip .dot {
+        width: 5px; height: 5px; border-radius: 9999px;
+        background: var(--fg-3);
+      }
+      .vc .col.today .chip .dot { background: var(--primary-fg); opacity: .8; }
+      .vc .chip .cnt {
+        background: rgba(16,24,40,.08);
+        color: inherit;
+        padding: 0 6px;
+        border-radius: 9999px;
+        font-size: 11px;
+      }
+      .vc .col.today .chip .cnt { background: rgba(255,255,255,.22); }
+      .vc .col.past .chip { opacity: .55; }
+    </style>
+  </head>
+  <body>
+    <h1>Mock — Calendar column header (so sánh 3 hướng)</h1>
+    <p class="sub">Tuần 18/05 – 24/05/2026. Cột Thứ Năm (21/05) = today. T2–T4 = past (mờ).</p>
+
+    <p class="sub">Brand color của project: corporate blue (brand-600 = #2b5fa1).</p>
+
+    <div class="section va va2">
+      <h2>A2. Brand-tinted deep — non-today = brand-900 (#142d4b)</h2>
+      <div class="grid" id="grid-a2"></div>
+    </div>
+
+    <div class="section va va5">
+      <h2>A2b. Brand-tinted mid — non-today = brand-800 (#1b3b63), sáng hơn A2 chút</h2>
+      <div class="grid" id="grid-a5"></div>
+    </div>
+
+    <div class="section va va4">
+      <h2>A4. Gradient brand-700 → fg (neutral đen)</h2>
+      <div class="grid" id="grid-a4"></div>
+    </div>
+
+    <div class="section va va6">
+      <h2>A4b. Gradient brand-700 → brand-900 (full brand, vertical)</h2>
+      <div class="grid" id="grid-a6"></div>
+    </div>
+
+    <hr style="margin: 24px 0; border: 0; border-top: 1px solid var(--border-2);" />
+    <p class="sub">Reference (loại từ shortlist):</p>
+
+    <div class="section va va1">
+      <h2>A1. Neutral dark (gray-700) — không có brand identity</h2>
+      <div class="grid" id="grid-a1"></div>
+    </div>
+
+    <div class="section va va3">
+      <h2>A3. Brand-fill solid — non-today = brand-600 đầy</h2>
+      <div class="grid" id="grid-a3"></div>
+    </div>
+
+    <hr style="margin: 32px 0; border: 0; border-top: 1px solid var(--border-2);" />
+
+    <p class="sub">Reference (B & C — vẫn giữ để so sánh nhanh):</p>
+
+    <div class="section vb">
+      <h2>B. Flat minimal — no box, thin border-b, today = brand underline 2px</h2>
+      <div class="grid" id="grid-b"></div>
+    </div>
+
+    <div class="section vc">
+      <h2>C. Sticky chip — header pill nhỏ tự nhiên, today = chip brand</h2>
+      <div class="grid" id="grid-c"></div>
+    </div>
+
+    <script>
+      const DAYS = [
+        { dow: "THỨ HAI",  short: "T2", date: "18/05", past: true,  today: false },
+        { dow: "THỨ BA",   short: "T3", date: "19/05", past: true,  today: false },
+        { dow: "THỨ TƯ",   short: "T4", date: "20/05", past: true,  today: false },
+        { dow: "THỨ NĂM",  short: "T5", date: "21/05", past: false, today: true  },
+        { dow: "THỨ SÁU",  short: "T6", date: "22/05", past: false, today: false },
+        { dow: "THỨ BẢY",  short: "T7", date: "23/05", past: false, today: false },
+        { dow: "CHỦ NHẬT", short: "CN", date: "24/05", past: false, today: false },
+      ];
+      const CARDS = [
+        { time: "06:00 – 14:00", name: "Ca phân loại hàng", site: "Trung tâm phân loại Q7", st: "open",  ratio: "23/25" },
+        { time: "14:00 – 22:00", name: "Ca phân loại chiều", site: "Trung tâm phân loại Q7", st: "full",  ratio: "22/22" },
+        { time: "22:00 – 06:00", name: "Ca xử lý hàng đêm", site: "Kho GHN Quận 12",        st: "crit",  ratio: "6/15"  },
+      ];
+      const LABELS = { open: "Đang mở", full: "Đủ người", crit: "Thiếu gấp" };
+
+      function shiftHtml(c) {
+        return `
+          <div class="card ${c.st === "crit" ? "crit" : ""}">
+            <div class="top">
+              <span class="time">${c.time}</span>
+              <span class="badge b-${c.st}">${LABELS[c.st]}</span>
+            </div>
+            <div class="name">${c.name}</div>
+            <div class="site">${c.site}</div>
+            <div class="bar">
+              <div class="progress p-${c.st}"><span></span></div>
+              <span class="ratio">${c.ratio}</span>
+            </div>
+          </div>`;
+      }
+
+      function headerA(d, count) {
+        return `<div class="col-bg"></div>
+          <div class="hdr">
+            <div>
+              <div class="dow">${d.dow}</div>
+              <div class="date">${d.date}</div>
+            </div>
+            <span class="cnt">${count}</span>
+          </div>`;
+      }
+      function headerB(d, count) {
+        return `<div class="hdr">
+            <div class="l">
+              <span class="dow">${d.dow}</span>
+              <span class="date">${d.date}</span>
+            </div>
+            <span class="cnt">${count} ca</span>
+          </div>`;
+      }
+      function headerC(d, count) {
+        return `<div class="hdr-row">
+            <span class="chip">
+              ${d.short} · ${d.date}
+              <span class="dot"></span>
+              <span class="cnt">${count}</span>
+            </span>
+          </div>`;
+      }
+
+      function render(elId, headerFn) {
+        const el = document.getElementById(elId);
+        el.innerHTML = DAYS.map((d) => {
+          const cls = [
+            "col",
+            d.past  ? "past"  : "",
+            d.today ? "today" : "",
+          ].filter(Boolean).join(" ");
+          const count = CARDS.length;
+          const cards = CARDS.map(shiftHtml).join("");
+          return `<div class="${cls}">${headerFn(d, count)}${cards}</div>`;
+        }).join("");
+      }
+      render("grid-a1", headerA);
+      render("grid-a2", headerA);
+      render("grid-a3", headerA);
+      render("grid-a4", headerA);
+      render("grid-a5", headerA);
+      render("grid-a6", headerA);
+      render("grid-b", headerB);
+      render("grid-c", headerC);
+    </script>
+  </body>
+</html>

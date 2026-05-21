@@ -1,5 +1,5 @@
-import { ShiftsPage } from "../../components/shifts";
+import { ShiftsCalendarPage } from "../../components/shifts";
 
 export default function Route() {
-  return <ShiftsPage />;
+  return <ShiftsCalendarPage />;
 }
