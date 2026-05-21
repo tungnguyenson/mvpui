@@ -120,12 +120,14 @@ export function inferGender(name: string): Gender {
   if (tokens.length >= 3) {
     for (let i = 1; i < tokens.length - 1; i++) {
       const m = tokens[i];
+      if (!m) continue;
       if (FEMALE_MIDDLES.has(m)) return "female";
       if (MALE_MIDDLES.has(m)) return "male";
     }
   }
 
   const last = tokens[tokens.length - 1];
+  if (!last) return "unknown";
   // diacritic-sensitive disambiguation
   if (last === "dũng") return "male";
   if (last === "dung") return "female";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
+import { Suspense, useActionState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle, Button, Checkbox, HintText, Input, Label, BackgroundPattern } from "@mvp-ui/ui";
 import { loginAction } from "./actions";
@@ -13,6 +13,14 @@ const FEATURE_BULLETS = [
 ];
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginPageContent />
+    </Suspense>
+  );
+}
+
+function LoginPageContent() {
   const [state, formAction, isPending] = useActionState(loginAction, null);
   const router = useRouter();
   const searchParams = useSearchParams();

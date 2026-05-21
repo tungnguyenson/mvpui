@@ -6,5 +6,9 @@ export default async function Route({
   searchParams: Promise<{ customerId?: string }>;
 }) {
   const { customerId } = await searchParams;
-  return <HiringRequestCreatePage initialCustomerId={customerId} />;
+  return (
+    <HiringRequestCreatePage
+      {...(customerId ? { initialCustomerId: customerId } : {})}
+    />
+  );
 }

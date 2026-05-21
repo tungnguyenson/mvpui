@@ -53,7 +53,7 @@ export function WorkerAvatar({
       alt={name}
       initials={getInitials(name)}
       state={resolvedState}
-      className={className}
+      {...(className ? { className } : {})}
     />
   );
 }
@@ -83,7 +83,7 @@ export function WorkerProfilePhoto({
       alt={name}
       initials={getInitials(name)}
       state={resolvedState}
-      className={className}
+      {...(className ? { className } : {})}
     />
   );
 }
