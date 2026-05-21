@@ -54,7 +54,7 @@ function Brand() {
   return (
     <div className="flex items-center gap-2.5">
       <BrandMark />
-      <span className="text-sm font-semibold text-fg">Staffing SaaS</span>
+      <span className="text-sm font-semibold text-fg">Staffing Admin</span>
     </div>
   );
 }
