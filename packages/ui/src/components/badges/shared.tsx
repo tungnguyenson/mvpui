@@ -20,19 +20,32 @@ export type BadgeType = "pill-color" | "color" | "modern";
 
 export type IconProp = FC<{ className?: string }>;
 
+/**
+ * Tag/Badge color slots — all four resolve to semantic tokens that flip in
+ * `[data-theme="dark"]`. Defined in `@mvp-ui/tokens` (tokens.css + theme.css):
+ *
+ *   root        = `bg-tag-{c}-bg text-tag-{c}-fg ring-tag-{c}-border`
+ *   addon       = `text-tag-{c}-accent`         (dot, leading/trailing icon)
+ *   addonButton = `text-tag-{c}-accent hover:text-tag-{c}-fg hover:bg-tag-{c}-border`
+ *                  (close button — hover uses border token as a tinted backdrop)
+ *
+ * Naming note: original Untitled UI source used `brand=purple`, `error=red`,
+ * `warning=yellow`, `success=green`. We collapse to the semantic name so the
+ * brand badge tracks the project brand color, not a hardcoded purple ramp.
+ */
 export const filledColors: Record<BadgeColor, { root: string; addon: string; addonButton: string }> = {
-  gray:    { root: "bg-gray-50 text-gray-700 ring-gray-200",         addon: "text-gray-500",    addonButton: "hover:bg-gray-100 text-gray-400 hover:text-gray-500" },         // dark-ok — decorative badge
-  brand:   { root: "bg-purple-50 text-purple-700 ring-purple-200",   addon: "text-purple-500",  addonButton: "hover:bg-purple-100 text-purple-400 hover:text-purple-500" },
-  error:   { root: "bg-red-50 text-red-700 ring-red-200",            addon: "text-red-500",     addonButton: "hover:bg-red-100 text-red-400 hover:text-red-500" },
-  warning: { root: "bg-yellow-50 text-yellow-700 ring-yellow-200",   addon: "text-yellow-500",  addonButton: "hover:bg-yellow-100 text-yellow-400 hover:text-yellow-500" },
-  success: { root: "bg-green-50 text-green-700 ring-green-200",      addon: "text-green-500",   addonButton: "hover:bg-green-100 text-green-400 hover:text-green-500" },
-  slate:   { root: "bg-slate-50 text-slate-700 ring-slate-200",      addon: "text-slate-500",   addonButton: "hover:bg-slate-100 text-slate-400 hover:text-slate-500" },
-  sky:     { root: "bg-sky-50 text-sky-700 ring-sky-200",            addon: "text-sky-500",     addonButton: "hover:bg-sky-100 text-sky-400 hover:text-sky-500" },
-  blue:    { root: "bg-blue-50 text-blue-700 ring-blue-200",         addon: "text-blue-500",    addonButton: "hover:bg-blue-100 text-blue-400 hover:text-blue-500" },
-  indigo:  { root: "bg-indigo-50 text-indigo-700 ring-indigo-200",   addon: "text-indigo-500",  addonButton: "hover:bg-indigo-100 text-indigo-400 hover:text-indigo-500" },
-  purple:  { root: "bg-purple-50 text-purple-700 ring-purple-200",   addon: "text-purple-500",  addonButton: "hover:bg-purple-100 text-purple-400 hover:text-purple-500" },
-  pink:    { root: "bg-pink-50 text-pink-700 ring-pink-200",         addon: "text-pink-500",    addonButton: "hover:bg-pink-100 text-pink-400 hover:text-pink-500" },
-  orange:  { root: "bg-orange-50 text-orange-700 ring-orange-200",   addon: "text-orange-500",  addonButton: "hover:bg-orange-100 text-orange-400 hover:text-orange-500" },
+  gray:    { root: "bg-tag-gray-bg text-tag-gray-fg ring-tag-gray-border",         addon: "text-tag-gray-accent",    addonButton: "hover:bg-tag-gray-border text-tag-gray-accent hover:text-tag-gray-fg" },
+  brand:   { root: "bg-tag-brand-bg text-tag-brand-fg ring-tag-brand-border",      addon: "text-tag-brand-accent",   addonButton: "hover:bg-tag-brand-border text-tag-brand-accent hover:text-tag-brand-fg" },
+  error:   { root: "bg-tag-error-bg text-tag-error-fg ring-tag-error-border",      addon: "text-tag-error-accent",   addonButton: "hover:bg-tag-error-border text-tag-error-accent hover:text-tag-error-fg" },
+  warning: { root: "bg-tag-warning-bg text-tag-warning-fg ring-tag-warning-border",addon: "text-tag-warning-accent", addonButton: "hover:bg-tag-warning-border text-tag-warning-accent hover:text-tag-warning-fg" },
+  success: { root: "bg-tag-success-bg text-tag-success-fg ring-tag-success-border",addon: "text-tag-success-accent", addonButton: "hover:bg-tag-success-border text-tag-success-accent hover:text-tag-success-fg" },
+  slate:   { root: "bg-tag-slate-bg text-tag-slate-fg ring-tag-slate-border",      addon: "text-tag-slate-accent",   addonButton: "hover:bg-tag-slate-border text-tag-slate-accent hover:text-tag-slate-fg" },
+  sky:     { root: "bg-tag-sky-bg text-tag-sky-fg ring-tag-sky-border",            addon: "text-tag-sky-accent",     addonButton: "hover:bg-tag-sky-border text-tag-sky-accent hover:text-tag-sky-fg" },
+  blue:    { root: "bg-tag-blue-bg text-tag-blue-fg ring-tag-blue-border",         addon: "text-tag-blue-accent",    addonButton: "hover:bg-tag-blue-border text-tag-blue-accent hover:text-tag-blue-fg" },
+  indigo:  { root: "bg-tag-indigo-bg text-tag-indigo-fg ring-tag-indigo-border",   addon: "text-tag-indigo-accent",  addonButton: "hover:bg-tag-indigo-border text-tag-indigo-accent hover:text-tag-indigo-fg" },
+  purple:  { root: "bg-tag-purple-bg text-tag-purple-fg ring-tag-purple-border",   addon: "text-tag-purple-accent",  addonButton: "hover:bg-tag-purple-border text-tag-purple-accent hover:text-tag-purple-fg" },
+  pink:    { root: "bg-tag-pink-bg text-tag-pink-fg ring-tag-pink-border",         addon: "text-tag-pink-accent",    addonButton: "hover:bg-tag-pink-border text-tag-pink-accent hover:text-tag-pink-fg" },
+  orange:  { root: "bg-tag-orange-bg text-tag-orange-fg ring-tag-orange-border",   addon: "text-tag-orange-accent",  addonButton: "hover:bg-tag-orange-border text-tag-orange-accent hover:text-tag-orange-fg" },
 };
 
 export const PILL_SIZE = {

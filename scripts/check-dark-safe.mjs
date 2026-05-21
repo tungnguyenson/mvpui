@@ -20,29 +20,39 @@
  * alpha brand/error scale (e.g. ring-brand-500/22) and read in both modes.
  */
 
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 
 const COMPONENT_DIR = "packages/ui/src/components";
 
 const SCALE = "(?:25|50|100|200|300|400|500|600|700|800|900|950)";
+const COLOR_NAMES =
+  "gray|brand|error|success|warning|slate|sky|blue|indigo|purple|pink|orange|red|yellow|green";
 const BANNED = [
   new RegExp(
-    `\\b(?:bg|border|divide|from|via|to)-(?:gray|brand|error|success|warning)-${SCALE}\\b`,
+    `\\b(?:bg|border|divide|from|via|to)-(?:${COLOR_NAMES})-${SCALE}\\b`,
     "g"
   ),
-  new RegExp(
-    `\\btext-(?:gray|brand|error|success|warning)-${SCALE}\\b`,
-    "g"
-  ),
+  new RegExp(`\\btext-(?:${COLOR_NAMES})-${SCALE}\\b`, "g"),
   /\bbg-(?:white|black)\b/g,
   /\btext-black\b/g,
 ];
 
+/** Walk a directory tree and yield every `.tsx` file path. */
+function* walk(dir) {
+  for (const entry of readdirSync(dir)) {
+    const full = join(dir, entry);
+    if (statSync(full).isDirectory()) {
+      yield* walk(full);
+    } else if (full.endsWith(".tsx")) {
+      yield full;
+    }
+  }
+}
+
 let violations = 0;
 
-for (const file of readdirSync(COMPONENT_DIR).filter((f) => f.endsWith(".tsx"))) {
-  const path = join(COMPONENT_DIR, file);
+for (const path of walk(COMPONENT_DIR)) {
   const lines = readFileSync(path, "utf8").split("\n");
 
   lines.forEach((line, i) => {

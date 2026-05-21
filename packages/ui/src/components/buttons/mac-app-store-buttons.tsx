@@ -25,7 +25,7 @@ export const MacAppStoreButton = forwardRef<HTMLAnchorElement, AppStoreButtonPro
         aria-label="Download on the Mac App Store"
         {...props}
         className={cn(
-          "relative inline-block overflow-hidden rounded-[7px] bg-black ring-1 ring-white/10 ring-inset outline-none focus-visible:ring-4 focus-visible:ring-brand-500/22",
+          "relative inline-block overflow-hidden rounded-[7px] bg-black ring-1 ring-white/10 ring-inset outline-none focus-visible:ring-4 focus-visible:ring-brand-500/22", // dark-ok — Apple App Store button is brand-locked black in both modes
           dims,
           props.className,
         )}

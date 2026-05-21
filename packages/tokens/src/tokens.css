@@ -83,6 +83,45 @@
   --error-950: #450a0a;
 
   /* --------------------------------------------------------------------------
+     Decorative ramps — used by Badge/Tag/Chip surfaces only.
+     Only shades consumed by the semantic 4-slot pattern below.
+     -------------------------------------------------------------------------- */
+  --slate-50:  #f8fafc;  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;  --slate-500: #64748b;
+  --slate-700: #334155;  --slate-800: #1e293b;  --slate-950: #020617;
+
+  --sky-50:  #f0f9ff;  --sky-100: #e0f2fe;
+  --sky-200: #bae6fd;  --sky-300: #7dd3fc;
+  --sky-400: #38bdf8;  --sky-500: #0ea5e9;
+  --sky-700: #0369a1;  --sky-800: #075985;  --sky-950: #082f49;
+
+  --blue-50:  #eff6ff;  --blue-100: #dbeafe;
+  --blue-200: #bfdbfe;  --blue-300: #93c5fd;
+  --blue-400: #60a5fa;  --blue-500: #3b82f6;
+  --blue-700: #1d4ed8;  --blue-800: #1e40af;  --blue-950: #172554;
+
+  --indigo-50:  #eef2ff;  --indigo-100: #e0e7ff;
+  --indigo-200: #c7d2fe;  --indigo-300: #a5b4fc;
+  --indigo-400: #818cf8;  --indigo-500: #6366f1;
+  --indigo-700: #4338ca;  --indigo-800: #3730a3;  --indigo-950: #1e1b4b;
+
+  --purple-50:  #faf5ff;  --purple-100: #f3e8ff;
+  --purple-200: #e9d5ff;  --purple-300: #d8b4fe;
+  --purple-400: #c084fc;  --purple-500: #a855f7;
+  --purple-700: #7e22ce;  --purple-800: #6b21a8;  --purple-950: #3b0764;
+
+  --pink-50:  #fdf2f8;  --pink-100: #fce7f3;
+  --pink-200: #fbcfe8;  --pink-300: #f9a8d4;
+  --pink-400: #f472b6;  --pink-500: #ec4899;
+  --pink-700: #be185d;  --pink-800: #9d174d;  --pink-950: #500724;
+
+  --orange-50:  #fff7ed;  --orange-100: #ffedd5;
+  --orange-200: #fed7aa;  --orange-300: #fdba74;
+  --orange-400: #fb923c;  --orange-500: #f97316;
+  --orange-700: #c2410c;  --orange-800: #9a3412;  --orange-950: #431407;
+
+  /* --------------------------------------------------------------------------
      Semantic aliases — light mode defaults
      -------------------------------------------------------------------------- */
   --color-bg: #ffffff;
@@ -120,6 +159,73 @@
   --color-error-fg: var(--error-700);
   --color-neutral-bg: var(--gray-100);
   --color-neutral-border: var(--gray-200);
+
+  /* --------------------------------------------------------------------------
+     Tag/Badge decorative surfaces — light.
+     4 slots per color: bg / border / fg / accent (dot/icon).
+     Flips in [data-theme="dark"] block below.
+     Pattern per slot: bg = -50→-950, border = -200→-800,
+     fg = -700→-300, accent = -500→-400.
+     -------------------------------------------------------------------------- */
+  --color-tag-gray-bg: var(--gray-50);
+  --color-tag-gray-border: var(--gray-200);
+  --color-tag-gray-fg: var(--gray-700);
+  --color-tag-gray-accent: var(--gray-500);
+
+  --color-tag-brand-bg: var(--brand-50);
+  --color-tag-brand-border: var(--brand-200);
+  --color-tag-brand-fg: var(--brand-700);
+  --color-tag-brand-accent: var(--brand-500);
+
+  --color-tag-error-bg: var(--error-50);
+  --color-tag-error-border: var(--error-200);
+  --color-tag-error-fg: var(--error-700);
+  --color-tag-error-accent: var(--error-500);
+
+  --color-tag-warning-bg: var(--warning-50);
+  --color-tag-warning-border: var(--warning-200);
+  --color-tag-warning-fg: var(--warning-700);
+  --color-tag-warning-accent: var(--warning-500);
+
+  --color-tag-success-bg: var(--success-50);
+  --color-tag-success-border: var(--success-200);
+  --color-tag-success-fg: var(--success-700);
+  --color-tag-success-accent: var(--success-500);
+
+  --color-tag-slate-bg: var(--slate-50);
+  --color-tag-slate-border: var(--slate-200);
+  --color-tag-slate-fg: var(--slate-700);
+  --color-tag-slate-accent: var(--slate-500);
+
+  --color-tag-sky-bg: var(--sky-50);
+  --color-tag-sky-border: var(--sky-200);
+  --color-tag-sky-fg: var(--sky-700);
+  --color-tag-sky-accent: var(--sky-500);
+
+  --color-tag-blue-bg: var(--blue-50);
+  --color-tag-blue-border: var(--blue-200);
+  --color-tag-blue-fg: var(--blue-700);
+  --color-tag-blue-accent: var(--blue-500);
+
+  --color-tag-indigo-bg: var(--indigo-50);
+  --color-tag-indigo-border: var(--indigo-200);
+  --color-tag-indigo-fg: var(--indigo-700);
+  --color-tag-indigo-accent: var(--indigo-500);
+
+  --color-tag-purple-bg: var(--purple-50);
+  --color-tag-purple-border: var(--purple-200);
+  --color-tag-purple-fg: var(--purple-700);
+  --color-tag-purple-accent: var(--purple-500);
+
+  --color-tag-pink-bg: var(--pink-50);
+  --color-tag-pink-border: var(--pink-200);
+  --color-tag-pink-fg: var(--pink-700);
+  --color-tag-pink-accent: var(--pink-500);
+
+  --color-tag-orange-bg: var(--orange-50);
+  --color-tag-orange-border: var(--orange-200);
+  --color-tag-orange-fg: var(--orange-700);
+  --color-tag-orange-accent: var(--orange-500);
 
   /* --------------------------------------------------------------------------
      Spacing — 4pt base scale, named by semantic size
@@ -246,6 +352,68 @@
   --color-error-fg: var(--error-300);
   --color-neutral-bg: var(--gray-800);
   --color-neutral-border: var(--gray-700);
+
+  /* Tag/Badge decorative surfaces — dark.
+     bg = -950, border = -800, fg = -300, accent = -400. */
+  --color-tag-gray-bg: var(--gray-800);
+  --color-tag-gray-border: var(--gray-700);
+  --color-tag-gray-fg: var(--gray-300);
+  --color-tag-gray-accent: var(--gray-400);
+
+  --color-tag-brand-bg: var(--brand-950);
+  --color-tag-brand-border: var(--brand-800);
+  --color-tag-brand-fg: var(--brand-300);
+  --color-tag-brand-accent: var(--brand-400);
+
+  --color-tag-error-bg: var(--error-950);
+  --color-tag-error-border: var(--error-800);
+  --color-tag-error-fg: var(--error-300);
+  --color-tag-error-accent: #f87171; /* error-400 — not in raw scale */
+
+  --color-tag-warning-bg: var(--warning-950);
+  --color-tag-warning-border: var(--warning-800);
+  --color-tag-warning-fg: var(--warning-300);
+  --color-tag-warning-accent: #fbbf24; /* warning-400 — not in raw scale */
+
+  --color-tag-success-bg: var(--success-950);
+  --color-tag-success-border: var(--success-800);
+  --color-tag-success-fg: var(--success-300);
+  --color-tag-success-accent: var(--success-400);
+
+  --color-tag-slate-bg: var(--slate-950);
+  --color-tag-slate-border: var(--slate-800);
+  --color-tag-slate-fg: var(--slate-300);
+  --color-tag-slate-accent: var(--slate-400);
+
+  --color-tag-sky-bg: var(--sky-950);
+  --color-tag-sky-border: var(--sky-800);
+  --color-tag-sky-fg: var(--sky-300);
+  --color-tag-sky-accent: var(--sky-400);
+
+  --color-tag-blue-bg: var(--blue-950);
+  --color-tag-blue-border: var(--blue-800);
+  --color-tag-blue-fg: var(--blue-300);
+  --color-tag-blue-accent: var(--blue-400);
+
+  --color-tag-indigo-bg: var(--indigo-950);
+  --color-tag-indigo-border: var(--indigo-800);
+  --color-tag-indigo-fg: var(--indigo-300);
+  --color-tag-indigo-accent: var(--indigo-400);
+
+  --color-tag-purple-bg: var(--purple-950);
+  --color-tag-purple-border: var(--purple-800);
+  --color-tag-purple-fg: var(--purple-300);
+  --color-tag-purple-accent: var(--purple-400);
+
+  --color-tag-pink-bg: var(--pink-950);
+  --color-tag-pink-border: var(--pink-800);
+  --color-tag-pink-fg: var(--pink-300);
+  --color-tag-pink-accent: var(--pink-400);
+
+  --color-tag-orange-bg: var(--orange-950);
+  --color-tag-orange-border: var(--orange-800);
+  --color-tag-orange-fg: var(--orange-300);
+  --color-tag-orange-accent: var(--orange-400);
 
   /* Brand action — figma bg-brand-solid keeps brand-600;
      bg-brand-solid_hover (dark) = brand-500. Focus ring unchanged. */

@@ -128,6 +128,71 @@
   --color-neutral-bg: var(--gray-100);
   --color-neutral-border: var(--gray-200);
 
+  /* Tag/Badge decorative surfaces — light values registered here so Tailwind
+     v4 generates `bg-tag-{name}-bg`, `text-tag-{name}-fg`,
+     `ring-tag-{name}-border`, `text-tag-{name}-accent` utilities. Dark mode
+     overrides live in tokens.css `[data-theme="dark"]` and win via cascade
+     specificity (selector > :root that `@theme` emits to). */
+  --color-tag-gray-bg: var(--gray-50);
+  --color-tag-gray-border: var(--gray-200);
+  --color-tag-gray-fg: var(--gray-700);
+  --color-tag-gray-accent: var(--gray-500);
+
+  --color-tag-brand-bg: var(--brand-50);
+  --color-tag-brand-border: var(--brand-200);
+  --color-tag-brand-fg: var(--brand-700);
+  --color-tag-brand-accent: var(--brand-500);
+
+  --color-tag-error-bg: var(--error-50);
+  --color-tag-error-border: var(--error-200);
+  --color-tag-error-fg: var(--error-700);
+  --color-tag-error-accent: var(--error-500);
+
+  --color-tag-warning-bg: var(--warning-50);
+  --color-tag-warning-border: var(--warning-200);
+  --color-tag-warning-fg: var(--warning-700);
+  --color-tag-warning-accent: var(--warning-500);
+
+  --color-tag-success-bg: var(--success-50);
+  --color-tag-success-border: var(--success-200);
+  --color-tag-success-fg: var(--success-700);
+  --color-tag-success-accent: var(--success-500);
+
+  --color-tag-slate-bg: var(--slate-50);
+  --color-tag-slate-border: var(--slate-200);
+  --color-tag-slate-fg: var(--slate-700);
+  --color-tag-slate-accent: var(--slate-500);
+
+  --color-tag-sky-bg: var(--sky-50);
+  --color-tag-sky-border: var(--sky-200);
+  --color-tag-sky-fg: var(--sky-700);
+  --color-tag-sky-accent: var(--sky-500);
+
+  --color-tag-blue-bg: var(--blue-50);
+  --color-tag-blue-border: var(--blue-200);
+  --color-tag-blue-fg: var(--blue-700);
+  --color-tag-blue-accent: var(--blue-500);
+
+  --color-tag-indigo-bg: var(--indigo-50);
+  --color-tag-indigo-border: var(--indigo-200);
+  --color-tag-indigo-fg: var(--indigo-700);
+  --color-tag-indigo-accent: var(--indigo-500);
+
+  --color-tag-purple-bg: var(--purple-50);
+  --color-tag-purple-border: var(--purple-200);
+  --color-tag-purple-fg: var(--purple-700);
+  --color-tag-purple-accent: var(--purple-500);
+
+  --color-tag-pink-bg: var(--pink-50);
+  --color-tag-pink-border: var(--pink-200);
+  --color-tag-pink-fg: var(--pink-700);
+  --color-tag-pink-accent: var(--pink-500);
+
+  --color-tag-orange-bg: var(--orange-50);
+  --color-tag-orange-border: var(--orange-200);
+  --color-tag-orange-fg: var(--orange-700);
+  --color-tag-orange-accent: var(--orange-500);
+
   /* --------------------------------------------------------------------------
      Radii — literal values (avoids circular ref with tokens.css --radius-*)
      Generates: rounded-sm, rounded-md, rounded-lg, rounded-xl, rounded-2xl, rounded-full
