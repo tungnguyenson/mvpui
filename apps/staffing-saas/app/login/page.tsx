@@ -144,7 +144,7 @@ function LoginPageContent() {
               S
             </div>
             <span className="text-lg font-semibold text-primary-fg tracking-tight">
-              Staffing SaaS
+              Staffing Admin
             </span>
           </div>
         </div>

@@ -118,22 +118,39 @@ export interface SlimNavButtonProps {
 }
 
 export function SlimNavButton({ item, active, onClick }: SlimNavButtonProps) {
+	const hasChildren = Boolean(item.items?.length);
+	const className = cn(
+		"flex size-10 cursor-pointer items-center justify-center rounded-lg outline-none transition-colors duration-100",
+		"focus-visible:ring-2 focus-visible:ring-brand-500/22", // dark-ok
+		active
+			? "bg-bg-secondary text-fg"
+			: "text-fg-tertiary hover:bg-bg-secondary hover:text-fg-secondary",
+	);
+
+	if (hasChildren) {
+		return (
+			<button
+				type="button"
+				title={item.label}
+				onClick={onClick}
+				aria-current={active ? "page" : undefined}
+				className={className}
+			>
+				{renderIcon(item.icon, "size-5")}
+			</button>
+		);
+	}
+
 	return (
-		<button
-			type="button"
+		<a
+			href={item.href}
 			title={item.label}
 			onClick={onClick}
 			aria-current={active ? "page" : undefined}
-			className={cn(
-				"flex size-10 items-center justify-center rounded-lg outline-none transition-colors duration-100",
-				"focus-visible:ring-2 focus-visible:ring-brand-500/22", // dark-ok
-				active
-					? "bg-bg-secondary text-fg"
-					: "text-fg-tertiary hover:bg-bg-secondary hover:text-fg-secondary",
-			)}
+			className={className}
 		>
 			{renderIcon(item.icon, "size-5")}
-		</button>
+		</a>
 	);
 }
 
