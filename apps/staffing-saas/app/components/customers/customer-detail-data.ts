@@ -163,19 +163,42 @@ export type CustomerShiftOvertimeCalcMode =
   | "dailyHourThreshold";
 export type CustomerShiftWeekday = 1 | 2 | 3 | 4 | 5 | 6 | 7;
 
+export type CustomerShiftKind = "day" | "night" | "mixed";
+
+export const CUSTOMER_SHIFT_KIND_LABELS: Record<
+  CustomerShiftKind,
+  { label: string; color: "warning" | "blue" | "gray" }
+> = {
+  day: { label: "Ngày", color: "warning" },
+  night: { label: "Đêm", color: "blue" },
+  mixed: { label: "Hỗn hợp", color: "gray" },
+};
+
+export function classifyShiftKind(
+  startTime: string,
+  endTime: string
+): CustomerShiftKind {
+  const inNight = (t: string) => t > "22:00" || t < "06:00";
+  const startInNight = inNight(startTime);
+  const endInNight = inNight(endTime);
+  if (startInNight && endInNight) return "night";
+  if (!startInNight && !endInNight) return "day";
+  return "mixed";
+}
+
 export const CUSTOMER_SHIFT_WEEKDAYS: {
   key: CustomerShiftWeekday;
   label: string;
   isSunday?: boolean;
 }[] = [
-  { key: 1, label: "T2" },
-  { key: 2, label: "T3" },
-  { key: 3, label: "T4" },
-  { key: 4, label: "T5" },
-  { key: 5, label: "T6" },
-  { key: 6, label: "T7" },
-  { key: 7, label: "CN", isSunday: true },
-];
+    { key: 1, label: "T2" },
+    { key: 2, label: "T3" },
+    { key: 3, label: "T4" },
+    { key: 4, label: "T5" },
+    { key: 5, label: "T6" },
+    { key: 6, label: "T7" },
+    { key: 7, label: "CN", isSunday: true },
+  ];
 
 export type CustomerShiftHiringRequestStatus =
   | "publishing"

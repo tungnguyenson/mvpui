@@ -166,7 +166,7 @@ export function PricingDetailView({ config, customerName, backHref }: PricingDet
           <table className="w-full min-w-180 border-collapse text-sm">
             <thead>
               <tr className="border-b border-border-secondary bg-bg-secondary/40 text-left text-xs font-semibold uppercase tracking-wide text-fg-tertiary">
-                <th className="px-4 py-3">Loại ca</th>
+                <th className="px-4 py-3 w-76">Loại ca</th>
                 <th className="px-4 py-3 text-right w-30">
                   Mức chi trả
                   <br />
@@ -177,7 +177,8 @@ export function PricingDetailView({ config, customerName, backHref }: PricingDet
                   <br />
                   <span className="font-normal normal-case text-fg-tertiary">VNĐ / giờ</span>
                 </th>
-                <th className="px-4 py-3 text-center">GM0</th>
+                <th className="px-4 py-3 text-center w-30">GM0</th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -218,6 +219,7 @@ export function PricingDetailView({ config, customerName, backHref }: PricingDet
                   <td className="px-4 py-3 text-center align-middle font-medium text-fg-brand">
                     {rate.gm0}
                   </td>
+                  <td></td>
                 </tr>
               ))}
             </tbody>

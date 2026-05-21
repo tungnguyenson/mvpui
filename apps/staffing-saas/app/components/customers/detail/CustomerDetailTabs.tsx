@@ -1,7 +1,7 @@
 "use client";
 
 import { Tab, TabList, TabPanel, Tabs } from "@mvp-ui/ui";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { CustomerDetailExtras } from "../customer-detail-data";
 import { DocumentsTab } from "./DocumentsTab";
 import { LocationsTab } from "./LocationsTab";
@@ -30,14 +30,44 @@ const TAB_DEFS = [
 
 const TAB_IDS = TAB_DEFS.map((t) => t.id) as readonly string[];
 
+// Sub-route params that belong to a specific tab. When tab changes, drop
+// the previous tab's sub-route params so URL stays clean.
+const TAB_SUB_PARAMS: Record<string, readonly string[]> = {
+  shifts: ["shift"],
+  pricing: ["config"],
+  positions: ["position"],
+};
+
 export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const tabParam = searchParams.get("tab");
-  const initialTab = tabParam && TAB_IDS.includes(tabParam) ? tabParam : "overview";
+  const selectedTab =
+    tabParam && TAB_IDS.includes(tabParam) ? tabParam : "overview";
+
+  const handleTabChange = (key: string) => {
+    if (key === selectedTab) return;
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("tab", key);
+    // Drop sub-route params from previous tab
+    for (const [tabId, subParams] of Object.entries(TAB_SUB_PARAMS)) {
+      if (tabId !== key) {
+        for (const sub of subParams) params.delete(sub);
+      }
+    }
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
   return (
-    <Tabs defaultSelectedKey={initialTab} variant="pill" orientation="vertical" className="gap-6">
-      <TabList aria-label="Customer detail tabs" >
+    <Tabs
+      selectedKey={selectedTab}
+      onSelectionChange={(key) => handleTabChange(key as string)}
+      variant="pill"
+      orientation="vertical"
+      className="gap-6"
+    >
+      <TabList aria-label="Customer detail tabs">
         {TAB_DEFS.map((tab) => (
           <Tab key={tab.id} id={tab.id}>
             {tab.label}

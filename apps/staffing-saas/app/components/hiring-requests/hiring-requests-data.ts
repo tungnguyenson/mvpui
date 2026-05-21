@@ -26,17 +26,63 @@ export interface HiringTimelineEntry {
   note?: string;
 }
 
+export type JobPostStatus = "draft" | "published" | "paused" | "closed";
+
+export const JOB_POST_STATUS_LABELS: Record<
+  JobPostStatus,
+  { label: string; color: "gray" | "warning" | "success" | "error" }
+> = {
+  draft: { label: "Nháp", color: "gray" },
+  published: { label: "Đang đăng", color: "warning" },
+  paused: { label: "Tạm dừng", color: "gray" },
+  closed: { label: "Đã đóng", color: "gray" },
+};
+
+export type JobPostVisibility = "public" | "unlisted" | "private";
+
+export const JOB_POST_VISIBILITY_LABELS: Record<JobPostVisibility, string> = {
+  public: "Công khai",
+  unlisted: "Hạn chế",
+  private: "Riêng tư",
+};
+
+export interface JobPost {
+  id: string;
+  hiringRequestId: string;
+  title: string;
+  displayedPay: { amount: number; unit: "shift" | "hour" };
+  payCycle: string;
+  visibility: JobPostVisibility;
+  status: JobPostStatus;
+  adhocBonus: {
+    amount: number;
+    unit: "shift" | "hour";
+    reason: string;
+    approvalStatus: "pending" | "approved" | "rejected";
+  } | null;
+  publishedAt: string | null;
+  closedAt: string | null;
+  applicationCount: number;
+}
+
 export interface HiringRequestRecord {
   id: string;
   code: string;
   title: string;
   customer: string;
   customerId: string;
+  shiftId: string | null;
   area: string;
   headcount: number;
   filled: number;
+  committedWorkers: number;
+  filledSlots: number;
+  totalSlots: number;
   startDate: string;
+  endDate: string;
   deadline: string;
+  targetDeadline: string;
+  parentRequestId: string | null;
   status: HiringStatus;
   payRate: string;
   workerProfile: string[];
@@ -45,6 +91,7 @@ export interface HiringRequestRecord {
   notes: string;
   candidates: HiringCandidate[];
   timeline: HiringTimelineEntry[];
+  jobPosts: JobPost[];
 }
 
 export const HIRING_STATUS_LABELS: Record<
@@ -77,11 +124,18 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
     title: "CTV bán hàng cuối tuần",
     customer: "GHN Sorting",
     customerId: "highlands-commerce",
+    shiftId: "SC1002",
     area: "Quận 1, TP.HCM",
     headcount: 20,
     filled: 12,
+    committedWorkers: 12,
+    filledSlots: 18,
+    totalSlots: 40,
     startDate: "24/05/2026",
+    endDate: "30/05/2026",
     deadline: "24/05/2026",
+    targetDeadline: "23/05/2026",
+    parentRequestId: null,
     status: "open",
     payRate: "₫55.000 / giờ",
     workerProfile: [
@@ -130,6 +184,39 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       { id: "t-4", at: "16/05/2026", action: "Nhận thêm 5 worker (5/20 người)", actor: "Lê Thuỳ Trang" },
       { id: "t-5", at: "19/05/2026", action: "Nhận thêm 7 worker (12/20 người)", actor: "Lê Thuỳ Trang" },
     ],
+    jobPosts: [
+      {
+        id: "JP-8821",
+        hiringRequestId: "hr-2401",
+        title: "Tuyển gấp CTV bán hàng cuối tuần - Q1, HCM",
+        displayedPay: { amount: 170000, unit: "shift" },
+        payCycle: "Trả liền sau ca",
+        visibility: "public",
+        status: "published",
+        adhocBonus: null,
+        publishedAt: "14/05/2026",
+        closedAt: null,
+        applicationCount: 28,
+      },
+      {
+        id: "JP-8839",
+        hiringRequestId: "hr-2401",
+        title: "[VIP Network] CTV retail cuối tuần thưởng cao",
+        displayedPay: { amount: 185000, unit: "shift" },
+        payCycle: "Trả liền sau ca",
+        visibility: "private",
+        status: "published",
+        adhocBonus: {
+          amount: 20000,
+          unit: "shift",
+          reason: "Đẩy nhanh fill rate trước thứ 7, ưu tiên CTV có rating ≥ 4.5",
+          approvalStatus: "approved",
+        },
+        publishedAt: "17/05/2026",
+        closedAt: null,
+        applicationCount: 9,
+      },
+    ],
   },
   {
     id: "hr-2402",
@@ -137,11 +224,18 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
     title: "CTV kho ca đêm",
     customer: "Ninja Van",
     customerId: "gomart-distribution",
+    shiftId: "SC1004",
     area: "Thuận An, Bình Dương",
     headcount: 15,
     filled: 8,
+    committedWorkers: 8,
+    filledSlots: 32,
+    totalSlots: 105,
     startDate: "23/05/2026",
+    endDate: "29/05/2026",
     deadline: "25/05/2026",
+    targetDeadline: "22/05/2026",
+    parentRequestId: null,
     status: "fulfilling",
     payRate: "₫70.000 / giờ + phụ cấp",
     workerProfile: [
@@ -180,6 +274,26 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       { id: "t-4", at: "17/05/2026", action: "Nhận thêm 5 worker (5/15 người)", actor: "Nguyễn Quốc Đạt" },
       { id: "t-5", at: "20/05/2026", action: "Nhận thêm 3 worker (8/15 người)", actor: "Nguyễn Quốc Đạt" },
     ],
+    jobPosts: [
+      {
+        id: "JP-8825",
+        hiringRequestId: "hr-2402",
+        title: "CTV kho ca đêm - Thuận An, có phụ cấp",
+        displayedPay: { amount: 75000, unit: "hour" },
+        payCycle: "Trả 2 lần/tháng (15-20 và 01-05)",
+        visibility: "public",
+        status: "published",
+        adhocBonus: {
+          amount: 50000,
+          unit: "shift",
+          reason: "Khó tuyển ca đêm; bù thêm để hấp dẫn CTV có chứng nhận an toàn LĐ",
+          approvalStatus: "approved",
+        },
+        publishedAt: "13/05/2026",
+        closedAt: null,
+        applicationCount: 14,
+      },
+    ],
   },
   {
     id: "hr-2409",
@@ -187,11 +301,18 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
     title: "CTV chăm sóc khách hàng",
     customer: "Shopee Express Official",
     customerId: "medistar-clinic",
+    shiftId: "SC1001",
     area: "Ba Đình, Hà Nội",
     headcount: 4,
     filled: 1,
+    committedWorkers: 1,
+    filledSlots: 3,
+    totalSlots: 20,
     startDate: "20/05/2026",
+    endDate: "24/05/2026",
     deadline: "20/05/2026",
+    targetDeadline: "19/05/2026",
+    parentRequestId: null,
     status: "overdue",
     payRate: "₫60.000 / giờ",
     workerProfile: [
@@ -219,6 +340,39 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       { id: "t-3", at: "15/05/2026", action: "Nhận 1 worker (1/4 người)", actor: "Đỗ Khánh Vy (AM)" },
       { id: "t-4", at: "20/05/2026", action: "Đánh dấu quá hạn", actor: "Hệ thống" },
     ],
+    jobPosts: [
+      {
+        id: "JP-8801",
+        hiringRequestId: "hr-2409",
+        title: "Tuyển CTV CSKH Ba Đình - phụ cấp ăn trưa",
+        displayedPay: { amount: 65000, unit: "hour" },
+        payCycle: "Hàng tháng (01-05)",
+        visibility: "public",
+        status: "closed",
+        adhocBonus: null,
+        publishedAt: "10/05/2026",
+        closedAt: "18/05/2026",
+        applicationCount: 6,
+      },
+      {
+        id: "JP-8842",
+        hiringRequestId: "hr-2409",
+        title: "[Urgent] Tuyển gấp CTV CSKH - thưởng nóng 100k/ca",
+        displayedPay: { amount: 65000, unit: "hour" },
+        payCycle: "Hàng tháng (01-05)",
+        visibility: "public",
+        status: "published",
+        adhocBonus: {
+          amount: 100000,
+          unit: "shift",
+          reason: "Đã quá hạn deadline, cần phụ cấp đột xuất để vớt fill rate cuối",
+          approvalStatus: "pending",
+        },
+        publishedAt: "20/05/2026",
+        closedAt: null,
+        applicationCount: 2,
+      },
+    ],
   },
   {
     id: "hr-2418",
@@ -226,11 +380,18 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
     title: "CTV đóng gói cuối tháng",
     customer: "Ninja Van",
     customerId: "gomart-distribution",
+    shiftId: "SC1002",
     area: "Dĩ An, Bình Dương",
     headcount: 10,
     filled: 10,
+    committedWorkers: 10,
+    filledSlots: 60,
+    totalSlots: 60,
     startDate: "30/05/2026",
+    endDate: "05/06/2026",
     deadline: "29/05/2026",
+    targetDeadline: "28/05/2026",
+    parentRequestId: null,
     status: "fulfilled",
     payRate: "₫55.000 / giờ",
     workerProfile: [
@@ -257,6 +418,21 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       { id: "t-3", at: "10/05/2026", action: "Nhận thêm 4 worker (4/10 người)", actor: "Lê Thuỳ Trang" },
       { id: "t-4", at: "13/05/2026", action: "Nhận thêm 4 worker (8/10 người)", actor: "Lê Thuỳ Trang" },
       { id: "t-5", at: "15/05/2026", action: "Đạt đủ headcount (10/10 người)", actor: "Lê Thuỳ Trang" },
+    ],
+    jobPosts: [
+      {
+        id: "JP-8755",
+        hiringRequestId: "hr-2418",
+        title: "CTV đóng gói FMCG - ca ngắn cuối tháng",
+        displayedPay: { amount: 55000, unit: "hour" },
+        payCycle: "Trả 2 lần/tháng (15-20 và 01-05)",
+        visibility: "public",
+        status: "closed",
+        adhocBonus: null,
+        publishedAt: "06/05/2026",
+        closedAt: "15/05/2026",
+        applicationCount: 22,
+      },
     ],
   },
 ];
