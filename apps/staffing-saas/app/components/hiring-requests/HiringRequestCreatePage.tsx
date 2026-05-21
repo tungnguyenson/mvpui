@@ -24,13 +24,15 @@ import {
 
 interface HiringRequestCreatePageProps {
   initialCustomerId?: string;
+  initialShiftId?: string;
 }
 
 export function HiringRequestCreatePage({
   initialCustomerId,
+  initialShiftId,
 }: HiringRequestCreatePageProps = {}) {
   const [customerId, setCustomerId] = useState<string>(initialCustomerId ?? "");
-  const [shiftId, setShiftId] = useState<string>("");
+  const [shiftId, setShiftId] = useState<string>(initialShiftId ?? "");
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
   const [headcount, setHeadcount] = useState<string>("");

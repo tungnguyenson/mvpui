@@ -1,6 +1,17 @@
 "use client";
 
 import { Tab, TabList, TabPanel, Tabs } from "@mvp-ui/ui";
+import {
+  Briefcase,
+  CalendarClock,
+  FileText,
+  LayoutDashboard,
+  type LucideIcon,
+  MapPin,
+  Receipt,
+  Tag,
+  Users,
+} from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import type { CustomerDetailExtras } from "../customer-detail-data";
 import { DocumentsTab } from "./DocumentsTab";
@@ -17,16 +28,20 @@ interface CustomerDetailTabsProps {
   extras: CustomerDetailExtras;
 }
 
-const TAB_DEFS = [
-  { id: "overview", label: "Tổng quan" },
-  { id: "documents", label: "Hợp đồng" },
-  { id: "locations", label: "Địa điểm" },
-  { id: "positions", label: "Công việc" },
-  { id: "pricing", label: "Cấu hình giá" },
-  { id: "shifts", label: "Ca làm việc" },
-  { id: "reconciliation", label: "Cấu hình đối soát" },
-  { id: "users", label: "Nhân viên" },
-] as const;
+const TAB_DEFS: ReadonlyArray<{
+  id: string;
+  label: string;
+  icon: LucideIcon;
+}> = [
+  { id: "overview", label: "Tổng quan", icon: LayoutDashboard },
+  { id: "documents", label: "Hợp đồng", icon: FileText },
+  { id: "locations", label: "Địa điểm", icon: MapPin },
+  { id: "positions", label: "Công việc", icon: Briefcase },
+  { id: "pricing", label: "Cấu hình giá", icon: Tag },
+  { id: "shifts", label: "Ca làm việc", icon: CalendarClock },
+  { id: "reconciliation", label: "Cấu hình đối soát", icon: Receipt },
+  { id: "users", label: "Nhân viên", icon: Users },
+];
 
 const TAB_IDS = TAB_DEFS.map((t) => t.id) as readonly string[];
 
@@ -68,11 +83,18 @@ export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsPro
       className="gap-6"
     >
       <TabList aria-label="Customer detail tabs">
-        {TAB_DEFS.map((tab) => (
-          <Tab key={tab.id} id={tab.id}>
-            {tab.label}
-          </Tab>
-        ))}
+        {TAB_DEFS.map((tab) => {
+          const Icon = tab.icon;
+          return (
+            <Tab
+              key={tab.id}
+              id={tab.id}
+              icon={<Icon className="size-full" strokeWidth={1.75} />}
+            >
+              {tab.label}
+            </Tab>
+          );
+        })}
       </TabList>
 
       <TabPanel id="overview">
@@ -103,6 +125,7 @@ export function CustomerDetailTabs({ customerId, extras }: CustomerDetailTabsPro
           positions={extras.positions}
           locations={extras.locations}
           pricingConfigs={extras.pricingConfigs}
+          customerId={customerId}
         />
       </TabPanel>
       <TabPanel id="reconciliation">
