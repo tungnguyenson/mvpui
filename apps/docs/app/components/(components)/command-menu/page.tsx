@@ -128,6 +128,50 @@ function DisabledDemo() {
   );
 }
 
+function RichDemo() {
+  const [open, setOpen] = useState(false);
+  const items: CommandItem[] = [
+    {
+      id: "customer-acme",
+      label: "Acme Corp",
+      description: "0902 123 456 · Hà Nội",
+      keywords: ["0902123456", "ACM-001"],
+      icon: HomeIcon,
+      group: "Khách hàng",
+    },
+    {
+      id: "hr-2025-04-001",
+      label: "HR-2025-04-001 — Tuyển bảo vệ",
+      description: "Acme Corp · Quận 1",
+      keywords: ["HR2025"],
+      icon: FileIcon,
+      group: "Y/c tuyển dụng",
+    },
+    {
+      id: "worker-nguyenvana",
+      label: "Nguyễn Văn A",
+      description: "0911 222 333 · Tp HCM",
+      keywords: ["0911222333"],
+      icon: UserIcon,
+      group: "Cộng tác viên",
+    },
+  ];
+  return (
+    <div className="flex gap-2">
+      <Button color="secondary" size="sm" onClick={() => setOpen(true)}>
+        Rich items (description + keywords)
+      </Button>
+      <CommandMenu
+        isOpen={open}
+        onOpenChange={setOpen}
+        items={items}
+        placeholder="Try '0902' or 'HR2025'…"
+        onAction={(id) => console.log("Selected:", id)}
+      />
+    </div>
+  );
+}
+
 function EmptyDemo() {
   const [open, setOpen] = useState(false);
   return (
@@ -192,6 +236,32 @@ const items: CommandItem[] = [
     code: `const items: CommandItem[] = [
   { id: "active", label: "Active Action", icon: HomeIcon },
   { id: "disabled", label: "Disabled Action", icon: SettingsIcon, isDisabled: true },
+];
+
+<CommandMenu isOpen={open} onOpenChange={setOpen} items={items} />`,
+  },
+  {
+    id: "rich",
+    title: "Description & hidden keywords",
+    description:
+      "Add a `description` for a dim secondary line. Add `keywords` to include terms in search matching without rendering them — useful for IDs, phone numbers, or codes that shouldn't clutter the visible label.",
+    preview: <RichDemo />,
+    code: `const items: CommandItem[] = [
+  {
+    id: "customer-acme",
+    label: "Acme Corp",
+    description: "0902 123 456 · Hà Nội",
+    keywords: ["0902123456", "ACM-001"],
+    icon: HomeIcon,
+    group: "Khách hàng",
+  },
+  {
+    id: "hr-2025-04-001",
+    label: "HR-2025-04-001 — Tuyển bảo vệ",
+    description: "Acme Corp · Quận 1",
+    icon: FileIcon,
+    group: "Y/c tuyển dụng",
+  },
 ];
 
 <CommandMenu isOpen={open} onOpenChange={setOpen} items={items} />`,

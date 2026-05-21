@@ -20,12 +20,13 @@ import {
 } from "react";
 import {
 	ComboBox as AriaComboBox,
-	Group as AriaGroup,
+	Header as AriaHeader,
 	Input as AriaInput,
 	type Key,
 	ListBox as AriaListBox,
 	ListBoxItem as AriaListBoxItem,
 	type ListBoxItemProps as AriaListBoxItemProps,
+	ListBoxSection as AriaListBoxSection,
 	Modal as AriaModal,
 	ModalOverlay as AriaModalOverlay,
 } from "react-aria-components";
@@ -38,7 +39,37 @@ import { cn } from "../lib/cn.js";
 function isReactComponent<P = Record<string, unknown>>(
 	value: unknown,
 ): value is FC<P> {
-	return typeof value === "function";
+	if (typeof value === "function") return true;
+	if (
+		typeof value === "object" &&
+		value !== null &&
+		"$$typeof" in (value as object)
+	) {
+		return true;
+	}
+	return false;
+}
+
+/**
+ * Normalize for diacritic-insensitive matching (Vietnamese-aware).
+ * "Bích" → "bich", "Đà Nẵng" → "da nang".
+ *
+ * Memoized: NFD decompose + regex strip is the dominant cost in the
+ * per-keystroke filter pass. Cache keeps repeated calls for the same
+ * item textValue at O(1) after first hit.
+ */
+const normalizeCache = new Map<string, string>();
+function normalizeForSearch(value: string): string {
+	const cached = normalizeCache.get(value);
+	if (cached !== undefined) return cached;
+	const result = value
+		.normalize("NFD")
+		.replace(/\p{Diacritic}/gu, "")
+		.replace(/đ/g, "d")
+		.replace(/Đ/g, "D")
+		.toLowerCase();
+	normalizeCache.set(value, result);
+	return result;
 }
 
 function SearchIcon({ className }: { className?: string }) {
@@ -97,6 +128,10 @@ export interface CommandItem {
 	id: string;
 	/** Display label. */
 	label: string;
+	/** Secondary line rendered dim under the label. */
+	description?: string;
+	/** Hidden terms included in search matching (not rendered). */
+	keywords?: string[];
 	/** Optional group label — items with the same group are visually grouped. */
 	group?: string;
 	/** Leading icon. */
@@ -218,18 +253,65 @@ const CommandMenuRoot = ({
 		[onAction, handleClose],
 	);
 
-	// Group items
-	const grouped = items.reduce<Record<string, CommandItem[]>>((acc, item) => {
-		const g = item.group ?? "__ungrouped__";
-		if (!acc[g]) acc[g] = [];
-		acc[g].push(item);
-		return acc;
-	}, {});
+	// Group items preserving insertion order.
+	const groupMap = new Map<string, CommandItem[]>();
+	for (const item of items) {
+		const key = item.group ?? "__ungrouped__";
+		const bucket = groupMap.get(key) ?? [];
+		bucket.push(item);
+		groupMap.set(key, bucket);
+	}
+	const groups = [...groupMap.entries()];
+	const isGrouped =
+		groups.length > 1 || groups[0]?.[0] !== "__ungrouped__";
 
-	const groups = Object.entries(grouped);
-	const isGrouped = groups.length > 1 || groups[0]?.[0] !== "__ungrouped__";
+	const renderItem = (item: CommandItem) => {
+		const textValue = [
+			item.label,
+			item.description,
+			...(item.keywords ?? []),
+		]
+			.filter(Boolean)
+			.join(" ");
+		const IconProp = item.icon;
+		return (
+			<AriaListBoxItem
+				key={item.id}
+				id={item.id}
+				textValue={textValue}
+				{...(item.isDisabled !== undefined && { isDisabled: item.isDisabled })}
+				className={(state) =>
+					cn(
+						"flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-sm outline-hidden select-none transition-colors",
+						(state.isFocused || state.isHovered) && "bg-bg-secondary",
+						state.isDisabled && "cursor-not-allowed opacity-50",
+						state.isFocusVisible && "ring-2 ring-brand-500/22 ring-inset",
+					)
+				}
+			>
+				{isReactComponent(IconProp) ? (
+					<IconProp className="size-4 shrink-0 text-fg-tertiary" />
+				) : isValidElement(IconProp) ? (
+					IconProp
+				) : null}
 
-	const allItems = Object.values(grouped).flat();
+				<div className="flex min-w-0 flex-1 flex-col">
+					<span className="truncate font-medium text-fg">{item.label}</span>
+					{item.description && (
+						<span className="truncate text-xs text-fg-tertiary">
+							{item.description}
+						</span>
+					)}
+				</div>
+
+				{item.shortcut && (
+					<kbd className="pointer-events-none shrink-0 rounded px-1.5 py-0.5 text-xs font-medium text-fg-tertiary ring-1 ring-border select-none">
+						{item.shortcut}
+					</kbd>
+				)}
+			</AriaListBoxItem>
+		);
+	};
 
 	return (
 		<CommandMenuContext.Provider value={{ onClose: handleClose }}>
@@ -259,80 +341,58 @@ const CommandMenuRoot = ({
 					<AriaComboBox
 						aria-label="Command menu"
 						menuTrigger="focus"
-						defaultItems={allItems}
 						onSelectionChange={handleSelect}
+						defaultFilter={(textValue, inputValue) =>
+							normalizeForSearch(textValue).includes(
+								normalizeForSearch(inputValue),
+							)
+						}
 						autoFocus
 					>
-						{() => (
-							<>
-								<div className="flex items-center gap-3 border-b border-border px-4 py-3">
-									<SearchIcon className="size-4 shrink-0 text-fg-tertiary" />
-									<AriaGroup className="flex flex-1 items-center">
-										<AriaInput
-											autoFocus
-											placeholder={placeholder}
-											className="flex-1 appearance-none bg-transparent text-sm text-fg caret-fg outline-hidden placeholder:text-fg-tertiary"
-										/>
-									</AriaGroup>
-									<button
-										type="button"
-										onClick={handleClose}
-										className="flex h-6 w-6 items-center justify-center rounded-md text-fg-tertiary hover:bg-bg-secondary hover:text-fg transition-colors"
-										aria-label="Close"
-									>
-										<XIcon className="size-3.5" />
-									</button>
-								</div>
+						<div className="flex items-center gap-3 border-b border-border px-4 py-3">
+							<SearchIcon className="size-4 shrink-0 text-fg-tertiary" />
+							<AriaInput
+								autoFocus
+								placeholder={placeholder}
+								className="flex-1 appearance-none bg-transparent text-sm text-fg caret-fg outline-hidden placeholder:text-fg-tertiary"
+							/>
+							<button
+								type="button"
+								onClick={handleClose}
+								className="flex h-6 w-6 items-center justify-center rounded-md text-fg-tertiary hover:bg-bg-secondary hover:text-fg transition-colors"
+								aria-label="Close"
+							>
+								<XIcon className="size-3.5" />
+							</button>
+						</div>
 
-								<AriaListBox
-									className="max-h-80 overflow-y-auto p-2 outline-hidden"
-									renderEmptyState={() => (
-										<div className="py-6 text-center text-sm text-fg-tertiary">
-											{emptyMessage}
-										</div>
-									)}
-								>
-									{isGrouped
-										? groups.map(([group, groupItems]) =>
-												group === "__ungrouped__" ? (
-													groupItems.map((item) => (
-														<CommandMenuItem
-															key={item.id}
-															id={item.id}
-															label={item.label}
-															{...(item.icon !== undefined && { icon: item.icon })}
-															{...(item.shortcut !== undefined && { shortcut: item.shortcut })}
-															{...(item.isDisabled !== undefined && { isDisabled: item.isDisabled })}
-														/>
-													))
-												) : (
-													<CommandMenuGroup key={group} label={group}>
-														{groupItems.map((item) => (
-															<CommandMenuItem
-																key={item.id}
-																id={item.id}
-																label={item.label}
-																{...(item.icon !== undefined && { icon: item.icon })}
-																{...(item.shortcut !== undefined && { shortcut: item.shortcut })}
-																{...(item.isDisabled !== undefined && { isDisabled: item.isDisabled })}
-															/>
-														))}
-													</CommandMenuGroup>
-												),
-											)
-										: allItems.map((item) => (
-												<CommandMenuItem
-													key={item.id}
-													id={item.id}
-													label={item.label}
-													{...(item.icon !== undefined && { icon: item.icon })}
-													{...(item.shortcut !== undefined && { shortcut: item.shortcut })}
-													{...(item.isDisabled !== undefined && { isDisabled: item.isDisabled })}
-												/>
-											))}
-								</AriaListBox>
-							</>
-						)}
+						<AriaListBox
+							className="max-h-80 overflow-y-auto p-2 outline-hidden"
+							renderEmptyState={() => (
+								<div className="py-6 text-center text-sm text-fg-tertiary">
+									{emptyMessage}
+								</div>
+							)}
+						>
+							{isGrouped
+								? groups.map(([groupKey, groupItems]) =>
+										groupKey === "__ungrouped__" ? (
+											groupItems.map(renderItem)
+										) : (
+											<AriaListBoxSection
+												key={groupKey}
+												id={groupKey}
+												className="mt-2 first:mt-0"
+											>
+												<AriaHeader className="px-3 py-1.5 text-xs font-semibold text-fg-tertiary">
+													{groupKey}
+												</AriaHeader>
+												{groupItems.map(renderItem)}
+											</AriaListBoxSection>
+										),
+									)
+								: groups[0]?.[1]?.map(renderItem)}
+						</AriaListBox>
 					</AriaComboBox>
 				</AriaModal>
 			</AriaModalOverlay>

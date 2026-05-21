@@ -26,6 +26,7 @@ interface ShiftEditViewProps {
   locations: CustomerLocation[];
   pricingConfigs: CustomerPricingConfig[];
   backHref: string;
+  customerId: string;
 }
 
 const SUB_TABS = [
@@ -41,6 +42,7 @@ export function ShiftEditView({
   locations,
   pricingConfigs,
   backHref,
+  customerId,
 }: ShiftEditViewProps) {
   const isCreate = !shift;
   const [form, setForm] = useState<ShiftFormState>(
@@ -76,13 +78,19 @@ export function ShiftEditView({
             </p>
           )}
         </div>
-        <div className="flex self-start md:self-center">
-          <Link href={`/hiring-requests/new`}>
-            <Button color="primary" size="sm">
-              Tạo Y/c tuyển dụng cho ca này
-            </Button>
-          </Link>
-        </div>
+        {!isCreate && (
+          <div className="flex self-start md:self-center">
+            <Link
+              href={`/hiring-requests/new?customerId=${encodeURIComponent(
+                customerId
+              )}&shiftId=${encodeURIComponent(shift.id)}`}
+            >
+              <Button color="primary" size="sm">
+                Tạo Y/c tuyển dụng cho ca này
+              </Button>
+            </Link>
+          </div>
+        )}
       </div>
 
       <Tabs variant="underline" defaultSelectedKey="general">

@@ -7,7 +7,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { NAV_SECTIONS, breadcrumbsForPath } from "./nav";
 import { useBreadcrumbOverride } from "./BreadcrumbContext";
+import { buildSearchItems } from "./search/buildSearchItems";
 import { ThemePicker } from "./ThemePicker";
+
+const NAV_GROUP_LABEL = "Điều hướng";
 
 export function Header() {
     const pathname = usePathname();
@@ -16,18 +19,18 @@ export function Header() {
     const breadcrumbs = override ?? breadcrumbsForPath(pathname);
     const [isCommandOpen, setIsCommandOpen] = useState(false);
 
-    const commandItems = useMemo<CommandItem[]>(
-        () =>
-            NAV_SECTIONS.flatMap((section) =>
-                section.items.map((item) => ({
-                    id: item.href,
-                    label: item.label,
-                    icon: item.icon,
-                    ...(section.label ? { group: section.label } : {}),
-                })),
-            ),
-        [],
-    );
+    const commandItems = useMemo<CommandItem[]>(() => {
+        const navItems: CommandItem[] = NAV_SECTIONS.flatMap((section) =>
+            section.items.map((item) => ({
+                id: item.href,
+                label: item.label,
+                icon: item.icon,
+                group: NAV_GROUP_LABEL,
+                ...(section.label ? { description: section.label } : {}),
+            })),
+        );
+        return [...navItems, ...buildSearchItems()];
+    }, []);
 
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {

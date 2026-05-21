@@ -31,6 +31,7 @@ interface ShiftsTabProps {
   positions: CustomerPosition[];
   locations: CustomerLocation[];
   pricingConfigs: CustomerPricingConfig[];
+  customerId: string;
 }
 
 type StatusTabId = "all" | CustomerShiftStatus;
@@ -56,6 +57,7 @@ export function ShiftsTab({
   positions,
   locations,
   pricingConfigs,
+  customerId,
 }: ShiftsTabProps) {
   const searchParams = useSearchParams();
   const shiftParam = searchParams.get("shift");
@@ -85,6 +87,7 @@ export function ShiftsTab({
         locations={locations}
         pricingConfigs={pricingConfigs}
         backHref={buildHref(null)}
+        customerId={customerId}
       />
     );
   }
