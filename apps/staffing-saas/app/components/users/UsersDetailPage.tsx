@@ -1,18 +1,33 @@
 import { Avatar, Badge, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Activity, CalendarPlus, Mail, MapPin, Phone, ShieldCheck, UserCog } from "lucide-react";
+import {
+  Activity,
+  CalendarPlus,
+  Mail,
+  MapPin,
+  Phone,
+  ShieldCheck,
+  UserCog,
+} from "lucide-react";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import {
-  USER_ROLE_LABELS,
   USER_STATUS_LABELS,
   getUserById,
   type UserActivity,
-  type UserPermission,
 } from "./users-data";
 import { getAvatarFor, getInitials } from "../_shared/assets";
+import {
+  ACTION_LABELS,
+  GROUP_LABELS,
+  RESOURCES,
+  ROLE_BY_KEY,
+  type Permission,
+  type ResourceMeta,
+} from "../roles/permissions-data";
+import { effectivePermissions } from "../roles/permission-helpers";
 
 function SectionCard({
   title,
@@ -34,16 +49,30 @@ function SectionCard({
   );
 }
 
-function PermissionItem({ item }: { item: UserPermission }) {
-  const tone = item.level === "Full" ? "success" : item.level === "Edit" ? "warning" : "gray";
+function PermissionResourceRow({
+  resource,
+  effective,
+}: {
+  resource: ResourceMeta;
+  effective: Set<Permission>;
+}) {
+  const grantedActions = resource.actions.filter((action) =>
+    effective.has(`${resource.key}:${action}` as Permission),
+  );
+
+  if (grantedActions.length === 0) return null;
 
   return (
-    <div className="rounded-xl border border-border-secondary bg-bg-secondary p-4">
-      <div className="flex items-start justify-between gap-3">
-        <p className="text-sm font-medium text-fg">{item.scope}</p>
-        <Badge color={tone} type="pill-color" size="sm">
-          {item.level}
-        </Badge>
+    <div className="flex flex-wrap items-center gap-2 rounded-lg border border-border-secondary bg-bg-secondary px-3 py-2">
+      <span className="min-w-35 text-sm font-medium text-fg">
+        {resource.label}
+      </span>
+      <div className="flex flex-wrap gap-1">
+        {grantedActions.map((action) => (
+          <Badge key={action} color="brand" type="pill-color" size="sm">
+            {ACTION_LABELS[action]}
+          </Badge>
+        ))}
       </div>
     </div>
   );
@@ -72,6 +101,29 @@ export function UsersDetailPage({ id }: { id: string }) {
   if (!user) notFound();
 
   const status = USER_STATUS_LABELS[user.status];
+  const roles = user.roleKeys
+    .map((key) => ROLE_BY_KEY[key])
+    .filter((role): role is NonNullable<typeof role> => Boolean(role));
+  const effective = effectivePermissions({
+    id: user.id,
+    roleKeys: user.roleKeys,
+  });
+
+  const groupedResources = RESOURCES.reduce<Record<string, ResourceMeta[]>>(
+    (acc, resource) => {
+      const grantedCount = resource.actions.filter((a) =>
+        effective.has(`${resource.key}:${a}` as Permission),
+      ).length;
+      if (grantedCount === 0) return acc;
+      const bucket = acc[resource.group] ?? [];
+      bucket.push(resource);
+      acc[resource.group] = bucket;
+      return acc;
+    },
+    {},
+  );
+
+  const primaryRoleLabel = roles[0]?.name ?? "Chưa gán vai trò";
 
   return (
     <PageScaffold
@@ -99,9 +151,16 @@ export function UsersDetailPage({ id }: { id: string }) {
                   <Badge color={status.color} type="pill-color" size="sm">
                     {status.label}
                   </Badge>
-                  <Badge color="gray" type="pill-color" size="sm">
-                    {USER_ROLE_LABELS[user.role]}
-                  </Badge>
+                  {roles.map((role) => (
+                    <Badge
+                      key={role.key}
+                      color={role.color}
+                      type="pill-color"
+                      size="sm"
+                    >
+                      {role.name}
+                    </Badge>
+                  ))}
                 </div>
                 <p className="mt-1 text-base text-fg-tertiary">
                   {user.email} • {user.phone}
@@ -115,9 +174,11 @@ export function UsersDetailPage({ id }: { id: string }) {
                   Quay lại danh sách
                 </Button>
               </Link>
-              <Button color="primary" size="sm">
-                Cập nhật quyền
-              </Button>
+              <Link href={`${APP_ROUTES.users}/${user.id}/roles`}>
+                <Button color="primary" size="sm">
+                  Cập nhật vai trò
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -125,8 +186,8 @@ export function UsersDetailPage({ id }: { id: string }) {
     >
       <div className="grid gap-4 lg:grid-cols-4">
         <MetricCard
-          label="Vai trò"
-          value={USER_ROLE_LABELS[user.role]}
+          label="Vai trò chính"
+          value={primaryRoleLabel}
           valueSize="md"
           iconChip={<UserCog className="size-5" />}
           iconChipStyle="tint"
@@ -183,7 +244,11 @@ export function UsersDetailPage({ id }: { id: string }) {
             <div className="flex items-start gap-3">
               <ShieldCheck className="mt-0.5 size-4 text-fg-brand" />
               <div>
-                <p className="text-sm text-fg">Vai trò {USER_ROLE_LABELS[user.role]}</p>
+                <p className="text-sm text-fg">
+                  {roles.length > 1
+                    ? `${roles.length} vai trò: ${roles.map((r) => r.name).join(", ")}`
+                    : primaryRoleLabel}
+                </p>
                 <p className="text-sm text-fg-tertiary">Quản lý: {user.manager}</p>
               </div>
             </div>
@@ -191,13 +256,29 @@ export function UsersDetailPage({ id }: { id: string }) {
         </SectionCard>
 
         <SectionCard
-          title="Quyền hạn / access scope"
-          description="Phạm vi module mà user có thể đọc hoặc chỉnh sửa."
+          title="Quyền hiệu lực (union các role)"
+          description="Tổng hợp resource × action mà user này có thể truy cập."
         >
-          <div className="grid gap-3 sm:grid-cols-2">
-            {user.permissions.map((item) => (
-              <PermissionItem key={item.id} item={item} />
+          <div className="flex flex-col gap-4">
+            {Object.entries(groupedResources).map(([group, resources]) => (
+              <div key={group} className="flex flex-col gap-2">
+                <div className="text-xs font-semibold uppercase tracking-wide text-fg-tertiary">
+                  {GROUP_LABELS[group as keyof typeof GROUP_LABELS]}
+                </div>
+                {resources.map((resource) => (
+                  <PermissionResourceRow
+                    key={resource.key}
+                    resource={resource}
+                    effective={effective}
+                  />
+                ))}
+              </div>
             ))}
+            {Object.keys(groupedResources).length === 0 ? (
+              <p className="text-sm text-fg-tertiary">
+                User chưa được gán vai trò nào, ko có quyền truy cập module.
+              </p>
+            ) : null}
           </div>
         </SectionCard>
       </div>
@@ -219,3 +300,4 @@ export function UsersDetailPage({ id }: { id: string }) {
     </PageScaffold>
   );
 }
+

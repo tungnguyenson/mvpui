@@ -1,12 +1,6 @@
+import type { RoleKey } from "../roles/permissions-data";
+
 export type UserStatus = "active" | "invited" | "suspended" | "inactive";
-
-export type UserRole = "owner" | "operations" | "accounting" | "support" | "viewer";
-
-export interface UserPermission {
-  id: string;
-  scope: string;
-  level: "Full" | "Edit" | "View";
-}
 
 export interface UserActivity {
   id: string;
@@ -20,13 +14,12 @@ export interface UserRecord {
   fullName: string;
   email: string;
   phone: string;
-  role: UserRole;
+  roleKeys: RoleKey[];
   status: UserStatus;
   region: string;
   joinedAt: string;
   lastActiveAt: string;
   manager: string;
-  permissions: UserPermission[];
   activity: UserActivity[];
   notes: string;
 }
@@ -41,31 +34,18 @@ export const USER_STATUS_LABELS: Record<
   inactive: { label: "Không hoạt động", color: "gray" },
 };
 
-export const USER_ROLE_LABELS: Record<UserRole, string> = {
-  owner: "Quản trị viên",
-  operations: "Điều phối vận hành",
-  accounting: "Kế toán",
-  support: "Chăm sóc khách hàng",
-  viewer: "Chỉ xem",
-};
-
 export const USERS: UserRecord[] = [
   {
     id: "le-quan-tri",
     fullName: "Lê Quản Trị",
     email: "admin@staffing.vn",
     phone: "0912 345 678",
-    role: "owner",
+    roleKeys: ["owner"],
     status: "active",
     region: "Toàn quốc",
     joinedAt: "01/2024",
     lastActiveAt: "Hôm nay 09:20",
     manager: "—",
-    permissions: [
-      { id: "p-1", scope: "Toàn bộ module", level: "Full" },
-      { id: "p-2", scope: "Phê duyệt thanh toán", level: "Full" },
-      { id: "p-3", scope: "Cấu hình hệ thống", level: "Full" },
-    ],
     activity: [
       { id: "a-1", at: "Hôm nay 09:20", action: "Đăng nhập hệ thống" },
       {
@@ -82,17 +62,12 @@ export const USERS: UserRecord[] = [
     fullName: "Lê Thuỳ Trang",
     email: "trang.le@staffing.vn",
     phone: "0908 776 221",
-    role: "operations",
+    roleKeys: ["operations"],
     status: "active",
     region: "Miền Nam",
     joinedAt: "03/2024",
     lastActiveAt: "Hôm nay 09:48",
     manager: "Lê Quản Trị",
-    permissions: [
-      { id: "p-1", scope: "Hiring requests", level: "Edit" },
-      { id: "p-2", scope: "Lịch ca & chấm công", level: "Edit" },
-      { id: "p-3", scope: "Thanh toán CTV", level: "View" },
-    ],
     activity: [
       { id: "a-1", at: "Hôm nay 09:48", action: "Đẩy batch PAY-0520-A lên duyệt" },
       {
@@ -109,17 +84,12 @@ export const USERS: UserRecord[] = [
     fullName: "Nguyễn Quốc Đạt",
     email: "dat.nguyen@staffing.vn",
     phone: "0907 113 882",
-    role: "operations",
+    roleKeys: ["operations"],
     status: "active",
     region: "Bình Dương & Long An",
     joinedAt: "07/2024",
     lastActiveAt: "Hôm qua 22:15",
     manager: "Lê Thuỳ Trang",
-    permissions: [
-      { id: "p-1", scope: "Lịch ca & chấm công", level: "Edit" },
-      { id: "p-2", scope: "Hiring requests", level: "Edit" },
-      { id: "p-3", scope: "Vi phạm worker", level: "Edit" },
-    ],
     activity: [
       {
         id: "a-1",
@@ -136,16 +106,12 @@ export const USERS: UserRecord[] = [
     fullName: "Phạm Quốc Bảo",
     email: "bao.pham@staffing.vn",
     phone: "0903 887 998",
-    role: "support",
+    roleKeys: ["support"],
     status: "active",
     region: "Miền Bắc",
     joinedAt: "09/2024",
     lastActiveAt: "Hôm nay 08:55",
     manager: "Lê Thuỳ Trang",
-    permissions: [
-      { id: "p-1", scope: "Xác thực worker", level: "Edit" },
-      { id: "p-2", scope: "CSKH khách hàng", level: "Edit" },
-    ],
     activity: [
       {
         id: "a-1",
@@ -161,17 +127,12 @@ export const USERS: UserRecord[] = [
     fullName: "Trần Mai Linh",
     email: "linh.tran@staffing.vn",
     phone: "0911 226 778",
-    role: "accounting",
+    roleKeys: ["accounting"],
     status: "active",
     region: "Toàn quốc",
     joinedAt: "11/2024",
     lastActiveAt: "Hôm nay 09:05",
     manager: "Lê Quản Trị",
-    permissions: [
-      { id: "p-1", scope: "Thanh toán CTV", level: "Edit" },
-      { id: "p-2", scope: "Đối soát", level: "Edit" },
-      { id: "p-3", scope: "Khách hàng (billing)", level: "View" },
-    ],
     activity: [
       { id: "a-1", at: "Hôm nay 09:05", action: "Mở batch PAY-0527-D" },
       {
@@ -184,20 +145,37 @@ export const USERS: UserRecord[] = [
     notes: "Kế toán chính. Phụ trách chốt batch và đối soát với khách hàng.",
   },
   {
+    id: "vu-thi-minh",
+    fullName: "Vũ Thị Minh",
+    email: "minh.vu@staffing.vn",
+    phone: "0902 558 991",
+    roleKeys: ["operations", "support"],
+    status: "active",
+    region: "Đà Nẵng",
+    joinedAt: "12/2024",
+    lastActiveAt: "Hôm nay 08:10",
+    manager: "Lê Thuỳ Trang",
+    activity: [
+      {
+        id: "a-1",
+        at: "Hôm nay 08:10",
+        action: "Tạo ca SH-2510-NV",
+        detail: "Ca giao hàng cao điểm Đà Nẵng.",
+      },
+    ],
+    notes: "Multi-role: điều phối + CSKH cho thị trường miền Trung.",
+  },
+  {
     id: "tran-huu-loc",
     fullName: "Trần Hữu Lộc",
     email: "loc.tran@staffing.vn",
     phone: "0905 444 102",
-    role: "viewer",
+    roleKeys: ["viewer"],
     status: "invited",
     region: "Miền Trung",
     joinedAt: "—",
     lastActiveAt: "Chưa đăng nhập",
     manager: "Lê Thuỳ Trang",
-    permissions: [
-      { id: "p-1", scope: "Dashboard tổng quan", level: "View" },
-      { id: "p-2", scope: "Báo cáo doanh thu", level: "View" },
-    ],
     activity: [
       {
         id: "a-1",
@@ -212,4 +190,12 @@ export const USERS: UserRecord[] = [
 
 export function getUserById(id: string): UserRecord | undefined {
   return USERS.find((user) => user.id === id);
+}
+
+export function getUsersByRole(roleKey: RoleKey): UserRecord[] {
+  return USERS.filter((user) => user.roleKeys.includes(roleKey));
+}
+
+export function countMembersByRole(roleKey: RoleKey): number {
+  return getUsersByRole(roleKey).length;
 }

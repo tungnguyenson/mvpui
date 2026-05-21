@@ -9,6 +9,7 @@ import {
   HardHat,
   LayoutDashboard,
   Receipt,
+  Shield,
   ShieldCheck,
   User,
   UserPlus,
@@ -43,6 +44,7 @@ export const APP_ROUTES = {
   candidates: "/candidates",
   bonuses: "/bonuses",
   users: "/users",
+  roles: "/roles",
 } as const;
 
 export const NAV_SECTIONS: NavSection[] = [
@@ -158,6 +160,12 @@ export const NAV_SECTIONS: NavSection[] = [
         label: "User",
         href: APP_ROUTES.users,
         icon: User,
+      },
+      {
+        id: "roles",
+        label: "Vai trò",
+        href: APP_ROUTES.roles,
+        icon: Shield,
       },
     ],
   },
