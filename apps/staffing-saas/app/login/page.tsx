@@ -79,18 +79,10 @@ function LoginPageContent() {
               />
             </div>
 
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" isRequired>
-                  Mật khẩu
-                </Label>
-                <a
-                  href="#"
-                  className="text-sm font-medium text-fg-brand hover:text-primary transition-colors"
-                >
-                  Quên mật khẩu?
-                </a>
-              </div>
+            <div className="space-y-1.5 relative">
+              <Label htmlFor="password" isRequired>
+                Mật khẩu
+              </Label>
               <Input
                 id="password"
                 name="password"
@@ -100,6 +92,12 @@ function LoginPageContent() {
                 required
                 isInvalid={!!state?.error}
               />
+              <a
+                href="#"
+                className="absolute top-0 right-0 text-sm font-medium text-fg-brand hover:text-primary transition-colors"
+              >
+                Quên mật khẩu?
+              </a>
               <HintText>Nhập mật khẩu được cấp bởi quản trị viên.</HintText>
             </div>
 
