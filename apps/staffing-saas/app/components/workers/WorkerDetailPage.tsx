@@ -1,4 +1,4 @@
-import { AvatarProfilePhoto, Badge, Button, MetricCard } from "@mvp-ui/ui";
+import { AvatarProfilePhoto, Badge, BadgeWithDot, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -109,26 +109,26 @@ export function WorkerDetailPage({ id }: { id: string }) {
                 initials={getInitials(worker.name)}
               />
 
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-xl font-semibold text-fg">{worker.name}</h1>
-                <Badge color={status.color} type="pill-color" size="sm">
-                  {status.label}
-                </Badge>
-              </div>
-              <p className="mt-1 text-base text-fg-tertiary">
-                {worker.district}, {worker.city} • Gia nhập từ {worker.joinedAt}
-              </p>
-              <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{worker.bio}</p>
-              <div className="mt-4 flex flex-wrap gap-2">
-                {worker.tags.map((tag) => (
-                  <Badge key={tag} color="gray" type="pill-color" size="sm">
-                    {tag}
-                  </Badge>
-                ))}
+              <div>
+                <div className="flex flex-wrap items-center gap-3">
+                  <h1 className="text-xl font-semibold text-fg">{worker.name}</h1>
+                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
+                    {status.label}
+                  </BadgeWithDot>
+                </div>
+                <p className="mt-1 text-base text-fg-tertiary">
+                  {worker.district}, {worker.city} • Gia nhập từ {worker.joinedAt}
+                </p>
+                <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{worker.bio}</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {worker.tags.map((tag) => (
+                    <Badge key={tag} color="gray" type="pill-color" size="sm">
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
             <div className="flex items-center gap-3">
               <Link href="/workers">
                 <Button color="secondary" size="sm">

@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
+import { BadgeWithDot, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
 import Link from "next/link";
 import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -67,9 +67,9 @@ function VerificationRow({ record }: { record: VerificationRecord }) {
         <div className="text-sm text-fg">{record.taxId}</div>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <div className="text-sm text-fg-tertiary">{record.lastUpdated}</div>

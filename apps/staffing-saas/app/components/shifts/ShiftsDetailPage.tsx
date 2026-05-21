@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, MetricCard } from "@mvp-ui/ui";
+import { Avatar, Badge, BadgeWithDot, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -105,9 +105,9 @@ export function ShiftsDetailPage({ id }: { id: string }) {
               <div>
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-xl font-semibold text-fg">{shift.name}</h1>
-                  <Badge color={status.color} type="pill-color" size="sm">
+                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
                     {status.label}
-                  </Badge>
+                  </BadgeWithDot>
                 </div>
                 <p className="mt-1 text-base text-fg-tertiary">
                   {shift.code} • {shift.customer} • {shift.site}

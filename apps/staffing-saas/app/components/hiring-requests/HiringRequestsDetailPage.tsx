@@ -1,4 +1,4 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { Badge, BadgeWithDot, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { UserPlus } from "lucide-react";
@@ -39,9 +39,9 @@ export function HiringRequestsDetailPage({ id }: { id: string }) {
             <div>
               <div className="flex flex-wrap items-center gap-3">
                 <h1 className="text-xl font-semibold text-fg">{record.title}</h1>
-                <Badge color={status.color} type="pill-color" size="sm">
+                <BadgeWithDot color={status.color} type="pill-color" size="sm">
                   {status.label}
-                </Badge>
+                </BadgeWithDot>
               </div>
               <p className="mt-1 text-base text-fg-tertiary">
                 {record.code} • {record.customer} • {record.area}

@@ -1,4 +1,4 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { BadgeWithDot, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Download, Pause, Play, Square, Trash2 } from "lucide-react";
@@ -139,9 +139,9 @@ export function WorkerPaymentBatchesDetailPage({ id }: { id: string }) {
               </h1>
               <div className="flex flex-wrap items-center gap-2 text-sm">
                 <span className="text-fg-tertiary">Trạng thái:</span>
-                <Badge color={status.color} type="pill-color" size="sm">
+                <BadgeWithDot color={status.color} type="pill-color" size="sm">
                   {status.label}
-                </Badge>
+                </BadgeWithDot>
               </div>
               {renderTimeline(batch)}
               <p className="text-sm text-fg-tertiary">

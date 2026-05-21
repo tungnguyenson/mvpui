@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button, Input, Select, SelectItem } from "@mvp-ui/ui";
+import { BadgeWithDot, Button, Input, Select, SelectItem } from "@mvp-ui/ui";
 import { Pencil } from "lucide-react";
 import type { ReactNode } from "react";
 import {
@@ -152,9 +152,9 @@ export function BatchConfigTab({ batch }: { batch: PaymentBatchRecord }) {
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border-secondary pt-5">
           <div className="flex items-center gap-2 text-sm">
             <span className="text-fg-tertiary">Trạng thái:</span>
-            <Badge color={status.color} type="pill-color" size="sm">
+            <BadgeWithDot color={status.color} type="pill-color" size="sm">
               {status.label}
-            </Badge>
+            </BadgeWithDot>
             <button
               type="button"
               className="inline-flex size-7 items-center justify-center rounded-md text-fg-tertiary hover:bg-bg-secondary hover:text-fg"

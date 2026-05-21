@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { BadgeWithDot, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { AlertOctagon, CalendarDays, ChevronRight, Clock, LayoutGrid, Search, Target } from "lucide-react";
 import { Button } from "@mvp-ui/ui";
@@ -57,9 +57,9 @@ function ShiftRow({ shift }: { shift: ShiftRecord }) {
         </div>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <div className="text-sm text-fg">{shift.payRate}</div>

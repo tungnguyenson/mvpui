@@ -2,6 +2,7 @@
 
 import {
   Badge,
+  BadgeWithDot,
   Button,
   Input,
   Tab,
@@ -60,9 +61,9 @@ function WorkerRow({ worker }: { worker: WorkerRecord }) {
         </div>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <div className="flex flex-wrap gap-2">

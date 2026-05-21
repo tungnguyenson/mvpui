@@ -1,7 +1,7 @@
 "use client";
 
 import {
-  Badge,
+  BadgeWithDot,
   Button,
   ButtonUtility,
   DateRangePicker,
@@ -263,9 +263,9 @@ export function BonusesPage() {
                       </div>
                     </Table.Cell>
                     <Table.Cell>
-                      <Badge color={status.color} type="pill-color" size="sm">
+                      <BadgeWithDot color={status.color} type="pill-color" size="sm">
                         {status.label}
-                      </Badge>
+                      </BadgeWithDot>
                     </Table.Cell>
                     <Table.Cell>
                       <div className="text-sm text-fg-tertiary">

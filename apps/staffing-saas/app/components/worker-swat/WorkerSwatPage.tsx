@@ -36,7 +36,7 @@ export function WorkerSwatPage() {
         selectedKey={tab}
         onSelectionChange={(key) => setTab(key as TabId)}
         orientation="vertical"
-        variant="underline"
+        variant="pill"
         className="gap-6"
       >
         <TabList aria-label="Quản lý SWAT">

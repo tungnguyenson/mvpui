@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, MetricCard } from "@mvp-ui/ui";
+import { Avatar, Badge, BadgeWithDot, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -148,9 +148,9 @@ export function UsersDetailPage({ id }: { id: string }) {
               <div>
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-xl font-semibold text-fg">{user.fullName}</h1>
-                  <Badge color={status.color} type="pill-color" size="sm">
+                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
                     {status.label}
-                  </Badge>
+                  </BadgeWithDot>
                   {roles.map((role) => (
                     <Badge
                       key={role.key}

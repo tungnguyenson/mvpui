@@ -2,7 +2,7 @@
 
 import {
   Avatar,
-  Badge,
+  BadgeWithDot,
   Button,
   Dialog,
   Modal,
@@ -62,9 +62,9 @@ function ShiftDetailContent({
         <div className="flex items-start justify-between gap-4">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
-              <Badge color={status.color} type="pill-color" size="sm">
+              <BadgeWithDot color={status.color} type="pill-color" size="sm">
                 {status.label}
-              </Badge>
+              </BadgeWithDot>
               <span className="text-xs font-medium text-fg-tertiary tabular-nums">
                 {shift.code}
               </span>

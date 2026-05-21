@@ -2,6 +2,7 @@
 
 import {
   Badge,
+  BadgeWithDot,
   Button,
   Input,
   MetricCard,
@@ -271,9 +272,9 @@ function HiringRow({ customer }: { customer: CustomerRecord }) {
         <div className="text-sm font-medium text-fg">{customer.billing.outstanding}</div>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={verification.color} type="pill-color" size="sm">
+        <BadgeWithDot color={verification.color} type="pill-color" size="sm">
           {verification.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <DetailLink customer={customer} />
@@ -409,9 +410,9 @@ function AllRow({ customer }: { customer: CustomerRecord }) {
         <CustomerNameCell customer={customer} />
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <div className="text-sm text-fg">{customer.activeRequests}</div>

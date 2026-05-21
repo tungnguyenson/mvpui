@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
+import { BadgeWithDot, Button, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -94,9 +94,9 @@ function BatchRow({ batch }: { batch: PaymentBatchRecord }) {
       </Table.Cell>
       <Table.Cell>
         <div className="flex flex-col items-start gap-1">
-          <Badge color={status.color} type="pill-color" size="sm">
+          <BadgeWithDot color={status.color} type="pill-color" size="sm">
             {status.label}
-          </Badge>
+          </BadgeWithDot>
           <span className="text-xs text-fg-tertiary">
             {formatRelativeVi(batch.timeline.updatedAt)}
           </span>

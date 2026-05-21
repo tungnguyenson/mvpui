@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button, Input, Select, SelectItem, Table } from "@mvp-ui/ui";
+import { BadgeWithDot, Button, Input, Select, SelectItem, Table } from "@mvp-ui/ui";
 import Link from "next/link";
 import { CheckCircle2, Download, Search, Upload } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -96,9 +96,9 @@ function LineRow({ item }: { item: BatchLineItem }) {
         </Link>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
     </Table.Row>
   );

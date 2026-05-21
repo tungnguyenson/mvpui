@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
+import { Badge, BadgeWithDot, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
 import Link from "next/link";
 import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -67,9 +67,9 @@ function ViolationRow({ record }: { record: ViolationWorkerRecord }) {
         </Badge>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <div className="text-sm font-medium text-fg">{record.totalPenalty}</div>

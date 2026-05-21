@@ -1,4 +1,4 @@
-import { Badge, Button } from "@mvp-ui/ui";
+import { BadgeWithDot, Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Building2 } from "lucide-react";
@@ -60,9 +60,9 @@ export function CustomerDetailPage({ id }: { id: string }) {
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-xl font-semibold text-fg">{extras.brand.brandName}</h1>
                 </div>
-                <Badge color={status.color} type="pill-color" size="sm">
-                  ● {status.label}
-                </Badge>
+                <BadgeWithDot color={status.color} type="pill-color" size="sm">
+                  {status.label}
+                </BadgeWithDot>
                 {/* <div className="mt-3 flex flex-wrap gap-2">
                   {extras.brand.serviceTags.map((tag) => (
                     <Badge key={tag} color="success" type="pill-color" size="sm">

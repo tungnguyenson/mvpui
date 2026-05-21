@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, BadgeWithDot, Button, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { AlertOctagon, Briefcase, Building2, ChevronRight, Plus, Search, UserPlus } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -94,9 +94,9 @@ function HiringRow({ record }: { record: HiringRequestRecord }) {
         <div className="text-sm text-fg-tertiary">{record.deadline}</div>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <Link

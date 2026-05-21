@@ -89,9 +89,7 @@ function SocialInsuranceRow({ record, onOpen }: RowProps) {
               {record.fullName}
             </div>
             <div>
-              <Badge color="orange" type="pill-color" size="sm">
-                {record.workerCode}
-              </Badge>
+              <div className="text-xs text-muted-fg">#{record.workerCode}</div>
             </div>
           </div>
         </div>

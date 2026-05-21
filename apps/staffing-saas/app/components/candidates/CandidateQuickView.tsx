@@ -3,6 +3,7 @@
 import {
   AvatarProfilePhoto,
   Badge,
+  BadgeWithDot,
   Button,
   Drawer,
   DrawerBody,
@@ -115,9 +116,9 @@ export function CandidateQuickView({
                 {candidate.code} • {candidate.district}, {candidate.city}
               </p>
               <div className="mt-2 flex flex-wrap items-center gap-2">
-                <Badge color={stage.color} type="pill-color" size="sm">
+                <BadgeWithDot color={stage.color} type="pill-color" size="sm">
                   {stage.label}
-                </Badge>
+                </BadgeWithDot>
                 <Badge color="gray" type="pill-color" size="sm">
                   {SOURCE_LABELS[candidate.source]}
                 </Badge>

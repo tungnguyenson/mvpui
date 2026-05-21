@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Badge, Button, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { Avatar, Badge, BadgeWithDot, Button, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import {
   ChevronRight,
@@ -96,9 +96,9 @@ function UserRow({ user }: { user: UserRecord }) {
         <div className="text-sm text-fg-tertiary">{user.lastActiveAt}</div>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <Link

@@ -3,6 +3,7 @@
 import {
   AvatarProfilePhoto,
   Badge,
+  BadgeWithDot,
   Button,
   Input,
   MetricCard,
@@ -111,9 +112,9 @@ function CandidateRow({
         </Badge>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={stage.color} type="pill-color" size="sm">
+        <BadgeWithDot color={stage.color} type="pill-color" size="sm">
           {stage.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <ScoreCell score={record.score} />

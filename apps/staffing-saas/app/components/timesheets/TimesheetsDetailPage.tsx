@@ -1,4 +1,4 @@
-import { Avatar, Badge, Button, MetricCard } from "@mvp-ui/ui";
+import { Avatar, BadgeWithDot, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AlertCircle, AlertTriangle, Building2, CalendarDays, CheckCircle2, ClipboardCheck, Clock, Users } from "lucide-react";
@@ -56,9 +56,9 @@ function AttendanceItem({ item }: { item: AttendanceRecord }) {
             <p className="mt-1 text-sm text-fg-tertiary">{item.role}</p>
           </div>
         </div>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </div>
       <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div>
@@ -114,9 +114,9 @@ export function TimesheetsDetailPage({ id }: { id: string }) {
               <div>
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-xl font-semibold text-fg">{record.shiftName}</h1>
-                  <Badge color={status.color} type="pill-color" size="sm">
+                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
                     {status.label}
-                  </Badge>
+                  </BadgeWithDot>
                 </div>
                 <p className="mt-1 text-base text-fg-tertiary">
                   {record.shiftCode} • {record.customer} • {record.date} {record.schedule}

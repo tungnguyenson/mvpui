@@ -1,6 +1,6 @@
 "use client";
 
-import { AvatarProfilePhoto, Badge } from "@mvp-ui/ui";
+import { AvatarProfilePhoto, Badge, BadgeWithDot } from "@mvp-ui/ui";
 import { getAvatarFor, getInitials } from "../_shared/assets";
 import {
   type CandidateRecord,
@@ -30,9 +30,9 @@ function StageColumn({
     <div className="flex w-72 shrink-0 flex-col rounded-xl border border-border-secondary bg-bg-secondary">
       <div className="flex items-center justify-between border-b border-border-secondary px-3 py-2.5">
         <div className="flex items-center gap-2">
-          <Badge color={stage.color} type="pill-color" size="sm">
+          <BadgeWithDot color={stage.color} type="pill-color" size="sm">
             {stage.label}
-          </Badge>
+          </BadgeWithDot>
         </div>
         <span className="text-sm font-medium text-fg-tertiary">{items.length}</span>
       </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, Badge, Tab, TabList, TabPanel, Tabs } from "@mvp-ui/ui";
+import { Avatar, BadgeWithDot, Tab, TabList, TabPanel, Tabs } from "@mvp-ui/ui";
 import Link from "next/link";
 import {
   CANDIDATE_LABELS,
@@ -52,9 +52,9 @@ function CandidateItem({ candidate }: { candidate: HiringCandidate }) {
           </div>
         </div>
         <div className="flex flex-col items-end gap-1">
-          <Badge color={status.color} type="pill-color" size="sm">
+          <BadgeWithDot color={status.color} type="pill-color" size="sm">
             {status.label}
-          </Badge>
+          </BadgeWithDot>
           <p className="text-sm text-fg-tertiary">Match {candidate.matchScore}%</p>
         </div>
       </div>

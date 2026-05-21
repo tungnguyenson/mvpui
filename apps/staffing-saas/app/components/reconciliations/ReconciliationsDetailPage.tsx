@@ -1,4 +1,4 @@
-import { Badge, Button, MetricCard } from "@mvp-ui/ui";
+import { Badge, BadgeWithDot, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Building2, CalendarRange, Calculator, CalendarCheck, CircleDollarSign, Percent, Scale, User2 } from "lucide-react";
@@ -113,9 +113,9 @@ export function ReconciliationsDetailPage({ id }: { id: string }) {
               <div>
                 <div className="flex flex-wrap items-center gap-3">
                   <h1 className="text-xl font-semibold text-fg">{record.code}</h1>
-                  <Badge color={status.color} type="pill-color" size="sm">
+                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
                     {status.label}
-                  </Badge>
+                  </BadgeWithDot>
                 </div>
                 <p className="mt-1 text-base text-fg-tertiary">
                   {record.customer} • Kỳ {record.period}

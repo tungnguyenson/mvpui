@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { BadgeWithDot, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { AlertTriangle, CheckCircle2, ChevronRight, Clock, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -62,9 +62,9 @@ function TimesheetRow({ record }: { record: TimesheetRecord }) {
         <div className="text-sm text-fg">{record.exceptions}</div>
       </Table.Cell>
       <Table.Cell>
-        <Badge color={status.color} type="pill-color" size="sm">
+        <BadgeWithDot color={status.color} type="pill-color" size="sm">
           {status.label}
-        </Badge>
+        </BadgeWithDot>
       </Table.Cell>
       <Table.Cell>
         <Link
