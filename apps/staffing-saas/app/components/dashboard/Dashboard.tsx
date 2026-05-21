@@ -2,6 +2,7 @@
 
 import {
   Badge,
+  BadgeWithDot,
   Button,
   MetricCard,
   Pagination,
@@ -283,25 +284,15 @@ export function Dashboard() {
   );
 
   return (
-    <PageScaffold
-      header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Tổng quan vận hành</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Theo dõi nhu cầu tuyển từ khách hàng, tình trạng xác thực CTV, lịch làm việc
-              và tiến độ thanh toán theo thời gian thực.
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <Button color="secondary" size="sm" iconLeading={<Download className="size-4" />}>
-              Xuất dữ liệu
-            </Button>
+    <div className="flex flex-col gap-8 px-4 py-8 md:px-8">
 
-          </div>
-        </div>
-      }
-    >
+      <div className="flex shrink-0 items-center gap-3 justify-between">
+        <h2 className="text-xl font-semibold text-fg">Dashboard</h2>
+        <Button color="secondary" size="sm" iconLeading={<Download className="size-4" />}>
+          Xuất dữ liệu
+        </Button>
+      </div>
+
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {METRICS.map((metric) => (
           <MetricCard
@@ -485,13 +476,13 @@ export function Dashboard() {
                       </span>
                     </Table.Cell>
                     <Table.Cell>
-                      <Badge
+                      <BadgeWithDot
                         color={WORKER_STATUS_LABELS[row.status].color}
                         type="pill-color"
                         size="sm"
                       >
                         {WORKER_STATUS_LABELS[row.status].label}
-                      </Badge>
+                      </BadgeWithDot>
                     </Table.Cell>
                     <Table.Cell>
                       <div className="flex min-w-28 flex-col gap-1">
@@ -561,6 +552,6 @@ export function Dashboard() {
           </div>
         </Link>
       </div>
-    </PageScaffold>
+    </div>
   );
 }
