@@ -284,6 +284,11 @@
       "import": "./dist/metric-card.js",
       "require": "./dist/metric-card.cjs"
     },
+    "./use-media-query": {
+      "types": "./dist/use-media-query.d.ts",
+      "import": "./dist/use-media-query.js",
+      "require": "./dist/use-media-query.cjs"
+    },
     "./styles.css": "./dist/styles.css"
   },
   "files": [

@@ -85,6 +85,7 @@ export default defineConfig({
     accordion: "src/components/accordion.tsx",
     sparkline: "src/components/sparkline.tsx",
     "metric-card": "src/components/metric-card.tsx",
+    "use-media-query": "src/hooks/use-media-query.ts",
   },
   format: ["esm", "cjs"],
   dts: true,

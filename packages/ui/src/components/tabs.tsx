@@ -21,7 +21,11 @@ import {
   type TabProps as AriaTabProps,
   type TabsProps as AriaTabsProps,
 } from "react-aria-components";
+import { useMediaQuery } from "../hooks/use-media-query.js";
 import { cn } from "../lib/cn.js";
+
+/** Mobile breakpoint where vertical tabs collapse to horizontal underline. */
+const RESPONSIVE_MOBILE_QUERY = "(max-width: 767px)";
 
 /* ==========================================================================
    Tabs — wraps react-aria Tabs with Untitled UI visual design.
@@ -51,6 +55,15 @@ export interface TabsProps extends Omit<AriaTabsProps, "orientation"> {
   size?: TabSize;
   variant?: TabVariant;
   orientation?: TabOrientation;
+  /**
+   * When true (default), vertical tabs collapse to a horizontal underline bar
+   * below the mobile breakpoint (`max-width: 767px`). Set to `false` to keep
+   * the supplied orientation/variant on every viewport (e.g. when the tabs
+   * live inside a layout that's already hidden on mobile).
+   *
+   * No effect when `orientation === "horizontal"`.
+   */
+  responsive?: boolean;
   children: ReactNode;
   className?: string;
   ref?: Ref<HTMLDivElement>;
@@ -60,20 +73,38 @@ export const Tabs = ({
   size = "md",
   variant = "underline",
   orientation = "horizontal",
+  responsive = true,
   className,
   children,
   ref,
   ...ariaTabsProps
 }: TabsProps) => {
+  const isMobile = useMediaQuery(RESPONSIVE_MOBILE_QUERY);
+  const shouldCollapse =
+    responsive && orientation === "vertical" && isMobile;
+
+  const effectiveOrientation: TabOrientation = shouldCollapse
+    ? "horizontal"
+    : orientation;
+  const effectiveVariant: TabVariant = shouldCollapse ? "underline" : variant;
+
   return (
-    <TabsContext.Provider value={{ size, variant, orientation }}>
+    <TabsContext.Provider
+      value={{
+        size,
+        variant: effectiveVariant,
+        orientation: effectiveOrientation,
+      }}
+    >
       <AriaTabs
         {...ariaTabsProps}
-        orientation={orientation}
+        orientation={effectiveOrientation}
         ref={ref}
         className={cn(
           "flex",
-          orientation === "horizontal" ? "flex-col gap-4" : "flex-row gap-6",
+          effectiveOrientation === "horizontal"
+            ? "flex-col gap-4"
+            : "flex-row gap-6",
           className,
         )}
       >

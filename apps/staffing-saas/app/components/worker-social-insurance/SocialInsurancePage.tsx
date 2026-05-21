@@ -137,7 +137,7 @@ function DetailRow({ label, children }: DetailRowProps) {
   return (
     <div className="grid grid-cols-[140px_minmax(0,1fr)] gap-3 py-2.5 border-b border-border-secondary last:border-b-0">
       <div className="text-sm text-fg-tertiary">{label}</div>
-      <div className="text-sm text-fg break-words">{children}</div>
+      <div className="text-sm text-fg wrap-break-word">{children}</div>
     </div>
   );
 }

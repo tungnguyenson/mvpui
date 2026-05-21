@@ -346,3 +346,4 @@ export type { SparklineProps, SparklinePoint, SparklineTone } from "./components
 export { Sparkline } from "./components/sparkline.js";
 export type { MetricCardProps, MetricTrend } from "./components/metric-card.js";
 export { MetricCard } from "./components/metric-card.js";
+export { useMediaQuery } from "./hooks/use-media-query.js";

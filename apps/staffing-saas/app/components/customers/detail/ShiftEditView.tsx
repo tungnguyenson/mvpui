@@ -59,21 +59,30 @@ export function ShiftEditView({
 
   return (
     <div className="flex w-full max-w-5xl flex-col gap-6 pb-24">
-      <div className="flex flex-col gap-2 border-b border-border-secondary pb-5">
-        <Link
-          href={backHref}
-          scroll={false}
-          className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-fg-tertiary hover:text-fg"
-        >
-          <ArrowLeft className="size-4" /> Quay lại danh sách
-        </Link>
-        <h3 className="text-lg font-semibold text-fg">{title}</h3>
-        {!isCreate && (
-          <p className="text-sm text-fg-tertiary">
-            Cập nhật ngày: {shift.updatedAt} · {shift.hiringRequestCount} y/c
-            đang dùng
-          </p>
-        )}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 border-b border-border-secondary pb-5">
+        <div className="flex flex-col gap-2">
+          <Link
+            href={backHref}
+            scroll={false}
+            className="inline-flex w-fit items-center gap-1.5 text-sm font-medium text-fg-tertiary hover:text-fg"
+          >
+            <ArrowLeft className="size-4" /> Quay lại danh sách
+          </Link>
+          <h3 className="text-lg font-semibold text-fg">{title}</h3>
+          {!isCreate && (
+            <p className="text-sm text-fg-tertiary">
+              Cập nhật ngày: {shift.updatedAt} · {shift.hiringRequestCount} y/c
+              đang dùng
+            </p>
+          )}
+        </div>
+        <div className="flex self-start md:self-center">
+          <Link href={`/hiring-requests/new`}>
+            <Button color="primary" size="sm">
+              Tạo Y/c tuyển dụng cho ca này
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <Tabs variant="underline" defaultSelectedKey="general">

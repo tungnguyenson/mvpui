@@ -54,7 +54,7 @@ export function DayShiftRow({
   const previewMore = Math.max(
     0,
     (ctx.state === "upcoming" ? shift.assignedCount : attended) -
-      previewAvatars.length,
+    previewAvatars.length,
   );
 
   const issue = buildIssueLabel(ctx.state, shift, attended, noShow, late);
@@ -83,7 +83,7 @@ export function DayShiftRow({
       className={cn(
         "grid w-full cursor-pointer items-center gap-3 border-b border-border-secondary px-4 py-3 text-left transition-colors",
         "hover:bg-bg-secondary",
-        isSelected && "bg-info-bg/40 border-l-[3px] border-l-border-brand pl-[13px]",
+        isSelected && "bg-info-bg/40 border-l-[3px] border-l-border-brand pl-3.25",
       )}
       style={{
         gridTemplateColumns:
