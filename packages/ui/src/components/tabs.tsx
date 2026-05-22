@@ -138,8 +138,10 @@ export function TabList<T extends object>({
       className={cn(
         "flex",
         // horizontal: horizontal scroll, hide scrollbar
+        // touch-pan-x = constrain touch gesture to horizontal axis (vertical pan bubbles to page)
+        // overscroll-x-contain = stop horizontal rubber-band from scrolling ancestors
         !isVertical &&
-        "overflow-x-auto [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden",
+        "overflow-x-auto touch-pan-x overscroll-x-contain [-ms-overflow-style:none] scrollbar-none [&::-webkit-scrollbar]:hidden",
         // ── horizontal layouts ─────────────────────────────────────────────
         !isVertical && variant === "underline" && "gap-3 border-b border-border",
         !isVertical &&

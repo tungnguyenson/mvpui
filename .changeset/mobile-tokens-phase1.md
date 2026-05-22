@@ -24,4 +24,12 @@ Mobile adaptation — Phase 1 (foundation)
 
 - `apps/staffing-saas` opts in to `@mvp-ui/tokens/mobile.css` and switches `h-screen → h-dvh` on AppShell + login page. `Viewport.viewportFit = "cover"` added to enable iOS notch / home-indicator safe-area handling.
 
+**Drawer mobile pattern:**
+
+- `Drawer` panel widths now clamp to `max-w-[85vw]` (sm/md) / `max-w-[90vw]` (lg) so the scrim always has a generous tap-outside-to-close area on small viewports. Token-scaled `w-80` (~346 px mobile) was previously overflowing iPhone widths.
+- Panel root now respects iOS safe-area insets (`pt-safe pb-safe`) so content clears the notch and home indicator.
+- Swipe-to-close gesture: on touch / pen pointers, dragging the panel toward its origin edge past 80 px closes the drawer. Mouse pointers are unaffected. Opt out with `enableSwipeToClose={false}`.
+- New `DrawerEdgeTrigger` component: thin invisible mobile-only touch zone hugging a viewport edge. Swipe inward past 40 px to fire `onOpen`. **PWA-only**: in regular browser tabs the horizontal edge swipe collides with the browser's own back / forward history gesture, so the component is not wired into AppShell. Reach for it only inside an installed PWA shell.
+- The optional `showCloseButton` scrim X is now sized to a 44 px touch target and inset using `safe-area-inset-top`. AppShell drops `showCloseButton` in favour of the tap-outside + edge-swipe pattern.
+
 See `docs/mobile_sizes.md` for the full plan, decisions, and follow-up phases.

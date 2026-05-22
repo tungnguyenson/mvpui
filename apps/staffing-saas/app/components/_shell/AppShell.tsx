@@ -231,7 +231,6 @@ function AppShellInner({ children }: { children: ReactNode }) {
         isOpen={navOpen}
         onOpenChange={setNavOpen}
         aria-label="Menu điều hướng"
-        showCloseButton
       >
         <div
           data-theme={navTheme}

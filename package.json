@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "pnpm -r --parallel run dev",
     "build": "pnpm -r run build",
+    "build:ui": "pnpm --filter ./packages/ui build",
     "lint": "node scripts/check-dark-safe.mjs && biome lint .",
     "lint:dark": "node scripts/check-dark-safe.mjs",
     "format": "biome format --write .",

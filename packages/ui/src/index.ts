@@ -260,6 +260,8 @@ export type { FileUploadTriggerProps } from "./components/file-upload-trigger.js
 export { FileUploadTrigger } from "./components/file-upload-trigger.js";
 export type { DrawerProps, DrawerHeaderProps, DrawerBodyProps, DrawerFooterProps, DrawerSide, DrawerSize, DrawerBackdrop } from "./components/drawer.js";
 export { Drawer, DrawerHeader, DrawerBody, DrawerFooter } from "./components/drawer.js";
+export type { DrawerEdgeTriggerProps } from "./components/drawer-edge-trigger.js";
+export { DrawerEdgeTrigger } from "./components/drawer-edge-trigger.js";
 export type { DatePickerProps } from "./components/date-picker.js";
 export { DatePicker } from "./components/date-picker.js";
 export type { AppNavProps, AppNavItemProps, AppNavItemDef } from "./components/app-nav.js";

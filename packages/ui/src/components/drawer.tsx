@@ -6,9 +6,14 @@
  */
 
 import {
+	type CSSProperties,
+	type PointerEvent as ReactPointerEvent,
 	type ReactNode,
 	forwardRef,
+	useCallback,
 	useId,
+	useRef,
+	useState,
 } from "react";
 import { X } from "lucide-react";
 import {
@@ -44,6 +49,8 @@ export interface DrawerProps extends Omit<AriaModalOverlayProps, "className" | "
 	className?: string;
 	/** Render an X button in the overlay area (outside the panel). @default false */
 	showCloseButton?: boolean;
+	/** Enable swipe-to-close gesture on touch devices. @default true */
+	enableSwipeToClose?: boolean;
 	children?: ReactNode;
 }
 
@@ -52,9 +59,9 @@ export interface DrawerProps extends Omit<AriaModalOverlayProps, "className" | "
 /* -------------------------------------------------------------------------- */
 
 const panelWidth: Record<DrawerSize, string> = {
-	sm: "w-80",
-	md: "w-96",
-	lg: "w-128",
+	sm: "w-80 max-w-[85vw]",
+	md: "w-96 max-w-[85vw]",
+	lg: "w-128 max-w-[90vw]",
 };
 
 /* -------------------------------------------------------------------------- */
@@ -125,6 +132,12 @@ const backdropClass: Record<DrawerBackdrop, string> = {
 	none: "",
 };
 
+/** Distance (px) the user must drag past before release-to-close triggers. */
+const SWIPE_CLOSE_THRESHOLD = 80;
+/** Pointer types that participate in swipe-to-close. Mouse intentionally
+ *  excluded — desktop users dismiss via scrim click or ESC. */
+const TOUCH_POINTER_TYPES = new Set(["touch", "pen"]);
+
 export const Drawer = ({
 	side = "right",
 	size = "md",
@@ -133,6 +146,7 @@ export const Drawer = ({
 	description,
 	isDismissable = true,
 	showCloseButton = false,
+	enableSwipeToClose = true,
 	children,
 	className,
 	"aria-label": ariaLabel,
@@ -140,6 +154,77 @@ export const Drawer = ({
 }: DrawerProps) => {
 	const isRight = side === "right";
 	const titleId = useId();
+
+	const startXRef = useRef<number | null>(null);
+	const startYRef = useRef<number | null>(null);
+	const directionLockedRef = useRef<"x" | "y" | null>(null);
+	const pointerIdRef = useRef<number | null>(null);
+	const [dragOffset, setDragOffset] = useState(0);
+
+	const closeDrawer = useCallback(() => {
+		props.onOpenChange?.(false);
+	}, [props.onOpenChange]);
+
+	const resetDrag = useCallback(() => {
+		startXRef.current = null;
+		startYRef.current = null;
+		directionLockedRef.current = null;
+		pointerIdRef.current = null;
+		setDragOffset(0);
+	}, []);
+
+	const onPointerDown = useCallback(
+		(e: ReactPointerEvent<HTMLDivElement>) => {
+			if (!enableSwipeToClose) return;
+			if (!TOUCH_POINTER_TYPES.has(e.pointerType)) return;
+			startXRef.current = e.clientX;
+			startYRef.current = e.clientY;
+			directionLockedRef.current = null;
+			pointerIdRef.current = e.pointerId;
+		},
+		[enableSwipeToClose],
+	);
+
+	const onPointerMove = useCallback(
+		(e: ReactPointerEvent<HTMLDivElement>) => {
+			if (startXRef.current == null || startYRef.current == null) return;
+			if (e.pointerId !== pointerIdRef.current) return;
+
+			const dx = e.clientX - startXRef.current;
+			const dy = e.clientY - startYRef.current;
+
+			// Lock direction on first meaningful movement to avoid hijacking
+			// vertical scroll inside the drawer body.
+			if (directionLockedRef.current == null) {
+				if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+				directionLockedRef.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+				if (directionLockedRef.current === "y") {
+					resetDrag();
+					return;
+				}
+			}
+
+			// Close direction: left drawer → negative dx; right drawer → positive dx.
+			const closeDx = isRight ? Math.max(0, dx) : Math.min(0, dx);
+			setDragOffset(closeDx);
+		},
+		[isRight, resetDrag],
+	);
+
+	const onPointerEnd = useCallback(
+		(e: ReactPointerEvent<HTMLDivElement>) => {
+			if (e.pointerId !== pointerIdRef.current) return;
+			const past = Math.abs(dragOffset) >= SWIPE_CLOSE_THRESHOLD;
+			resetDrag();
+			if (past) closeDrawer();
+		},
+		[dragOffset, resetDrag, closeDrawer],
+	);
+
+	const panelStyle: CSSProperties =
+		dragOffset !== 0
+			? { transform: `translateX(${dragOffset}px)`, transition: "none" }
+			: {};
 
 	return (
 		<AriaModalOverlay
@@ -159,9 +244,10 @@ export const Drawer = ({
 				<button
 					type="button"
 					aria-label="Close"
-					onClick={() => props.onOpenChange?.(false)}
+					onClick={closeDrawer}
 					className={cn(
-						"absolute top-2 z-10 flex h-10 w-10 items-center justify-center rounded-lg text-white/80 hover:text-white transition-colors",
+						"absolute z-10 flex size-11 items-center justify-center rounded-lg text-white/80 hover:text-white transition-colors",
+						"top-[max(0.5rem,env(safe-area-inset-top))]",
 						isRight ? "left-2" : "right-2",
 					)}
 				>
@@ -171,8 +257,9 @@ export const Drawer = ({
 			<AriaModal
 				className={({ isEntering, isExiting }) =>
 					cn(
-						"flex h-full flex-col bg-bg shadow-2xl outline-none",
+						"flex h-full flex-col bg-bg shadow-2xl outline-none pt-safe pb-safe touch-pan-y",
 						panelWidth[size],
+						className,
 						isRight
 							? [
 								isEntering && "animate-in slide-in-from-right duration-300 ease-out",
@@ -184,6 +271,11 @@ export const Drawer = ({
 							],
 					)
 				}
+				style={panelStyle}
+				onPointerDown={onPointerDown}
+				onPointerMove={onPointerMove}
+				onPointerUp={onPointerEnd}
+				onPointerCancel={onPointerEnd}
 			>
 				<AriaDialog
 					{...(title ? { "aria-labelledby": titleId } : ariaLabel ? { "aria-label": ariaLabel } : {})}
