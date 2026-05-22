@@ -1,6 +1,12 @@
 import { EmptyState } from "../../components/_shared";
 import { labelForPath } from "../../components/_shell";
 
+export function generateStaticParams(): { slug: string[] }[] {
+  return [];
+}
+
+export const dynamicParams = false;
+
 export default async function PendingRoutePage({
   params,
 }: {

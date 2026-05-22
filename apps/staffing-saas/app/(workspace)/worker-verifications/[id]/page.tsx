@@ -1,4 +1,9 @@
 import { WorkerVerificationsDetailPage } from "../../../components/worker-verifications";
+import { VERIFICATIONS } from "../../../components/worker-verifications/worker-verifications-data";
+
+export function generateStaticParams() {
+  return VERIFICATIONS.map((v) => ({ id: v.id }));
+}
 
 export default async function Route({
   params,

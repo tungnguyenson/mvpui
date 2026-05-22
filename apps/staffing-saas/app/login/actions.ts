@@ -1,14 +1,37 @@
-"use server";
+const ADMIN_USER =
+  process.env.NEXT_PUBLIC_ADMIN_USER || "admin@example.com";
+const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin";
 
-import { cookies } from "next/headers";
+const SESSION_COOKIE = "session";
 
-export async function loginAction(prevState: any, formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+function setSessionCookie(remember: boolean) {
+  if (typeof document === "undefined") return;
+  const maxAge = remember ? 60 * 60 * 24 * 30 : "";
+  const secure =
+    typeof window !== "undefined" && window.location.protocol === "https:"
+      ? "; Secure"
+      : "";
+  const ageAttr = maxAge ? `; Max-Age=${maxAge}` : "";
+  document.cookie = `${SESSION_COOKIE}=true; Path=/; SameSite=Lax${ageAttr}${secure}`;
+}
+
+function clearSessionCookie() {
+  if (typeof document === "undefined") return;
+  document.cookie = `${SESSION_COOKIE}=; Path=/; Max-Age=0; SameSite=Lax`;
+}
+
+export interface LoginState {
+  error?: string;
+  success?: boolean;
+}
+
+export async function loginAction(
+  _prevState: LoginState | null,
+  formData: FormData,
+): Promise<LoginState> {
+  const email = String(formData.get("email") || "");
+  const password = String(formData.get("password") || "");
   const remember = formData.get("remember") === "true";
-
-  const adminUser = process.env.ADMIN_USER || "admin@example.com";
-  const adminPassword = process.env.ADMIN_PASSWORD || "admin";
 
   if (!email || !email.includes("@")) {
     return { error: "Vui lòng nhập email hợp lệ." };
@@ -18,22 +41,14 @@ export async function loginAction(prevState: any, formData: FormData) {
     return { error: "Mật khẩu phải chứa ít nhất 5 ký tự." };
   }
 
-  if (email === adminUser && password === adminPassword) {
-    const cookieStore = await cookies();
-    cookieStore.set("session", "true", {
-      path: "/",
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      maxAge: remember ? 60 * 60 * 24 * 30 : undefined, // 30 days or session
-    });
+  if (email === ADMIN_USER && password === ADMIN_PASSWORD) {
+    setSessionCookie(remember);
     return { success: true };
   }
 
   return { error: "Email hoặc mật khẩu không chính xác." };
 }
 
-export async function logoutAction() {
-  const cookieStore = await cookies();
-  cookieStore.delete("session");
+export async function logoutAction(): Promise<void> {
+  clearSessionCookie();
 }

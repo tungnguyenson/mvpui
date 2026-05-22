@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { CapacitorInit } from "./_capacitor-init";
 
 const inter = Inter({ subsets: ["latin", "vietnamese"] });
 
@@ -34,7 +35,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: themeInitScript }}
         />
       </head>
-      <body className={inter.className} suppressHydrationWarning>{children}</body>
+      <body className={inter.className} suppressHydrationWarning>
+        <CapacitorInit />
+        {children}
+      </body>
     </html>
   );
 }

@@ -1,4 +1,9 @@
 import { TimesheetsDetailPage } from "../../../components/timesheets";
+import { TIMESHEETS } from "../../../components/timesheets/timesheets-data";
+
+export function generateStaticParams() {
+  return TIMESHEETS.map((t) => ({ id: t.id }));
+}
 
 export default async function Route({
   params,

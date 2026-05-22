@@ -1,4 +1,9 @@
 import { CandidatesDetailPage } from "../../../components/candidates";
+import { CANDIDATES } from "../../../components/candidates/candidates-data";
+
+export function generateStaticParams() {
+  return CANDIDATES.map((c) => ({ id: c.id }));
+}
 
 export default async function Route({
   params,

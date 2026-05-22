@@ -75,6 +75,7 @@ export function Header({ onOpenNav }: HeaderProps) {
 
     return (
         <>
+          <div className="sticky top-0 z-30">
             {/* Mobile header */}
             <div className="flex h-14 shrink-0 items-center gap-1 border-b border-border-secondary bg-bg px-2 pt-safe md:hidden">
                 <Button
@@ -191,6 +192,7 @@ export function Header({ onOpenNav }: HeaderProps) {
                     </Badge>
                 </div>
             </div>
+          </div>
 
             <CommandMenu
                 isOpen={isCommandOpen}

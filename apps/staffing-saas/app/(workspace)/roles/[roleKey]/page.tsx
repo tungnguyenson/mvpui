@@ -1,4 +1,9 @@
 import { RoleDetailPage } from "../../../components/roles";
+import { ROLES } from "../../../components/roles/permissions-data";
+
+export function generateStaticParams() {
+  return ROLES.map((r) => ({ roleKey: r.key }));
+}
 
 interface RouteProps {
   params: Promise<{ roleKey: string }>;
