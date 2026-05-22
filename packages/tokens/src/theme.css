@@ -248,3 +248,37 @@
   from { height: var(--radix-accordion-content-height); }
   to { height: 0; }
 }
+
+/* --------------------------------------------------------------------------
+   Thin auto-hiding scrollbar — for sidebar nav and other tall scroll panes.
+   Track stays invisible; thumb fades in on container hover, darkens on direct
+   hover. Uses semantic border tokens so it flips correctly in dark mode.
+   -------------------------------------------------------------------------- */
+@utility nav-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 200ms ease;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 9999px;
+    transition: background-color 200ms ease;
+  }
+
+  &:hover {
+    scrollbar-color: var(--color-border-secondary) transparent;
+  }
+  &:hover::-webkit-scrollbar-thumb {
+    background: var(--color-border-secondary);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border);
+  }
+}

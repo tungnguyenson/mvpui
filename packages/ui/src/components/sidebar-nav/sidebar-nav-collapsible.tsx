@@ -78,7 +78,7 @@ export function SidebarNavCollapsible({
 
 			<nav
 				aria-label="Main navigation"
-				className="flex flex-1 flex-col overflow-y-auto px-3 py-4"
+				className="nav-scroll flex flex-1 flex-col overflow-y-auto px-3 py-4"
 			>
 				{sections.map((section, i) => (
 					<div key={`section-${i}`} className="flex flex-col gap-0.5">

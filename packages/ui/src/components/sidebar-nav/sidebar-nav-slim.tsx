@@ -96,7 +96,7 @@ export function SidebarNavSlim({
 
 				<nav
 					aria-label="Main navigation"
-					className="flex flex-1 flex-col items-center gap-1 overflow-y-auto px-3 py-4"
+					className="nav-scroll flex flex-1 flex-col items-center gap-1 overflow-y-auto px-3 py-4"
 				>
 					{items.map((item) => (
 						<SlimNavButton
@@ -156,7 +156,7 @@ export function SidebarNavSlim({
 						</div>
 						<nav
 							aria-label={`${currentItem.label} sub-navigation`}
-							className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 py-4"
+							className="nav-scroll flex flex-1 flex-col gap-0.5 overflow-y-auto px-3 py-4"
 						>
 							{currentItem.items?.map((sub) => (
 								<NavItemRow
