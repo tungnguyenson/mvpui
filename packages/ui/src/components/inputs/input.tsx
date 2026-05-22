@@ -51,6 +51,7 @@ export const inputFieldVariants = cva(
 		"has-[input:disabled]:cursor-not-allowed has-[input:disabled]:opacity-50 has-[input:disabled]:bg-bg-secondary",
 		"has-[input:read-only]:bg-bg-secondary",
 		"[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:text-fg-tertiary",
+		"min-h-11 md:min-h-0",
 	],
 	{
 		variants: {
@@ -230,6 +231,7 @@ export const InputBase = forwardRef<HTMLInputElement, InputBaseProps>(
 					type={resolvedType}
 					aria-invalid={invalid ? true : ariaInvalid}
 					className="min-w-0 flex-1 border-0 bg-transparent p-0 text-fg outline-none placeholder:text-fg-tertiary disabled:cursor-not-allowed read-only:cursor-default"
+					suppressHydrationWarning
 					{...props}
 				/>
 

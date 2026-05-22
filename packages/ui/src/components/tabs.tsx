@@ -192,6 +192,7 @@ export const Tab = ({
         cn(
           // base
           "relative inline-flex shrink-0 cursor-pointer items-center gap-2 whitespace-nowrap font-semibold outline-none transition-colors select-none",
+          "min-h-11 md:min-h-0 touch-manipulation",
           // focus ring
           state.isFocusVisible &&
           "rounded-md ring-2 ring-brand-500/22 ring-offset-1",

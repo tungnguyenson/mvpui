@@ -32,6 +32,7 @@ export const buttonVariants = cva(
     "disabled:cursor-not-allowed disabled:opacity-50",
     "aria-disabled:cursor-not-allowed aria-disabled:opacity-50 aria-disabled:pointer-events-none",
     "[&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
+    "min-h-11 md:min-h-0 touch-manipulation",
   ],
   {
     variants: {
@@ -68,17 +69,17 @@ export const buttonVariants = cva(
           "focus-visible:ring-error-500/24",
         ],
         "link-color": [
-          "p-0! shadow-none ring-0 underline-offset-4 text-fg-brand",
+          "p-0! shadow-none ring-0 underline-offset-4 text-fg-brand min-h-0!",
           "hover:enabled:underline",
           "focus-visible:ring-brand-500/22",
         ],
         "link-gray": [
-          "p-0! shadow-none ring-0 underline-offset-4 text-fg-tertiary",
+          "p-0! shadow-none ring-0 underline-offset-4 text-fg-tertiary min-h-0!",
           "hover:enabled:text-fg hover:enabled:underline",
           "focus-visible:ring-brand-500/22",
         ],
         "link-destructive": [
-          "p-0! shadow-none ring-0 underline-offset-4 text-fg-error",
+          "p-0! shadow-none ring-0 underline-offset-4 text-fg-error min-h-0!",
           "hover:enabled:underline",
           "focus-visible:ring-error-500/24",
         ],

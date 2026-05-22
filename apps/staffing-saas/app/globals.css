@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@mvp-ui/tokens/theme.css";
+@import "@mvp-ui/tokens/mobile.css";
 
 /* Scan UI package source so Tailwind generates utilities for CVA class strings */
 @source "../../../packages/ui/src/**/*.{ts,tsx}";

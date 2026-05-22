@@ -1,0 +1,82 @@
+/**
+ * Copyright (c) 2026 TungMVP
+ * Licensed under MIT
+ */
+
+/* ==========================================================================
+   MVP UI — Mobile Token Overrides
+   Opt-in mobile-aware scaling. Imported AFTER theme.css.
+
+   Usage in globals.css:
+     @import "tailwindcss";
+     @import "@mvp-ui/tokens/theme.css";
+     @import "@mvp-ui/tokens/mobile.css";
+
+   Approach:
+   - Override Tailwind v4 design tokens at (max-width: 767px) so all
+     utilities (h-*, w-*, p-*, m-*, gap-*, size-*, text-*) scale free.
+   - Single breakpoint at md (767px). Tailwind's md: boundary acts as
+     touch/desktop divider.
+   - Conservative +8% scale magnitude. Bump later only if needed.
+   - Radius/shadow held constant — brand identity, not touch concern.
+   ========================================================================== */
+
+@media (max-width: 767px) {
+  :root {
+    /* ----------------------------------------------------------------------
+       Spacing — drives every numeric Tailwind utility.
+       p-4, m-3, gap-2, h-9, w-10, size-11 all compile to calc(--spacing * N).
+       +8%: 0.25rem → 0.27rem
+       ---------------------------------------------------------------------- */
+    --spacing: 0.27rem;
+
+    /* ----------------------------------------------------------------------
+       Typography — bump readable text. text-sm hits 16px floor to block
+       iOS Safari focus auto-zoom on form fields.
+       ---------------------------------------------------------------------- */
+    --text-xs: 0.8125rem;   /* 13px (was 12px) */
+    --text-sm: 1rem;        /* 16px (was 14px) — iOS no-zoom floor */
+    --text-md: 1.0625rem;   /* 17px (was 16px) */
+    --text-lg: 1.1875rem;   /* 19px (was 18px) */
+
+    /* Larger heading scales stay constant — already big enough on mobile.
+       Per-surface responsive overrides (text-4xl md:text-5xl) handle hero
+       cases where auto-scale would overshoot. */
+  }
+}
+
+/* ==========================================================================
+   Safe-area helpers — iOS notch + home indicator.
+
+   Requires <meta name="viewport" content="..., viewport-fit=cover" /> in the
+   consumer app's head. Pair with pb-safe on any sticky bottom element.
+   ========================================================================== */
+
+@utility pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+@utility pr-safe {
+  padding-right: env(safe-area-inset-right);
+}
+@utility pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+@utility pl-safe {
+  padding-left: env(safe-area-inset-left);
+}
+@utility px-safe {
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+@utility py-safe {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+/* Composes with regular padding: e.g. pb-3 pb-safe-or stacks the safe-area
+   inset on top of the base 0.75rem. */
+@utility pb-safe-or-* {
+  padding-bottom: calc(--value(integer) * var(--spacing) + env(safe-area-inset-bottom));
+}
+@utility pt-safe-or-* {
+  padding-top: calc(--value(integer) * var(--spacing) + env(safe-area-inset-top));
+}

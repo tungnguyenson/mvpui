@@ -2,7 +2,7 @@
 
 import { Suspense, useActionState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Alert, AlertDescription, AlertTitle, Button, Checkbox, HintText, Input, Label, BackgroundPattern } from "@mvp-ui/ui";
+import { Alert, AlertDescription, AlertTitle, Button, Checkbox, HintText, Input, Label, BackgroundPattern, SocialButton } from "@mvp-ui/ui";
 import { loginAction } from "./actions";
 
 const FEATURE_BULLETS = [
@@ -34,7 +34,7 @@ function LoginPageContent() {
   }, [state, router, callbackUrl]);
 
   return (
-    <div className="flex h-screen w-screen overflow-hidden bg-bg">
+    <div className="flex h-dvh w-screen overflow-hidden bg-bg">
 
       {/* Right — form panel */}
       <div className="flex flex-1 flex-col items-center justify-center px-6 py-12 bg-bg relative">
@@ -51,9 +51,9 @@ function LoginPageContent() {
             <h2 className="text-2xl font-bold text-fg tracking-tight">
               Đăng nhập hệ thống
             </h2>
-            <p className="mt-1.5 text-sm text-fg-tertiary">
+            {/* <p className="mt-1.5 text-sm text-fg-tertiary">
               Chào mừng quay trở lại. Vui lòng nhập thông tin đăng nhập của bạn.
-            </p>
+            </p> */}
           </div>
 
           {state?.error && (
@@ -98,7 +98,7 @@ function LoginPageContent() {
               >
                 Quên mật khẩu?
               </a>
-              <HintText>Nhập mật khẩu được cấp bởi quản trị viên.</HintText>
+              {/* <HintText>Nhập mật khẩu được cấp bởi quản trị viên.</HintText> */}
             </div>
 
             <Checkbox
@@ -110,11 +110,22 @@ function LoginPageContent() {
             <Button
               type="submit"
               color="primary"
+              size="lg"
               className="w-full justify-center mt-6 cursor-pointer"
               disabled={isPending}
             >
               {isPending ? "Đang đăng nhập…" : "Đăng nhập"}
             </Button>
+
+            <div className="relative flex items-center py-1">
+              <div className="flex-1 border-t border-border-secondary" />
+              <span className="px-3 text-xs text-fg-tertiary">hoặc</span>
+              <div className="flex-1 border-t border-border-secondary" />
+            </div>
+
+            <SocialButton social="google" className="w-full">
+              Đăng nhập với Google
+            </SocialButton>
           </form>
 
           <p className="text-center text-sm text-fg-tertiary">

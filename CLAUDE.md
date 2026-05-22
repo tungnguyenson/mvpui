@@ -9,6 +9,17 @@
 
 Skipping these steps caused sessions to miss 15+ components while working on 2. Do not skip.
 
+## MANDATORY: Before any UI work in `apps/*` (consumer apps)
+
+Before writing UI in `apps/staffing-saas`, `apps/docs`, or any other consumer app:
+
+1. **Read `packages/skill/components.md`** — authoritative index of every `@mvp-ui/ui` export with import path, when to use, and gotchas.
+2. If unsure a component exists, grep `packages/ui/src/index.ts` for the keyword.
+3. **Never hand-roll markup** (inline SVGs, custom buttons, ad-hoc dividers, etc.) for anything that has a dedicated component. Example: use `<SocialButton social="google">`, not a custom `<button>` with an inline Google SVG.
+4. Only fall back to custom markup when both lookups confirm the export does not exist — and even then, propose a new component for `packages/ui` instead of inlining.
+
+Skipping this caused a session to hand-roll a Google sign-in button with inline 4-path SVG while `SocialButton` already existed. Do not skip.
+
 ## What this repo is
 
 Shared design system for personal SaaS projects: tokens, React components, AI skill files, and a docs workbench. Consumed via git deps + git submodule.

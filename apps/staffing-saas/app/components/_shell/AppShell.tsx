@@ -175,7 +175,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
     <div
       data-theme={theme}
       suppressHydrationWarning
-      className="flex h-screen flex-col overflow-hidden bg-bg md:flex-row"
+      className="flex h-dvh flex-col overflow-hidden bg-bg md:flex-row"
     >
       {/* Mobile top bar */}
       <div className="flex shrink-0 items-center justify-between border-b border-border-secondary bg-bg px-4 py-3 md:hidden">

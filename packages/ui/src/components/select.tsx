@@ -423,6 +423,7 @@ const SelectValueButton = ({
 			ref={ref}
 			className={cn(
 				"relative flex w-full cursor-pointer items-center rounded-lg bg-bg shadow-xs ring-1 ring-border outline-hidden transition duration-100 ease-linear ring-inset",
+				"min-h-11 md:min-h-0 touch-manipulation",
 				(isFocused || isOpen) && "ring-2 ring-brand-500/22",
 				isDisabled && "cursor-not-allowed opacity-50",
 			)}

@@ -73,6 +73,7 @@ export function NavItemRow({ item, activeHref, onClick, className }: NavItemRowP
 			onClick={onClick}
 			className={cn(
 				"group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium outline-none transition-colors duration-100",
+				"min-h-11 md:min-h-0 touch-manipulation",
 				"focus-visible:ring-2 focus-visible:ring-brand-500/22", // dark-ok
 				active
 					? "bg-bg-secondary text-fg"
@@ -120,7 +121,8 @@ export interface SlimNavButtonProps {
 export function SlimNavButton({ item, active, onClick }: SlimNavButtonProps) {
 	const hasChildren = Boolean(item.items?.length);
 	const className = cn(
-		"flex size-10 cursor-pointer items-center justify-center rounded-lg outline-none transition-colors duration-100",
+		"flex size-11 md:size-10 cursor-pointer items-center justify-center rounded-lg outline-none transition-colors duration-100",
+		"touch-manipulation",
 		"focus-visible:ring-2 focus-visible:ring-brand-500/22", // dark-ok
 		active
 			? "bg-bg-secondary text-fg"

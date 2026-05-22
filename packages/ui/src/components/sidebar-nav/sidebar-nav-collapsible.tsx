@@ -100,7 +100,7 @@ export function SidebarNavCollapsible({
 										href={item.href}
 										aria-current={active ? "page" : undefined}
 										className={cn(
-											"group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium outline-none transition-colors duration-100",
+											"group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium outline-none transition-colors duration-100 min-h-11 md:min-h-0 touch-manipulation",
 											"focus-visible:ring-2 focus-visible:ring-brand-500/22", // dark-ok
 											active
 												? "bg-bg-secondary text-fg"
@@ -176,7 +176,7 @@ export function SidebarNavCollapsible({
 														href={sub.href}
 														aria-current={subActive ? "page" : undefined}
 														className={cn(
-															"flex items-center gap-3 rounded-lg py-2 pr-3 pl-9 text-sm font-medium outline-none transition-colors duration-100",
+															"flex items-center gap-3 rounded-lg py-2 pr-3 pl-9 text-sm font-medium outline-none transition-colors duration-100 min-h-11 md:min-h-0 touch-manipulation",
 															"focus-visible:ring-2 focus-visible:ring-brand-500/22", // dark-ok
 															subActive
 																? "bg-bg-secondary text-fg"

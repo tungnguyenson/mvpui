@@ -6,13 +6,14 @@
   "exports": {
     "./tokens.css": "./src/tokens.css",
     "./theme.css": "./src/theme.css",
+    "./mobile.css": "./src/mobile.css",
     "./tokens": {
       "types": "./dist/tokens.d.ts",
       "import": "./dist/tokens.js",
       "require": "./dist/tokens.cjs"
     }
   },
-  "files": ["dist", "src/tokens.css", "src/theme.css", "README.md"],
+  "files": ["dist", "src/tokens.css", "src/theme.css", "src/mobile.css", "README.md"],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
