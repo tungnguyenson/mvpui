@@ -1,7 +1,7 @@
 "use client";
 
 import { Drawer, SidebarNavCollapsible, SidebarNavSlim } from "@mvp-ui/ui";
-import { ChevronsLeft, ChevronsRight, Menu } from "lucide-react";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
 import {
   useCallback,
   useEffect,
@@ -177,19 +177,6 @@ function AppShellInner({ children }: { children: ReactNode }) {
       suppressHydrationWarning
       className="flex h-dvh flex-col overflow-hidden bg-bg md:flex-row"
     >
-      {/* Mobile top bar */}
-      <div className="flex shrink-0 items-center justify-between border-b border-border-secondary bg-bg px-4 py-3 md:hidden">
-        <Brand />
-        <button
-          type="button"
-          className="flex size-9 items-center justify-center rounded-lg text-fg-secondary transition-colors hover:bg-bg-secondary"
-          aria-label="Mở menu"
-          onClick={() => setNavOpen(true)}
-        >
-          <Menu className="size-5" />
-        </button>
-      </div>
-
       {/* Desktop sidebar */}
       <div
         data-theme={navTheme}
@@ -219,7 +206,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
       {/* Content */}
       <main className="min-w-0 flex-1 overflow-y-auto bg-bg-secondary">
         <BreadcrumbProvider>
-          <Header />
+          <Header onOpenNav={() => setNavOpen(true)} />
           {children}
         </BreadcrumbProvider>
       </main>
