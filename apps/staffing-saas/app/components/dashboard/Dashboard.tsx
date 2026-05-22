@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState, type ReactNode } from "react";
 import { APP_ROUTES } from "../_shell/nav";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { WorkerAvatar } from "../_shared";
 import { WORKERS, WORKER_STATUS_LABELS } from "../workers/workers-data";
@@ -284,14 +285,18 @@ export function Dashboard() {
   );
 
   return (
-    <div className="flex flex-col gap-8 px-4 py-8 md:px-8">
-
-      <div className="flex shrink-0 items-center gap-3 justify-between">
-        <h2 className="text-xl font-semibold text-fg">Dashboard</h2>
-        <Button color="secondary" size="sm" iconLeading={<Download className="size-4" />}>
-          Xuất dữ liệu
-        </Button>
-      </div>
+    <PageScaffold
+      header={
+        <AppPageHeader
+          title="Dashboard"
+          actions={
+            <Button color="secondary" size="sm" iconLeading={<Download className="size-4" />}>
+              Xuất dữ liệu
+            </Button>
+          }
+        />
+      }
+    >
 
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
         {METRICS.map((metric) => (
@@ -552,6 +557,6 @@ export function Dashboard() {
           </div>
         </Link>
       </div>
-    </div>
+    </PageScaffold>
   );
 }

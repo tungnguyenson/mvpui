@@ -22,6 +22,7 @@ import {
   type CustomerReconciliationConfig,
   type ReconciliationContact,
 } from "./customer-reconciliation-configs-data";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 
 const PAGE_SIZE = 8;
@@ -229,13 +230,10 @@ export function CustomerReconciliationConfigsPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Tổng hợp cấu hình đối soát</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Quản lý quy tắc đối soát của từng công ty khách hàng: chu kỳ ra sao
-            kê, hóa đơn, hồ sơ thanh toán, và đầu mối liên hệ.
-          </p>
-        </div>
+        <AppPageHeader
+          title="Tổng hợp cấu hình đối soát"
+          description="Quản lý quy tắc đối soát của từng công ty khách hàng: chu kỳ ra sao kê, hóa đơn, hồ sơ thanh toán, và đầu mối liên hệ."
+        />
       }
     >
       <TableCard.Root>

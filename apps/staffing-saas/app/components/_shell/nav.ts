@@ -9,6 +9,7 @@ import {
   HardHat,
   HeartHandshake,
   LayoutDashboard,
+  MessageCircle,
   Receipt,
   Shield,
   ShieldCheck,
@@ -33,6 +34,7 @@ export interface NavSection {
 
 export const APP_ROUTES = {
   dashboard: "/",
+  chat: "/chat",
   customers: "/customers",
   customerReconciliations: "/customer-reconciliations",
   workers: "/workers",
@@ -60,7 +62,13 @@ export const NAV_SECTIONS: NavSection[] = [
         label: "Dashboard",
         href: APP_ROUTES.dashboard,
         icon: LayoutDashboard,
-      }
+      },
+      {
+        id: "chat",
+        label: "Chat",
+        href: APP_ROUTES.chat,
+        icon: MessageCircle,
+      },
     ],
   },
   {

@@ -45,10 +45,9 @@ function SegmentedTab({
       onClick={onClick}
       className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium
         transition-colors duration-150 ease-[cubic-bezier(0.2,0,0,1)]
-        ${
-          active
-            ? "bg-bg text-fg shadow-xs"
-            : "text-fg-tertiary hover:text-fg-secondary"
+        ${active
+          ? "bg-bg text-fg shadow-xs"
+          : "text-fg-tertiary hover:text-fg-secondary"
         }`}
     >
       {icon}
@@ -112,7 +111,7 @@ export function Example({
       aria-labelledby={`${id}-heading`}
       className="scroll-mt-8 py-10 border-b border-border last:border-0"
     >
-      <div className="mb-4 flex items-start justify-between gap-4">
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
         <div>
           <h3
             id={`${id}-heading`}
@@ -127,7 +126,7 @@ export function Example({
           )}
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1 self-end sm:self-auto">
           {hasPreview && (
             <IconToggle
               onClick={() => setDark((d) => !d)}
@@ -174,7 +173,7 @@ export function Example({
         <div
           data-theme={dark ? "dark" : undefined}
           className="flex min-h-64 items-center justify-center rounded-xl
-            border border-border bg-bg p-10 transition-colors duration-200"
+            sm:border sm:border-border bg-bg p-0 sm:p-10 transition-colors duration-200"
         >
           <div className="flex w-full flex-wrap items-center justify-center gap-4">
             {children}

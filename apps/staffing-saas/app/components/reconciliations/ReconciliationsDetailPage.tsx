@@ -2,8 +2,8 @@ import { Badge, BadgeWithDot, Button, MetricCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Building2, CalendarRange, Calculator, CalendarCheck, CircleDollarSign, Percent, Scale, User2 } from "lucide-react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import {
   DISCREPANCY_LABELS,
@@ -96,35 +96,14 @@ export function ReconciliationsDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "Đối soát", href: APP_ROUTES.reconciliations },
-              { label: `${record.code} • ${record.customer}` },
-            ]}
-          />
-
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
-                <Calculator className="size-7" />
-              </div>
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-xl font-semibold text-fg">{record.code}</h1>
-                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
-                    {status.label}
-                  </BadgeWithDot>
-                </div>
-                <p className="mt-1 text-base text-fg-tertiary">
-                  {record.customer} • Kỳ {record.period}
-                  {record.closedAt ? ` • Đóng phiếu ${record.closedAt}` : ""}
-                </p>
-                <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{record.notes}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "Đối soát", href: APP_ROUTES.reconciliations },
+            { label: `${record.code} • ${record.customer}` },
+          ]}
+          actions={
+            <>
               <Link href="/reconciliations">
                 <Button color="secondary" size="sm">
                   Quay lại danh sách
@@ -133,9 +112,28 @@ export function ReconciliationsDetailPage({ id }: { id: string }) {
               <Button color="primary" size="sm">
                 Gửi duyệt khách hàng
               </Button>
+            </>
+          }
+        >
+          <div className="flex items-start gap-4">
+            <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
+              <Calculator className="size-7" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl font-semibold text-fg">{record.code}</h1>
+                <BadgeWithDot color={status.color} type="pill-color" size="sm">
+                  {status.label}
+                </BadgeWithDot>
+              </div>
+              <p className="mt-1 text-base text-fg-tertiary">
+                {record.customer} • Kỳ {record.period}
+                {record.closedAt ? ` • Đóng phiếu ${record.closedAt}` : ""}
+              </p>
+              <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{record.notes}</p>
             </div>
           </div>
-        </div>
+        </AppPageHeader>
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">

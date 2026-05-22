@@ -4,6 +4,7 @@ import { BadgeWithDot, Button, Input, Tab, TabList, Table, TableCard, Tabs } fro
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   BATCH_STATUS_LABELS,
@@ -134,17 +135,14 @@ export function WorkerPaymentBatchesPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Kỳ thanh toán</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Theo dõi mọi kỳ thù lao đã chốt và đang chạy thanh toán cho CTV.
-            </p>
-          </div>
-          <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-            Tạo kỳ mới
-          </Button>
-        </div>
+        <AppPageHeader
+          title="Kỳ thanh toán"
+          description="Theo dõi mọi kỳ thù lao đã chốt và đang chạy thanh toán cho CTV."
+          primaryAction={{
+            label: "Tạo kỳ mới",
+            icon: Plus,
+          }}
+        />
       }
     >
       <TableCard.Root>

@@ -3,22 +3,21 @@
 import { Button } from "@mvp-ui/ui";
 import Link from "next/link";
 import { ArrowLeft, Rocket } from "lucide-react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 
 export function CustomerCreatePage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-5">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "Khách hàng", href: APP_ROUTES.customers },
-              { label: "Onboarding khách hàng mới" },
-            ]}
-          />
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "Khách hàng", href: APP_ROUTES.customers },
+            { label: "Onboarding khách hàng mới" },
+          ]}
+        >
           <div className="flex items-start gap-4">
             <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
               <Rocket className="size-7" />
@@ -33,7 +32,7 @@ export function CustomerCreatePage() {
               </p>
             </div>
           </div>
-        </div>
+        </AppPageHeader>
       }
     >
       <div className="flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-border-secondary bg-bg-secondary px-6 py-24 text-center">

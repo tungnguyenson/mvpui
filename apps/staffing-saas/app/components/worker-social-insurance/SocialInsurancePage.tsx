@@ -14,6 +14,7 @@ import {
 } from "@mvp-ui/ui";
 import { Calendar, Download, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { getAvatarFor, getInitials } from "../_shared";
 import {
@@ -295,13 +296,10 @@ export function SocialInsurancePage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Quản lý BHXH</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Theo dõi giờ công, số ca và thu nhập 3 tháng gần nhất của cộng tác viên
-            phục vụ kê khai bảo hiểm xã hội. Nhấp vào một dòng để xem chi tiết.
-          </p>
-        </div>
+        <AppPageHeader
+          title="Quản lý BHXH"
+          description="Theo dõi giờ công, số ca và thu nhập 3 tháng gần nhất của cộng tác viên phục vụ kê khai bảo hiểm xã hội. Nhấp vào một dòng để xem chi tiết."
+        />
       }
     >
       <TableCard.Root>

@@ -12,6 +12,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   USERS,
@@ -141,25 +142,22 @@ export function UsersPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">User</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Quản lý internal users vận hành hệ thống staffing. Mỗi user có thể giữ
-              nhiều vai trò; quyền hiệu lực = union mọi vai trò.
-            </p>
-          </div>
-          <div className="flex items-center gap-2">
-            <Link href="/roles">
-              <Button color="secondary" size="sm" iconLeading={ShieldCheck}>
-                Quản lý vai trò
+        <AppPageHeader
+          title="User"
+          description="Quản lý internal users vận hành hệ thống staffing. Mỗi user có thể giữ nhiều vai trò; quyền hiệu lực = union mọi vai trò."
+          actions={
+            <>
+              <Link href="/roles">
+                <Button color="secondary" size="sm" iconLeading={ShieldCheck}>
+                  Quản lý vai trò
+                </Button>
+              </Link>
+              <Button color="primary" size="sm" iconLeading={UserPlus}>
+                Mời thành viên
               </Button>
-            </Link>
-            <Button color="primary" size="sm" iconLeading={UserPlus}>
-              Mời thành viên
-            </Button>
-          </div>
-        </div>
+            </>
+          }
+        />
       }
     >
       {/* <div className="grid gap-4 lg:grid-cols-4">

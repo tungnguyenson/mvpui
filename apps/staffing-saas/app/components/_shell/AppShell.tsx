@@ -15,6 +15,7 @@ import { Header } from "./Header";
 import { BreadcrumbProvider } from "./BreadcrumbContext";
 import { ThemeProvider, useAppearance } from "./ThemeContext";
 import { logoutAction } from "../../login/actions";
+import { ThemePicker } from "./ThemePicker";
 
 const SECTIONS = NAV_SECTIONS.map((section) => ({
   label: section.label,
@@ -55,6 +56,15 @@ function Brand() {
     <div className="flex items-center gap-2.5">
       <BrandMark />
       <span className="text-sm font-semibold text-fg">Staffing Admin</span>
+    </div>
+  );
+}
+
+function BrandWithTheme() {
+  return (
+    <div className="flex w-full items-center justify-between">
+      <Brand />
+      <ThemePicker />
     </div>
   );
 }
@@ -204,7 +214,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
       </div>
 
       {/* Content */}
-      <main className="min-w-0 flex-1 overflow-y-auto bg-bg-secondary">
+      <main className="min-w-0 flex-1 overflow-y-auto bg-bg md:bg-bg-secondary">
         <BreadcrumbProvider>
           <Header onOpenNav={() => setNavOpen(true)} />
           {children}
@@ -227,7 +237,7 @@ function AppShellInner({ children }: { children: ReactNode }) {
         >
           <SidebarNavCollapsible
             className="w-full border-r-0"
-            logo={<Brand />}
+            logo={<BrandWithTheme />}
             sections={SECTIONS}
             activeHref={activeHref}
             account={account}

@@ -4,6 +4,7 @@ import { Badge, BadgeWithDot, Input, Tab, TabList, Table, TableCard, Tabs } from
 import Link from "next/link";
 import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   SEVERITY_LABELS,
@@ -113,13 +114,10 @@ export function WorkerViolationsPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Quản lý vi phạm</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Theo dõi danh sách worker từng có vi phạm trong vận hành ca, kèm số lần,
-            mức độ và trạng thái xử lý từ đội vận hành.
-          </p>
-        </div>
+        <AppPageHeader
+          title="Quản lý vi phạm"
+          description="Theo dõi danh sách worker từng có vi phạm trong vận hành ca, kèm số lần, mức độ và trạng thái xử lý từ đội vận hành."
+        />
       }
     >
       <TableCard.Root>

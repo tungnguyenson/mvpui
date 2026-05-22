@@ -246,6 +246,10 @@ export type { TabsProps, TabListProps, TabProps, TabPanelProps, TabSize, TabVari
 export { Tabs, TabList, Tab, TabPanel } from "./components/tabs.js";
 export type { BreadcrumbsProps, BreadcrumbItem } from "./components/breadcrumbs.js";
 export { Breadcrumbs } from "./components/breadcrumbs.js";
+export type { PageHeaderProps, PageHeaderPrimaryAction } from "./components/page-header.js";
+export { PageHeader } from "./components/page-header.js";
+export type { FabProps, FabIcon } from "./components/fab.js";
+export { FAB } from "./components/fab.js";
 export type { PaginationProps } from "./components/pagination.js";
 export { Pagination } from "./components/pagination.js";
 export type { EmptyStateProps } from "./components/empty-state.js";
@@ -348,4 +352,10 @@ export type { SparklineProps, SparklinePoint, SparklineTone } from "./components
 export { Sparkline } from "./components/sparkline.js";
 export type { MetricCardProps, MetricTrend } from "./components/metric-card.js";
 export { MetricCard } from "./components/metric-card.js";
+export type {
+  MetricStripColor,
+  MetricStripItem,
+  MetricStripProps,
+} from "./components/metric-strip.js";
+export { MetricStrip } from "./components/metric-strip.js";
 export { useMediaQuery } from "./hooks/use-media-query.js";

@@ -4,6 +4,7 @@ import { BadgeWithDot, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { AlertTriangle, CheckCircle2, ChevronRight, Clock, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   TIMESHEETS,
@@ -103,13 +104,10 @@ export function TimesheetsPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Chấm công</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Theo dõi chấm công theo từng ca làm việc, tỷ lệ check-in và các bất thường
-            cần điều phối duyệt trước khi tính lương.
-          </p>
-        </div>
+        <AppPageHeader
+          title="Chấm công"
+          description="Theo dõi chấm công theo từng ca làm việc, tỷ lệ check-in và các bất thường cần điều phối duyệt trước khi tính lương."
+        />
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">

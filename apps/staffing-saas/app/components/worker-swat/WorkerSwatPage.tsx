@@ -2,6 +2,7 @@
 
 import { Tab, TabList, TabPanel, Tabs } from "@mvp-ui/ui";
 import { useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { InviteTrialTab } from "./InviteTrialTab";
 import { PayslipTab } from "./PayslipTab";
@@ -23,13 +24,10 @@ export function WorkerSwatPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Quản lý SWAT</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Theo dõi đội SWAT — mời thử việc, danh sách hợp đồng, bảng công và
-            phiếu lương trong cùng một nơi.
-          </p>
-        </div>
+        <AppPageHeader
+          title="Quản lý SWAT"
+          description="Theo dõi đội SWAT — mời thử việc, danh sách hợp đồng, bảng công và phiếu lương trong cùng một nơi."
+        />
       }
     >
       <Tabs

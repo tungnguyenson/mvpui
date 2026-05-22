@@ -22,6 +22,7 @@ import {
   Users,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { getAvatarFor, getInitials } from "../_shared/assets";
 import { CandidateQuickView } from "./CandidateQuickView";
@@ -174,21 +175,18 @@ export function CandidatesPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Ứng viên</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Theo dõi pipeline ứng viên theo từng hiring request, từ lúc nhận đơn đến khi
-              kích hoạt thành CTV chính thức.
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <Button color="secondary" size="sm">Import CSV</Button>
-            <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-              Thêm ứng viên
-            </Button>
-          </div>
-        </div>
+        <AppPageHeader
+          title="Ứng viên"
+          description="Theo dõi pipeline ứng viên theo từng hiring request, từ lúc nhận đơn đến khi kích hoạt thành CTV chính thức."
+          actions={
+            <>
+              <Button color="secondary" size="sm">Import CSV</Button>
+              <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
+                Thêm ứng viên
+              </Button>
+            </>
+          }
+        />
       }
     >
       {/* <div className="grid gap-4 lg:grid-cols-4">

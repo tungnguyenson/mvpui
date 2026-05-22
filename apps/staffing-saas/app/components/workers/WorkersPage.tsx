@@ -20,6 +20,7 @@ import {
   type WorkerRecord,
   type WorkerStatus,
 } from "./workers-data";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { WorkerAvatar } from "../_shared";
 
@@ -109,20 +110,14 @@ export function WorkersPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Danh sách CTV</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Theo dõi toàn bộ worker trong hệ thống, từ hồ sơ hoạt động đến hiệu suất,
-              lịch sử ca và các tín hiệu xác thực, vi phạm, thanh toán.
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-              Onboard CTV mới
-            </Button>
-          </div>
-        </div>
+        <AppPageHeader
+          title="Danh sách CTV"
+          description="Theo dõi toàn bộ worker trong hệ thống, từ hồ sơ hoạt động đến hiệu suất, lịch sử ca và các tín hiệu xác thực, vi phạm, thanh toán."
+          primaryAction={{
+            label: "Onboard CTV mới",
+            icon: Plus,
+          }}
+        />
       }
     >
       <TableCard.Root>

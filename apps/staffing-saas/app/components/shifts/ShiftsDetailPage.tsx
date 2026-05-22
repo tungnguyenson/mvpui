@@ -11,8 +11,8 @@ import {
   MapPin,
   Target,
 } from "lucide-react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import {
   SHIFT_STATUS_LABELS,
@@ -88,34 +88,14 @@ export function ShiftsDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "Lịch làm việc", href: APP_ROUTES.shifts },
-              { label: `${shift.code} • ${shift.name}` },
-            ]}
-          />
-
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
-                <CalendarDays className="size-7" />
-              </div>
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-xl font-semibold text-fg">{shift.name}</h1>
-                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
-                    {status.label}
-                  </BadgeWithDot>
-                </div>
-                <p className="mt-1 text-base text-fg-tertiary">
-                  {shift.code} • {shift.customer} • {shift.site}
-                </p>
-                <p className="mt-2 text-sm text-fg-tertiary">{shift.schedule}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "Lịch làm việc", href: APP_ROUTES.shifts },
+            { label: `${shift.code} • ${shift.name}` },
+          ]}
+          actions={
+            <>
               <Link href="/shifts">
                 <Button color="secondary" size="sm">
                   Quay lại danh sách
@@ -124,9 +104,27 @@ export function ShiftsDetailPage({ id }: { id: string }) {
               <Button color="primary" size="sm">
                 Mời thêm CTV
               </Button>
+            </>
+          }
+        >
+          <div className="flex items-start gap-4">
+            <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
+              <CalendarDays className="size-7" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl font-semibold text-fg">{shift.name}</h1>
+                <BadgeWithDot color={status.color} type="pill-color" size="sm">
+                  {status.label}
+                </BadgeWithDot>
+              </div>
+              <p className="mt-1 text-base text-fg-tertiary">
+                {shift.code} • {shift.customer} • {shift.site}
+              </p>
+              <p className="mt-2 text-sm text-fg-tertiary">{shift.schedule}</p>
             </div>
           </div>
-        </div>
+        </AppPageHeader>
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">

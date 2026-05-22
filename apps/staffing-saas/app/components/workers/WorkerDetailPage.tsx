@@ -16,8 +16,8 @@ import {
   getWorkerById,
   type WorkerShiftHistory,
 } from "./workers-data";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import { getAvatarFor, getInitials } from "../_shared/assets";
 
@@ -90,46 +90,14 @@ export function WorkerDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "Danh sách CTV", href: APP_ROUTES.workers },
-              { label: worker.name },
-            ]}
-          />
-
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex items-start gap-4">
-              <AvatarProfilePhoto
-                state={worker.status === "active" ? "verified" : worker.status === "locked" ? "blocked" : null}
-                size="lg"
-                src={getAvatarFor(worker.name, worker.id)}
-                alt={worker.name}
-                initials={getInitials(worker.name)}
-              />
-
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-xl font-semibold text-fg">{worker.name}</h1>
-                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
-                    {status.label}
-                  </BadgeWithDot>
-                </div>
-                <p className="mt-1 text-base text-fg-tertiary">
-                  {worker.district}, {worker.city} • Gia nhập từ {worker.joinedAt}
-                </p>
-                <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{worker.bio}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {worker.tags.map((tag) => (
-                    <Badge key={tag} color="gray" type="pill-color" size="sm">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "Danh sách CTV", href: APP_ROUTES.workers },
+            { label: worker.name },
+          ]}
+          actions={
+            <>
               <Link href="/workers">
                 <Button color="secondary" size="sm">
                   Quay lại danh sách
@@ -138,9 +106,39 @@ export function WorkerDetailPage({ id }: { id: string }) {
               <Button color="primary" size="sm">
                 Giao ca mới
               </Button>
+            </>
+          }
+        >
+          <div className="flex items-start gap-4">
+            <AvatarProfilePhoto
+              state={worker.status === "active" ? "verified" : worker.status === "locked" ? "blocked" : null}
+              size="lg"
+              src={getAvatarFor(worker.name, worker.id)}
+              alt={worker.name}
+              initials={getInitials(worker.name)}
+            />
+
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl font-semibold text-fg">{worker.name}</h1>
+                <BadgeWithDot color={status.color} type="pill-color" size="sm">
+                  {status.label}
+                </BadgeWithDot>
+              </div>
+              <p className="mt-1 text-base text-fg-tertiary">
+                {worker.district}, {worker.city} • Gia nhập từ {worker.joinedAt}
+              </p>
+              <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{worker.bio}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {worker.tags.map((tag) => (
+                  <Badge key={tag} color="gray" type="pill-color" size="sm">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
             </div>
           </div>
-        </div>
+        </AppPageHeader>
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">

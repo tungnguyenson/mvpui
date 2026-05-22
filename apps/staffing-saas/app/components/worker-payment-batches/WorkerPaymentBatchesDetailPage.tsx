@@ -3,8 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Download, Pause, Play, Square, Trash2 } from "lucide-react";
 import type { ReactNode } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import {
   BATCH_STATUS_LABELS,
@@ -123,38 +123,32 @@ export function WorkerPaymentBatchesDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "Thanh toán CTV", href: APP_ROUTES.workerPaymentBatches },
-              { label: `Kỳ ${batch.code}` },
-            ]}
-          />
-
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex flex-col gap-3">
-              <h1 className="text-xl font-semibold text-fg">
-                Kỳ thù lao {batch.code}
-              </h1>
-              <div className="flex flex-wrap items-center gap-2 text-sm">
-                <span className="text-fg-tertiary">Trạng thái:</span>
-                <BadgeWithDot color={status.color} type="pill-color" size="sm">
-                  {status.label}
-                </BadgeWithDot>
-              </div>
-              {renderTimeline(batch)}
-              <p className="text-sm text-fg-tertiary">
-                Kỳ phát sinh: {formatDateVi(batch.config.periodFrom)} →{" "}
-                {formatDateVi(batch.config.periodTo)} · Ngày thanh toán:{" "}
-                {formatDateVi(batch.config.payoutDate)}
-              </p>
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "Thanh toán CTV", href: APP_ROUTES.workerPaymentBatches },
+            { label: `Kỳ ${batch.code}` },
+          ]}
+          actions={<HeaderActions status={batch.status} />}
+        >
+          <div className="flex flex-col gap-3">
+            <h1 className="text-xl font-semibold text-fg">
+              Kỳ thù lao {batch.code}
+            </h1>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="text-fg-tertiary">Trạng thái:</span>
+              <BadgeWithDot color={status.color} type="pill-color" size="sm">
+                {status.label}
+              </BadgeWithDot>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <HeaderActions status={batch.status} />
-            </div>
+            {renderTimeline(batch)}
+            <p className="text-sm text-fg-tertiary">
+              Kỳ phát sinh: {formatDateVi(batch.config.periodFrom)} →{" "}
+              {formatDateVi(batch.config.periodTo)} · Ngày thanh toán:{" "}
+              {formatDateVi(batch.config.payoutDate)}
+            </p>
           </div>
-        </div>
+        </AppPageHeader>
       }
     >
       <BatchDetailTabs batch={batch} />

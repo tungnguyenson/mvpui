@@ -58,8 +58,15 @@ export interface MetricCardProps
   trend?: MetricTrend;
   /** Visual style of the change indicator. `badge` (default) = outlined chip with arrow; `text` = plain colored text. */
   changeStyle?: MetricChangeStyle;
-  /** Card layout. `flat` (default) = single panel; `framed` = outer label strip + inner framed body (Untitled hero pattern). */
-  variant?: "flat" | "framed";
+  /**
+   * Card layout.
+   * `flat` (default) = single panel.
+   * `framed` = outer label strip + inner framed body (Untitled hero pattern).
+   * `compact` = compact KPI tile with tinted background matching `featuredIconColor`,
+   *   icon rendered direct (no chip), no border. `change`/`spark`/`footer` are not
+   *   rendered. Pair with a horizontally scrolling parent for the mobile "tile row" pattern.
+   */
+  variant?: "flat" | "framed" | "compact";
   /** Comparison copy. For `text` style, defaults to `"vs last week"`. For `badge` style, only renders when explicitly passed. */
   changeLabel?: string;
   /** Caption shown under the value row. Renders independent of `change`/`trend`. */
@@ -96,6 +103,12 @@ export interface MetricCardProps
   href?: string;
   /** Show a loading skeleton instead of the value. */
   loading?: boolean;
+  /**
+   * Apply mobile-compact treatment below the `lg` breakpoint:
+   * shrinks the value text one tier, hides `helpText`, and tightens
+   * padding/gap. Desktop layout is unchanged. Defaults to `true`.
+   */
+  responsive?: boolean;
   /** Custom chart slot. Replaces the sparkline if both are passed. */
   children?: ReactNode;
 }
@@ -213,6 +226,13 @@ const VALUE_SIZE_CLASS = {
   lg: "text-3xl leading-9.5",
 } as const;
 
+const VALUE_SIZE_CLASS_RESPONSIVE = {
+  xs: "text-base leading-6",
+  sm: "text-base leading-6 lg:text-xl lg:leading-7",
+  md: "text-lg leading-7 lg:text-2xl lg:leading-8",
+  lg: "text-xl leading-7 lg:text-3xl lg:leading-9.5",
+} as const;
+
 const VALUE_TONE_CLASS = {
   default: "text-fg",
   brand: "text-fg-brand",
@@ -235,9 +255,10 @@ function ValueBlock({
   suffix,
   valueSize = "lg",
   valueTone = "default",
+  responsive = true,
 }: Pick<
   MetricCardProps,
-  "loading" | "prefix" | "value" | "suffix" | "valueSize" | "valueTone"
+  "loading" | "prefix" | "value" | "suffix" | "valueSize" | "valueTone" | "responsive"
 >) {
   if (loading) {
     return (
@@ -254,7 +275,7 @@ function ValueBlock({
     <span
       className={cn(
         "font-semibold",
-        VALUE_SIZE_CLASS[valueSize],
+        (responsive ? VALUE_SIZE_CLASS_RESPONSIVE : VALUE_SIZE_CLASS)[valueSize],
         VALUE_TONE_CLASS[valueTone],
       )}
     >
@@ -297,6 +318,7 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
     footerHref,
     href,
     loading = false,
+    responsive = true,
     children,
     className,
     ...rest
@@ -313,7 +335,7 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
 
   const valueAndChange = (
     <div className="flex w-full items-end justify-between gap-4">
-      <ValueBlock loading={loading} prefix={prefix} value={value} suffix={suffix} valueSize={valueSize} valueTone={valueTone} />
+      <ValueBlock loading={loading} prefix={prefix} value={value} suffix={suffix} valueSize={valueSize} valueTone={valueTone} responsive={responsive} />
       {hasChange ? (
         changeStyle === "badge" ? (
           <ChangeBadge trend={trend} change={change as string} icon={icon} />
@@ -341,7 +363,14 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
     ) : null;
 
   const helpTextNode = helpText ? (
-    <p className="text-sm text-muted-fg">{helpText}</p>
+    <p
+      className={cn(
+        "text-sm text-muted-fg",
+        responsive && "hidden lg:block",
+      )}
+    >
+      {helpText}
+    </p>
   ) : null;
 
   const featuredIconNode = featuredIcon ? (
@@ -394,11 +423,55 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
     <div className="absolute top-3 right-3 z-10">{actions}</div>
   ) : null;
 
+  const tintedIcon = featuredIcon ?? iconChip;
+  const tintedBody = (
+    <div
+      className={cn(
+        "flex items-center gap-3 p-4",
+        responsive && "gap-2.5 p-3 lg:gap-3 lg:p-4",
+      )}
+    >
+      {tintedIcon ? (
+        <div
+          className={cn(
+            "flex shrink-0 items-center justify-center rounded-md",
+            responsive ? "size-8 lg:size-9" : "size-9",
+            FEATURED_ICON_BG[iconColor],
+          )}
+          aria-hidden="true"
+        >
+          {tintedIcon}
+        </div>
+      ) : null}
+      <div className="flex min-w-0 flex-col">
+        <ValueBlock
+          loading={loading}
+          prefix={prefix}
+          value={value}
+          suffix={suffix}
+          valueSize={valueSize}
+          valueTone={valueTone}
+          responsive={responsive}
+        />
+        <span className="truncate text-xs font-medium text-fg-tertiary lg:text-sm">
+          {label}
+        </span>
+      </div>
+    </div>
+  );
+
   const body =
-    variant === "framed" ? (
+    variant === "compact" ? (
+      tintedBody
+    ) : variant === "framed" ? (
       <div className="flex flex-col">
-        <div className="px-5 pt-3 pb-2">{headingRow}</div>
-        <div className="relative m-px flex flex-col gap-5 rounded-xl border border-border-secondary bg-bg p-5 shadow-xs">
+        <div className={cn("px-5 pt-3 pb-2", responsive && "px-4 lg:px-5")}>{headingRow}</div>
+        <div
+          className={cn(
+            "relative m-px flex flex-col gap-5 rounded-xl border border-border-secondary bg-bg p-5 shadow-xs",
+            responsive && "gap-4 p-4 lg:gap-5 lg:p-5",
+          )}
+        >
           {innerFramedActions}
           {iconNode && iconPlacement === "above" ? iconNode : null}
           <div className="flex flex-col gap-2">
@@ -411,7 +484,12 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
         </div>
       </div>
     ) : (
-      <div className="flex flex-col gap-5 p-5">
+      <div
+        className={cn(
+          "flex flex-col gap-5 p-5",
+          responsive && "gap-4 p-4 lg:gap-5 lg:p-5",
+        )}
+      >
         {iconNode && iconPlacement === "above" ? iconNode : null}
         <div className="flex flex-col gap-2">
           {headingRow}
@@ -424,7 +502,7 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
       </div>
     );
 
-  const footerNode = hasFooter ? (
+  const footerNode = hasFooter && variant !== "compact" ? (
     <div className="flex items-center justify-end border-t border-border-secondary px-5 py-4">
       {footer ??
         (footerLabel && footerHref ? (
@@ -440,16 +518,17 @@ export const MetricCard = forwardRef<HTMLElement, MetricCardProps>(function Metr
   ) : null;
 
   const classes = cn(
-    "relative flex flex-col overflow-hidden rounded-xl border border-border-secondary shadow-xs",
-    variant === "framed" ? "bg-bg-secondary" : "bg-bg",
+    "relative flex flex-col overflow-hidden rounded-xl",
+    cn("border border-border-secondary shadow-xs", variant === "framed" ? "bg-bg-secondary" : "bg-bg"),
     isLink &&
-    "group cursor-pointer transition-colors hover:bg-bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-brand",
+      "group cursor-pointer transition-colors hover:bg-bg-secondary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-border-brand",
     className,
   );
 
-  const actionsSlot = hasActions && variant !== "framed" ? (
-    <div className="absolute top-3 right-3 z-10">{actions}</div>
-  ) : null;
+  const actionsSlot =
+    hasActions && variant !== "framed" && variant !== "compact" ? (
+      <div className="absolute top-3 right-3 z-10">{actions}</div>
+    ) : null;
 
   if (isLink) {
     return (

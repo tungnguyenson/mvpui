@@ -2,7 +2,6 @@
 
 import {
   BadgeWithDot,
-  Button,
   ButtonUtility,
   DateRangePicker,
   Input,
@@ -16,6 +15,7 @@ import {
 import { CheckCircle2, ChevronRight, Plus, RefreshCw, Search, Sparkles, Wallet } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   BONUS_STATUS_LABELS,
@@ -87,18 +87,14 @@ export function BonusesPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Thưởng Adhoc</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Quản lý các chương trình thưởng adhoc theo công việc & thời gian.
-              Theo dõi điều kiện áp dụng, ngân sách và payout thực tế.
-            </p>
-          </div>
-          <Button size="sm" color="primary" iconLeading={<Plus className="size-4" />}>
-            Tạo thưởng
-          </Button>
-        </div>
+        <AppPageHeader
+          title="Thưởng Adhoc"
+          description="Quản lý các chương trình thưởng adhoc theo công việc & thời gian. Theo dõi điều kiện áp dụng, ngân sách và payout thực tế."
+          primaryAction={{
+            label: "Tạo thưởng",
+            icon: Plus,
+          }}
+        />
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">

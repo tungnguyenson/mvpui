@@ -62,7 +62,7 @@ export function ComponentDocLayout({
 
   return (
     <div className="flex bg-bg">
-      <article className="min-w-0 flex-1 px-8 py-16">
+      <article className="min-w-0 flex-1 px-4 py-8 sm:px-8 sm:py-16">
         <div className="mb-2">
           <Link
             href="/"

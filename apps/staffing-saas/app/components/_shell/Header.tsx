@@ -77,7 +77,7 @@ export function Header({ onOpenNav }: HeaderProps) {
         <>
           <div className="sticky top-0 z-30">
             {/* Mobile header */}
-            <div className="flex h-14 shrink-0 items-center gap-1 border-b border-border-secondary bg-bg px-2 pt-safe md:hidden">
+            <div className="flex min-h-14 shrink-0 items-center gap-1 border-b border-border-secondary bg-bg px-2 pt-safe md:hidden">
                 <Button
                     size="md"
                     color="tertiary"
@@ -98,24 +98,6 @@ export function Header({ onOpenNav }: HeaderProps) {
                 <h1 className="min-w-0 flex-1 truncate text-md font-semibold text-fg">
                     {title}
                 </h1>
-                <ThemePicker />
-                <div className="relative">
-                    <Button
-                        size="md"
-                        color="tertiary"
-                        onClick={() => router.push("/chat")}
-                        iconLeading={<MessageCircle className="size-5" />}
-                        aria-label="Tin nhắn (2 chưa đọc)"
-                    />
-                    <Badge
-                        color="error"
-                        size="sm"
-                        className="pointer-events-none absolute -top-0.5 -right-0.5 min-w-4 justify-center px-1 text-xs"
-                        aria-hidden
-                    >
-                        2
-                    </Badge>
-                </div>
                 <div className="relative">
                     <Button
                         size="md"

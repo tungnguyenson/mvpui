@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Button, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
 import { useRouter } from "next/navigation";
 import {
   ChevronRight,
@@ -12,6 +12,7 @@ import {
   UserCog,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   ROLES,
@@ -103,18 +104,14 @@ export function RolesPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Vai trò</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Quản lý vai trò + quyền chi tiết. Mỗi user có thể được gán nhiều vai trò
-              cùng lúc; quyền hiệu lực = union mọi vai trò active.
-            </p>
-          </div>
-          <Button color="primary" size="sm" iconLeading={Plus}>
-            Tạo vai trò
-          </Button>
-        </div>
+        <AppPageHeader
+          title="Vai trò"
+          description="Quản lý vai trò + quyền chi tiết. Mỗi user có thể được gán nhiều vai trò cùng lúc; quyền hiệu lực = union mọi vai trò active."
+          primaryAction={{
+            label: "Tạo vai trò",
+            icon: Plus,
+          }}
+        />
       }
     >
       {/* <div className="grid gap-4 lg:grid-cols-3">

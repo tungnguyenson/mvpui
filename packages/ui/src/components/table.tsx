@@ -99,7 +99,7 @@ const TableCardRoot = ({
 		<div
 			{...props}
 			className={cn(
-				"overflow-hidden rounded-xl bg-bg shadow-xs ring-1 ring-border",
+				"overflow-hidden bg-bg md:rounded-xl md:shadow-xs md:ring-1 md:ring-border",
 				className,
 			)}
 		>

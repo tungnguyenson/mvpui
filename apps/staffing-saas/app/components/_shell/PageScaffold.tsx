@@ -13,9 +13,9 @@ export function PageScaffold({
 }: PageScaffoldProps) {
   return (
     <div className="flex flex-col">
-      <div className="bg-bg px-4 py-8 shadow-xs md:px-8">{header}</div>
+      {header}
       <div
-        className={`flex flex-col gap-8 px-4 py-8 md:px-8${
+        className={`flex flex-col gap-8 px-0 pt-4 pb-24 md:px-8 md:py-8 md:pb-8${
           contentClassName ? ` ${contentClassName}` : ""
         }`}
       >

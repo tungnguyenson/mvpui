@@ -1,10 +1,11 @@
 "use client";
 
-import { Badge, BadgeWithDot, Button, Input, MetricCard, Table, TableCard } from "@mvp-ui/ui";
+import { Badge, BadgeWithDot, Input, MetricStrip, Table, TableCard } from "@mvp-ui/ui";
 import Link from "next/link";
 import { AlertOctagon, Briefcase, Building2, ChevronRight, Plus, Search, UserPlus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { getCustomerLogo } from "../_shared/assets";
 import {
   HIRING_REQUESTS,
@@ -138,53 +139,39 @@ export function HiringRequestsPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Yêu cầu Tuyển dụng</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Theo dõi các hiring requests từ khách hàng và mức độ lấp đầy nhu cầu nhân sự
-              theo từng tài khoản và khu vực.
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <Link href="/hiring-requests/new">
-              <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-                Tạo Y/c tuyển dụng mới
-              </Button>
-            </Link>
-          </div>
-        </div>
+        <AppPageHeader
+          title="Yêu cầu Tuyển dụng"
+          description="Theo dõi các hiring requests từ khách hàng và mức độ lấp đầy nhu cầu nhân sự theo từng tài khoản và khu vực."
+          primaryAction={{
+            label: "Tạo Y/c tuyển dụng mới",
+            icon: Plus,
+            href: "/hiring-requests/new",
+          }}
+        />
       }
     >
-      <div className="grid gap-4 lg:grid-cols-3">
-        <MetricCard
-          label="Request đang mở"
-          value={`${openCount}`}
-          helpText="Nhu cầu tuyển khách hàng đang gửi cho đội vận hành."
-          iconChip={<Briefcase className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="brand"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Request quá hạn"
-          value={`${overdueCount}`}
-          helpText="Đã quá deadline, cần xử lý hoặc thương lượng lại với khách."
-          iconChip={<AlertOctagon className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="error"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="CTV cần fill thêm"
-          value={`${totalNeeded}`}
-          helpText="Tổng số headcount còn thiếu trong toàn bộ request hiện hiển thị."
-          iconChip={<UserPlus className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="warning"
-          iconPlacement="inline"
-        />
-      </div>
+      <MetricStrip
+        items={[
+          {
+            icon: <Briefcase className="size-4" />,
+            color: "brand",
+            value: openCount,
+            label: "Request mở",
+          },
+          {
+            icon: <AlertOctagon className="size-4" />,
+            color: "error",
+            value: overdueCount,
+            label: "Quá hạn",
+          },
+          {
+            icon: <UserPlus className="size-4" />,
+            color: "warning",
+            value: totalNeeded,
+            label: "CTV cần fill",
+          },
+        ]}
+      />
 
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">

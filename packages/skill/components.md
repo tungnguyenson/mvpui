@@ -72,6 +72,8 @@ Import all components from `@mvp-ui/ui`.
 | FeaturedIcon | `FeaturedIcon` | Large icon in onboarding / feature callouts | `icon`, `size`, `color`, `type` props |
 | FileUploadTrigger | `FileUploadTrigger` | Drag-and-drop file upload area | Accepts files via click or drag; `onUpload` callback |
 | LoadingIndicator | `LoadingIndicator` | Spinner or pulse loading state | `variant="spinner"/"dots"`; `size="sm"/"md"/"lg"` |
+| MetricCard | `MetricCard` | KPI tile with label, value, change badge, optional sparkline/footer | `responsive` default `true` — below `lg` shrinks value, hides `helpText`, tightens padding. Set `responsive={false}` to keep desktop layout at every viewport. |
+| MetricStrip | `MetricStrip` | Compact horizontal KPI row — icon chip + value + label inline, separated by dividers | Props-array API (`items: MetricStripItem[]`). `mobileLayout="row"` (default) keeps row at all sizes; `"stack"` switches to vertical below `lg`. Smaller footprint than a grid of `MetricCard`. |
 | Modal | `Modal`, `ModalOverlay`, `Dialog`, `ModalHeader`, `ModalBody`, `ModalFooter` | Dialogs, confirmations, destructive actions | Use controlled state — `DialogTrigger` incompatible with non-RAC Button |
 | Pagination | `Pagination` | Page navigation for tables/lists | `page`, `totalPages`, `onPageChange` props |
 | Progress | `Progress` (circle + bar) | Task / upload progress | — |
@@ -97,6 +99,8 @@ Import all components from `@mvp-ui/ui`.
 | Component | Named exports | When to use | Gotcha |
 |---|---|---|---|
 | Breadcrumbs | `Breadcrumbs`, `BreadcrumbItem` | Page hierarchy trail; headers, nested routes | `items` array; `divider="chevron"/"slash"`; `variant="text"/"text-with-line"/"button"`; `showHomeIcon` (default true) |
+| PageHeader | `PageHeader`, `PageHeaderPrimaryAction` | Standard page-top block: breadcrumb + title + description + primary CTA + secondary actions row. Use in every list/detail page inside `PageScaffold` instead of hand-rolling `<h1>` + `<p>` + button row | `title` is the simple form; pass `children` to override the title/description column when a detail page needs a leading icon, inline status badges, or tag chips. `primaryAction={{label, icon, href, onClick}}` for the single-button 80% case — renders inline `<Button>` on desktop and a fixed-position `<FAB>` on mobile. `actions` for multi-button rows (back+save, filter+export+create) — always inline, never becomes a FAB. `description`/`breadcrumbs` optional; `variant="default"/"compact"`. Title/description/breadcrumbs/children are `hidden md:flex`; `actions` stays visible at all viewports. Pass `linkAs={NextLink}` (done by `AppPageHeader` in staffing-saas) for client-side nav on `primaryAction.href`. Breadcrumb renders w/ `showHomeIcon={false}` |
+| FAB | `FAB` | Floating action button — circular, fixed bottom-right of viewport. Typically not used directly; passed as `PageHeader`'s `primaryAction` slot which renders it on mobile only | `label` required (used as `aria-label`); `icon` accepts lucide component OR ReactNode; `href` for nav (use `linkAs` to integrate Next Link); `onClick` for handler; `position="fixed"` (default) pins to viewport bottom-right w/ safe-area inset, `position="static"` for in-flow demos. Color `primary` (default) or `secondary`. Pair w/ `pb-24 md:pb-0` on content so the FAB doesn't cover bottom rows |
 | AppNav | `AppNav`, `AppNavItem`, `AppNavItemDef` | Sidebar navigation shell | presentational; pass `items`, `logo`, `footer` props |
 
 ---

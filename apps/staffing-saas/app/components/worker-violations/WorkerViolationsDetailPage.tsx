@@ -9,8 +9,8 @@ import {
   Receipt,
   UserCircle2,
 } from "lucide-react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import {
   SEVERITY_LABELS,
@@ -106,40 +106,14 @@ export function WorkerViolationsDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "Quản lý vi phạm", href: APP_ROUTES.workerViolations },
-              { label: record.workerName },
-            ]}
-          />
-
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex items-start gap-4">
-              <WorkerProfilePhoto
-                name={record.workerName}
-                id={record.id}
-                status={record.status}
-                size="sm"
-              />
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-xl font-semibold text-fg">{record.workerName}</h1>
-                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
-                    {status.label}
-                  </BadgeWithDot>
-                  <Badge color={severity.color} type="pill-color" size="sm">
-                    Mức gần nhất: {severity.label}
-                  </Badge>
-                </div>
-                <p className="mt-1 text-base text-fg-tertiary">
-                  Mã CTV {record.workerId} • {record.district}, {record.city}
-                </p>
-                <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{record.notes}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "Quản lý vi phạm", href: APP_ROUTES.workerViolations },
+            { label: record.workerName },
+          ]}
+          actions={
+            <>
               <Link href="/worker-violations">
                 <Button color="secondary" size="sm">
                   Quay lại danh sách
@@ -148,9 +122,33 @@ export function WorkerViolationsDetailPage({ id }: { id: string }) {
               <Button color="primary" size="sm">
                 Mở rộng case mới
               </Button>
+            </>
+          }
+        >
+          <div className="flex items-start gap-4">
+            <WorkerProfilePhoto
+              name={record.workerName}
+              id={record.id}
+              status={record.status}
+              size="sm"
+            />
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl font-semibold text-fg">{record.workerName}</h1>
+                <BadgeWithDot color={status.color} type="pill-color" size="sm">
+                  {status.label}
+                </BadgeWithDot>
+                <Badge color={severity.color} type="pill-color" size="sm">
+                  Mức gần nhất: {severity.label}
+                </Badge>
+              </div>
+              <p className="mt-1 text-base text-fg-tertiary">
+                Mã CTV {record.workerId} • {record.district}, {record.city}
+              </p>
+              <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{record.notes}</p>
             </div>
           </div>
-        </div>
+        </AppPageHeader>
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">

@@ -4,6 +4,7 @@ import { BadgeWithDot, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-
 import Link from "next/link";
 import { Calculator, ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   RECONCILIATIONS,
@@ -111,13 +112,10 @@ export function ReconciliationsPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Đối soát</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Đối soát số liệu ca làm việc, chấm công và thanh toán theo từng khách hàng,
-            quản lý chênh lệch và phê duyệt nội bộ.
-          </p>
-        </div>
+        <AppPageHeader
+          title="Đối soát"
+          description="Đối soát số liệu ca làm việc, chấm công và thanh toán theo từng khách hàng, quản lý chênh lệch và phê duyệt nội bộ."
+        />
       }
     >
       <TableCard.Root>

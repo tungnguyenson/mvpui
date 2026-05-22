@@ -3,7 +3,6 @@
 import {
   Badge,
   BadgeWithDot,
-  Button,
   Input,
   MetricCard,
   Tab,
@@ -31,6 +30,7 @@ import {
   type CustomerRecord,
   type CustomerStatus,
 } from "./customers-data";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { getAvatarFor, getCustomerLogo } from "../_shared/assets";
 
@@ -481,22 +481,15 @@ export function CustomersPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Khách hàng</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Quản lý pipeline khách hàng từ Lead → Onboarding → Đang tuyển. Mỗi
-              trạng thái có dữ liệu vận hành phù hợp với giai đoạn.
-            </p>
-          </div>
-          <div className="flex shrink-0 items-center gap-3">
-            <Link href="/customers/new">
-              <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-                Tạo Khách hàng mới
-              </Button>
-            </Link>
-          </div>
-        </div>
+        <AppPageHeader
+          title="Khách hàng"
+          description="Quản lý pipeline khách hàng từ Lead → Onboarding → Đang tuyển. Mỗi trạng thái có dữ liệu vận hành phù hợp với giai đoạn."
+          primaryAction={{
+            label: "Tạo Khách hàng mới",
+            icon: Plus,
+            href: "/customers/new",
+          }}
+        />
       }
     >
       {/* <div className="grid gap-4 lg:grid-cols-3">

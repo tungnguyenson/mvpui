@@ -11,8 +11,8 @@ import {
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { Check, MapPin, UserPlus } from "lucide-react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import { CUSTOMERS } from "../customers/customers-data";
 import { getCustomerLogo } from "../_shared/assets";
@@ -88,14 +88,13 @@ export function HiringRequestCreatePage({
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-5">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "Y/c tuyển dụng", href: APP_ROUTES.hiringRequests },
-              { label: "Tạo mới" },
-            ]}
-          />
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "Y/c tuyển dụng", href: APP_ROUTES.hiringRequests },
+            { label: "Tạo mới" },
+          ]}
+        >
           <div className="flex items-start gap-4">
             <div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-fg">
               <UserPlus className="size-7" />
@@ -111,7 +110,7 @@ export function HiringRequestCreatePage({
               </p>
             </div>
           </div>
-        </div>
+        </AppPageHeader>
       }
     >
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">

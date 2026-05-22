@@ -10,8 +10,8 @@ import {
   ShieldCheck,
   UserCog,
 } from "lucide-react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import {
   USER_STATUS_LABELS,
@@ -128,47 +128,14 @@ export function UsersDetailPage({ id }: { id: string }) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "User", href: APP_ROUTES.users },
-              { label: user.fullName },
-            ]}
-          />
-
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex items-start gap-4">
-              <Avatar
-                size="xl"
-                src={getAvatarFor(user.fullName, user.id)}
-                alt={user.fullName}
-                initials={getInitials(user.fullName)}
-              />
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-xl font-semibold text-fg">{user.fullName}</h1>
-                  <BadgeWithDot color={status.color} type="pill-color" size="sm">
-                    {status.label}
-                  </BadgeWithDot>
-                  {roles.map((role) => (
-                    <Badge
-                      key={role.key}
-                      color={role.color}
-                      type="pill-color"
-                      size="sm"
-                    >
-                      {role.name}
-                    </Badge>
-                  ))}
-                </div>
-                <p className="mt-1 text-base text-fg-tertiary">
-                  {user.email} • {user.phone}
-                </p>
-                <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{user.notes}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "User", href: APP_ROUTES.users },
+            { label: user.fullName },
+          ]}
+          actions={
+            <>
               <Link href="/users">
                 <Button color="secondary" size="sm">
                   Quay lại danh sách
@@ -179,9 +146,40 @@ export function UsersDetailPage({ id }: { id: string }) {
                   Cập nhật vai trò
                 </Button>
               </Link>
+            </>
+          }
+        >
+          <div className="flex items-start gap-4">
+            <Avatar
+              size="xl"
+              src={getAvatarFor(user.fullName, user.id)}
+              alt={user.fullName}
+              initials={getInitials(user.fullName)}
+            />
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl font-semibold text-fg">{user.fullName}</h1>
+                <BadgeWithDot color={status.color} type="pill-color" size="sm">
+                  {status.label}
+                </BadgeWithDot>
+                {roles.map((role) => (
+                  <Badge
+                    key={role.key}
+                    color={role.color}
+                    type="pill-color"
+                    size="sm"
+                  >
+                    {role.name}
+                  </Badge>
+                ))}
+              </div>
+              <p className="mt-1 text-base text-fg-tertiary">
+                {user.email} • {user.phone}
+              </p>
+              <p className="mt-3 max-w-3xl text-sm text-fg-tertiary">{user.notes}</p>
             </div>
           </div>
-        </div>
+        </AppPageHeader>
       }
     >
       <div className="grid gap-4 lg:grid-cols-4">

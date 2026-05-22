@@ -4,6 +4,7 @@ import { BadgeWithDot, Input, Tab, TabList, Table, TableCard, Tabs } from "@mvp-
 import Link from "next/link";
 import { ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   VERIFICATIONS,
@@ -114,13 +115,10 @@ export function WorkerVerificationsPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-1">
-          <h1 className="text-xl font-semibold text-fg">Quản lý xác thực</h1>
-          <p className="max-w-3xl text-base text-fg-tertiary">
-            Theo dõi hồ sơ xác thực của từng worker, trạng thái tài liệu và các cảnh báo
-            cần xử lý trước khi mở ca làm việc.
-          </p>
-        </div>
+        <AppPageHeader
+          title="Quản lý xác thực"
+          description="Theo dõi hồ sơ xác thực của từng worker, trạng thái tài liệu và các cảnh báo cần xử lý trước khi mở ca làm việc."
+        />
       }
     >
       <TableCard.Root>

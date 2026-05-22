@@ -7,13 +7,17 @@
 
 import {
   Activity,
+  AlertOctagon,
   ArrowUpRight,
+  Briefcase,
+  Building2,
   Copy,
   Eye,
   MoreVertical,
   Share2,
   Trash2,
   TrendingUp,
+  UserPlus,
   Users,
   Wallet,
   Zap,
@@ -123,6 +127,140 @@ const SECTIONS: DocExample[] = [
       </div>
     ),
     code: `<MetricCard label="Total workers" value="342" />`,
+  },
+  {
+    id: "responsive",
+    title: "Responsive (default)",
+    description:
+      "Default `responsive=true` applies mobile-compact treatment below `lg`: shrinks the value text one tier, hides `helpText`, and tightens padding/gap. Resize the browser to compare. Pass `responsive={false}` to opt out and keep the desktop layout at every viewport.",
+    preview: (
+      <div className="grid w-full gap-4 lg:grid-cols-3">
+        <MetricCard
+          label="Request đang mở"
+          value="2"
+          helpText="Nhu cầu tuyển khách hàng đang gửi cho đội vận hành."
+          iconChip={<Users className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="brand"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="Request quá hạn"
+          value="1"
+          helpText="Đã quá deadline, cần xử lý hoặc thương lượng lại với khách."
+          iconChip={<Activity className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="error"
+          iconPlacement="inline"
+        />
+        <MetricCard
+          label="CTV cần fill thêm"
+          value="18"
+          helpText="Tổng số headcount còn thiếu trong toàn bộ request hiện hiển thị."
+          iconChip={<Zap className="size-5" />}
+          iconChipStyle="tint"
+          featuredIconColor="warning"
+          iconPlacement="inline"
+        />
+      </div>
+    ),
+    code: `<MetricCard
+  label="Request đang mở"
+  value="2"
+  helpText="Nhu cầu tuyển khách hàng đang gửi cho đội vận hành."
+  iconChip={<Users className="size-5" />}
+  iconChipStyle="tint"
+  featuredIconColor="brand"
+  iconPlacement="inline"
+/>
+
+{/* Opt out — desktop layout at every viewport */}
+<MetricCard
+  label="Total workers"
+  value="342"
+  helpText="Across all active assignments."
+  responsive={false}
+/>`,
+  },
+  {
+    id: "compact-scroller",
+    title: 'Compact — horizontal scroller',
+    description:
+      '`variant="compact"` renders a compact tile: card bg + border + shadow with a tinted icon chip. Pair with a horizontally scrolling container for mobile. Above `lg` items fill the row.',
+    preview: (
+      <div className="-mx-4 overflow-x-auto px-4 scrollbar-none lg:mx-0 lg:px-0">
+        <div className="flex w-max gap-3 lg:w-full lg:gap-4">
+          {[
+            { Icon: Briefcase, color: "brand" as const, value: "2", label: "Request mở" },
+            { Icon: AlertOctagon, color: "error" as const, value: "1", label: "Quá hạn" },
+            { Icon: UserPlus, color: "warning" as const, value: "18", label: "CTV cần fill" },
+            { Icon: Building2, color: "success" as const, value: "24", label: "KH hoạt động" },
+          ].map((it) => (
+            <MetricCard
+              key={it.label}
+              variant="compact"
+              label={it.label}
+              value={it.value}
+              valueSize="sm"
+              featuredIcon={<it.Icon className="size-5" />}
+              featuredIconColor={it.color}
+              className="w-[160px] shrink-0 snap-start lg:w-auto lg:flex-1"
+            />
+          ))}
+        </div>
+      </div>
+    ),
+    code: `<div className="-mx-4 overflow-x-auto px-4 scrollbar-none lg:mx-0 lg:px-0">
+  <div className="flex w-max gap-3 lg:w-full lg:gap-4">
+    <MetricCard
+      variant="compact"
+      label="Request mở"
+      value="2"
+      valueSize="sm"
+      featuredIcon={<Briefcase className="size-5" />}
+      featuredIconColor="brand"
+      className="w-[160px] shrink-0 snap-start lg:w-auto lg:flex-1"
+    />
+    {/* repeat for each metric */}
+  </div>
+</div>`,
+  },
+  {
+    id: "compact-grid",
+    title: 'Compact — 2-col grid',
+    description:
+      'Same compact tile in a 2-column grid on mobile, N-column on desktop. Use when horizontal scroll is undesirable or 4 metrics need equal visual weight.',
+    preview: (
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+        {[
+          { Icon: Briefcase, color: "brand" as const, value: "2", label: "Request mở" },
+          { Icon: AlertOctagon, color: "error" as const, value: "1", label: "Quá hạn" },
+          { Icon: UserPlus, color: "warning" as const, value: "18", label: "CTV cần fill" },
+          { Icon: Building2, color: "success" as const, value: "24", label: "KH hoạt động" },
+        ].map((it) => (
+          <MetricCard
+            key={it.label}
+            variant="compact"
+            label={it.label}
+            value={it.value}
+            valueSize="sm"
+            featuredIcon={<it.Icon className="size-5" />}
+            featuredIconColor={it.color}
+          />
+        ))}
+      </div>
+    ),
+    code: `<div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+  <MetricCard
+    variant="compact"
+    label="Request mở"
+    value="2"
+    valueSize="sm"
+    featuredIcon={<Briefcase className="size-5" />}
+    featuredIconColor="brand"
+  />
+  {/* repeat for each metric */}
+</div>`,
   },
   {
     id: "prefix-suffix",

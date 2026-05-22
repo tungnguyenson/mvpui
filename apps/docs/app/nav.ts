@@ -25,6 +25,7 @@ export const componentSections: NavSection[] = [
     items: [
       { name: "Button", href: "/components/button" },
       { name: "Button Group", href: "/components/button-group" },
+      { name: "FAB", href: "/components/fab" },
       { name: "Utility Buttons", href: "/components/utility-buttons" },
       { name: "Social Button", href: "/components/social-button" },
       { name: "App Store Buttons", href: "/components/app-store-buttons" },
@@ -95,6 +96,7 @@ export const componentSections: NavSection[] = [
     title: "Navigation",
     items: [
       { name: "Breadcrumbs", href: "/components/breadcrumbs" },
+      { name: "Page Header", href: "/components/page-header" },
       { name: "Sidebar Nav", href: "/components/sidebar-nav" },
       { name: "Tabs", href: "/components/tabs" },
       { name: "Pagination", href: "/components/pagination" },
@@ -106,6 +108,7 @@ export const componentSections: NavSection[] = [
     items: [
       { name: "Table", href: "/components/table" },
       { name: "Metric Card", href: "/components/metric-card" },
+      { name: "Metric Strip", href: "/components/metric-strip" },
       { name: "Sparkline", href: "/components/sparkline" },
       { name: "Bar Chart", href: "/components/bar-chart" },
       { name: "Line Chart", href: "/components/line-chart" },

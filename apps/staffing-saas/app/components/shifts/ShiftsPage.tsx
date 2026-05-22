@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AlertOctagon, CalendarDays, ChevronRight, Clock, LayoutGrid, Search, Target } from "lucide-react";
 import { Button } from "@mvp-ui/ui";
 import { useMemo, useState } from "react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import {
   SHIFTS,
@@ -105,21 +106,18 @@ export function ShiftsPage() {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl font-semibold text-fg">Lịch làm việc — dạng bảng</h1>
-            <p className="max-w-3xl text-base text-fg-tertiary">
-              Theo dõi các ca làm việc đã mở cho khách hàng, tiến độ fill workers và trạng
-              thái vận hành theo từng ca.
-            </p>
-          </div>
-          <Button asChild color="secondary" size="sm">
-            <Link href="/shifts">
-              <LayoutGrid className="size-4" />
-              Chuyển về Lịch
-            </Link>
-          </Button>
-        </div>
+        <AppPageHeader
+          title="Lịch làm việc — dạng bảng"
+          description="Theo dõi các ca làm việc đã mở cho khách hàng, tiến độ fill workers và trạng thái vận hành theo từng ca."
+          actions={
+            <Button asChild color="secondary" size="sm">
+              <Link href="/shifts">
+                <LayoutGrid className="size-4" />
+                Chuyển về Lịch
+              </Link>
+            </Button>
+          }
+        />
       }
     >
       <div className="grid gap-4 lg:grid-cols-3">

@@ -1,6 +1,7 @@
 export { AppShell } from "./AppShell";
 export { Header } from "./Header";
 export { PageScaffold } from "./PageScaffold";
+export { AppPageHeader, type AppPageHeaderProps } from "./AppPageHeader";
 export {
   BreadcrumbProvider,
   SetPageBreadcrumb,

@@ -24,8 +24,8 @@ import {
   UserPlus,
   Users,
 } from "lucide-react";
+import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
 import { APP_ROUTES } from "../_shell/nav";
 import {
   ACTION_LABELS,
@@ -116,42 +116,14 @@ export function RoleDetailPage({ roleKey }: RoleDetailPageProps) {
   return (
     <PageScaffold
       header={
-        <div className="flex flex-col gap-4">
-          <SetPageBreadcrumb
-            items={[
-              { label: "Dashboard", href: APP_ROUTES.dashboard },
-              { label: "Vai trò", href: "/roles" },
-              { label: role.name },
-            ]}
-          />
-
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="rounded-lg bg-bg-secondary p-3">
-                <ShieldCheck className="size-6 text-fg-brand" />
-              </div>
-              <div>
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-xl font-semibold text-fg">{role.name}</h1>
-                  <Badge color={role.color} type="pill-color" size="sm">
-                    {role.key}
-                  </Badge>
-                  {role.isSystem ? (
-                    <Badge color="gray" type="pill-color" size="sm">
-                      <Lock className="mr-1 inline size-3" /> Hệ thống
-                    </Badge>
-                  ) : (
-                    <Badge color="brand" type="pill-color" size="sm">
-                      <Sparkles className="mr-1 inline size-3" /> Tùy chỉnh
-                    </Badge>
-                  )}
-                </div>
-                <p className="mt-2 max-w-3xl text-base text-fg-tertiary">
-                  {role.description}
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
+        <AppPageHeader
+          breadcrumbs={[
+            { label: "Dashboard", href: APP_ROUTES.dashboard },
+            { label: "Vai trò", href: "/roles" },
+            { label: role.name },
+          ]}
+          actions={
+            <>
               <Link href="/roles">
                 <Button color="secondary" size="sm">
                   Quay lại
@@ -173,24 +145,35 @@ export function RoleDetailPage({ roleKey }: RoleDetailPageProps) {
               >
                 Lưu thay đổi
               </Button>
+            </>
+          }
+        >
+          <div className="flex items-start gap-4">
+            <div className="rounded-lg bg-bg-secondary p-3">
+              <ShieldCheck className="size-6 text-fg-brand" />
+            </div>
+            <div>
+              <div className="flex flex-wrap items-center gap-3">
+                <h1 className="text-xl font-semibold text-fg">{role.name}</h1>
+                <Badge color={role.color} type="pill-color" size="sm">
+                  {role.key}
+                </Badge>
+                {role.isSystem ? (
+                  <Badge color="gray" type="pill-color" size="sm">
+                    <Lock className="mr-1 inline size-3" /> Hệ thống
+                  </Badge>
+                ) : (
+                  <Badge color="brand" type="pill-color" size="sm">
+                    <Sparkles className="mr-1 inline size-3" /> Tùy chỉnh
+                  </Badge>
+                )}
+              </div>
+              <p className="mt-2 max-w-3xl text-base text-fg-tertiary">
+                {role.description}
+              </p>
             </div>
           </div>
-
-          {role.isSystem ? (
-            <div className="flex items-start gap-3 rounded-lg border border-warning-border bg-warning-bg px-4 py-3">
-              <AlertTriangle className="mt-0.5 size-4 text-fg-warning" />
-              <div>
-                <p className="text-sm font-medium text-fg">
-                  Vai trò hệ thống — chỉ xem trong demo
-                </p>
-                <p className="text-sm text-fg-tertiary">
-                  Vai trò seed bị khóa để demo. Hãy nhân bản để tạo vai trò tùy chỉnh
-                  với cấu hình riêng.
-                </p>
-              </div>
-            </div>
-          ) : null}
-        </div>
+        </AppPageHeader>
       }
     >
       {/* <div className="grid gap-4 lg:grid-cols-3">
@@ -222,6 +205,21 @@ export function RoleDetailPage({ roleKey }: RoleDetailPageProps) {
           iconPlacement="inline"
         />
       </div> */}
+
+      {role.isSystem ? (
+        <div className="flex items-start gap-3 rounded-lg border border-warning-border bg-warning-bg px-4 py-3">
+          <AlertTriangle className="mt-0.5 size-4 text-fg-warning" />
+          <div>
+            <p className="text-sm font-medium text-fg">
+              Vai trò hệ thống — chỉ xem trong demo
+            </p>
+            <p className="text-sm text-fg-tertiary">
+              Vai trò seed bị khóa để demo. Hãy nhân bản để tạo vai trò tùy chỉnh
+              với cấu hình riêng.
+            </p>
+          </div>
+        </div>
+      ) : null}
 
       {showDiff && isDirty ? (
         <DiffSummary
