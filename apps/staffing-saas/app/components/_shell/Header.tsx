@@ -1,8 +1,8 @@
 "use client";
 
-import { Breadcrumbs, Button, CommandMenu, Input, type CommandItem } from "@mvp-ui/ui";
+import { Badge, Breadcrumbs, Button, CommandMenu, Input, type CommandItem } from "@mvp-ui/ui";
 import type { Key } from "react-aria-components";
-import { Bell, Search } from "lucide-react";
+import { Bell, MessageCircle, Search } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { NAV_SECTIONS, breadcrumbsForPath } from "./nav";
@@ -73,12 +73,40 @@ export function Header() {
                 />
             </button>
             <ThemePicker />
-            <Button
-                size="lg"
-                color="tertiary"
-                iconLeading={<Bell className="size-5" />}
-                aria-label="Thông báo"
-            />
+
+            <div className="relative">
+                <Button
+                    size="lg"
+                    color="tertiary"
+                    onClick={() => router.push("/chat")}
+                    iconLeading={<MessageCircle className="size-5" />}
+                    aria-label="Tin nhắn (2 chưa đọc)"
+                />
+                <Badge
+                    color="error"
+                    size="sm"
+                    className="pointer-events-none absolute -top-1 -right-1 min-w-5 justify-center px-1.5"
+                    aria-hidden
+                >
+                    2
+                </Badge>
+            </div>
+            <div className="relative">
+                <Button
+                    size="lg"
+                    color="tertiary"
+                    iconLeading={<Bell className="size-5" />}
+                    aria-label="Thông báo"
+                />
+                <Badge
+                    color="error"
+                    size="sm"
+                    className="pointer-events-none absolute -top-1 -right-1 min-w-5 justify-center px-1.5"
+                    aria-hidden
+                >
+                    1
+                </Badge>
+            </div>
             <CommandMenu
                 isOpen={isCommandOpen}
                 onOpenChange={setIsCommandOpen}
