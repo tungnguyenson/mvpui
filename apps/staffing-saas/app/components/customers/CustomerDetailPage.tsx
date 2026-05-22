@@ -12,6 +12,7 @@ import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
 import { APP_ROUTES } from "../_shell/nav";
 import { getCustomerLogo } from "../_shared/assets";
+import { SetHeaderActions } from "../_shell/HeaderActionsContext";
 
 export function CustomerDetailPage({ id }: { id: string }) {
   const customer = getCustomerById(id);
@@ -23,7 +24,13 @@ export function CustomerDetailPage({ id }: { id: string }) {
   const status = CUSTOMER_STATUS_LABELS[customer.status];
   const extras = getCustomerDetailExtras(customer);
 
+  const hiringHref = `/hiring-requests/new?customerId=${customer.id}`;
+
   return (
+    <>
+      <SetHeaderActions
+        items={[{ id: "create-hiring-request", label: "Tạo Y/c tuyển dụng", href: hiringHref }]}
+      />
     <PageScaffold
       header={
         <AppPageHeader
@@ -39,7 +46,7 @@ export function CustomerDetailPage({ id }: { id: string }) {
                   Quay lại danh sách
                 </Button>
               </Link>
-              <Link href={`/hiring-requests/new?customerId=${customer.id}`}>
+              <Link href={hiringHref} className="hidden sm:flex">
                 <Button color="primary" size="sm">
                   Tạo Y/c tuyển dụng
                 </Button>
@@ -88,5 +95,6 @@ export function CustomerDetailPage({ id }: { id: string }) {
     >
       <CustomerDetailTabs customerId={customer.id} extras={extras} />
     </PageScaffold>
+    </>
   );
 }

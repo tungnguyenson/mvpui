@@ -10,6 +10,7 @@ import {
   Table,
 } from "@mvp-ui/ui";
 import Link from "next/link";
+import { SetHeaderActions } from "../_shell/HeaderActionsContext";
 import {
   ArrowRight,
   CheckCircle2,
@@ -287,14 +288,17 @@ export function Dashboard() {
   return (
     <PageScaffold
       header={
-        <AppPageHeader
-          title="Dashboard"
-          actions={
-            <Button color="secondary" size="sm" iconLeading={<Download className="size-4" />}>
-              Xuất dữ liệu
-            </Button>
-          }
-        />
+        <>
+          <SetHeaderActions items={[{ id: "export-data", label: "Xuất dữ liệu" }]} />
+          <AppPageHeader
+            title="Dashboard"
+            actions={
+              <Button color="secondary" size="sm" className="hidden sm:flex" iconLeading={<Download className="size-4" />}>
+                Xuất dữ liệu
+              </Button>
+            }
+          />
+        </>
       }
     >
 

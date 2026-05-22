@@ -5,6 +5,7 @@ import {
     Breadcrumbs,
     Button,
     CommandMenu,
+    Dropdown,
     Input,
     type CommandItem,
 } from "@mvp-ui/ui";
@@ -20,6 +21,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { NAV_SECTIONS, breadcrumbsForPath } from "./nav";
 import { useBreadcrumbOverride } from "./BreadcrumbContext";
+import { useHeaderActions } from "./HeaderActionsContext";
 import { buildSearchItems } from "./search/buildSearchItems";
 import { ThemePicker } from "./ThemePicker";
 
@@ -34,6 +36,7 @@ export function Header({ onOpenNav }: HeaderProps) {
     const router = useRouter();
     const override = useBreadcrumbOverride();
     const breadcrumbs = override ?? breadcrumbsForPath(pathname);
+    const headerActions = useHeaderActions();
     const [isCommandOpen, setIsCommandOpen] = useState(false);
 
     const title = breadcrumbs[breadcrumbs.length - 1]?.label ?? "Trang";
@@ -75,106 +78,129 @@ export function Header({ onOpenNav }: HeaderProps) {
 
     return (
         <>
-          <div className="sticky top-0 z-30">
-            {/* Mobile header */}
-            <div className="flex min-h-14 shrink-0 items-center gap-1 border-b border-border-secondary bg-bg px-2 pt-safe md:hidden">
-                <Button
-                    size="md"
-                    color="tertiary"
-                    onClick={onOpenNav}
-                    iconLeading={<Menu className="size-5" />}
-                    aria-label="Mở menu"
-                />
-                {parentHref ? (
-                    <button
-                        type="button"
-                        onClick={() => router.push(parentHref)}
-                        className="flex size-9 shrink-0 items-center justify-center rounded-lg text-fg-secondary transition-colors hover:bg-bg-secondary"
-                        aria-label={`Quay lại ${parent?.label ?? ""}`}
-                    >
-                        <ChevronLeft className="size-5" />
-                    </button>
-                ) : null}
-                <h1 className="min-w-0 flex-1 truncate text-md font-semibold text-fg">
-                    {title}
-                </h1>
-                <div className="relative">
+            <div className="sticky top-0 z-30">
+                {/* Mobile header */}
+                <div className="flex min-h-14 shrink-0 items-center gap-1 border-b border-border-secondary bg-bg px-2 pt-safe md:hidden">
                     <Button
                         size="md"
                         color="tertiary"
-                        iconLeading={<Bell className="size-5" />}
-                        aria-label="Thông báo"
+                        onClick={onOpenNav}
+                        iconLeading={<Menu className="size-5" />}
+                        aria-label="Mở menu"
                     />
-                    <Badge
-                        color="error"
-                        size="sm"
-                        className="pointer-events-none absolute -top-0.5 -right-0.5 min-w-4 justify-center px-1 text-xs"
-                        aria-hidden
-                    >
-                        1
-                    </Badge>
+                    {parentHref ? (
+                        <button
+                            type="button"
+                            onClick={() => router.push(parentHref)}
+                            className="flex size-9 shrink-0 items-center justify-center rounded-lg text-fg-secondary transition-colors hover:bg-bg-secondary"
+                            aria-label={`Quay lại ${parent?.label ?? ""}`}
+                        >
+                            <ChevronLeft className="size-5" />
+                        </button>
+                    ) : null}
+                    <h1 className="min-w-0 flex-1 truncate text-md font-semibold text-fg">
+                        {title}
+                    </h1>
+                    {pathname === "/" && (
+                        <div className="relative">
+                            <Button
+                                size="md"
+                                color="tertiary"
+                                iconLeading={<Bell className="size-5" />}
+                                aria-label="Thông báo"
+                            />
+                            <Badge
+                                color="error"
+                                size="sm"
+                                className="pointer-events-none absolute -top-0.5 -right-0.5 size-4 justify-center p-0 text-[10px] leading-none"
+                                aria-hidden
+                            >
+                                1
+                            </Badge>
+                        </div>
+                    )}
+                    {headerActions.length > 0 && (
+                        <Dropdown.Root>
+                            <Dropdown.DotsButton aria-label="Thêm thao tác" className="p-2" />
+                            <Dropdown.Popover>
+                                <Dropdown.Menu
+                                    aria-label="Thao tác trang"
+                                    onAction={(id) => {
+                                        const action = headerActions.find((a) => a.id === String(id));
+                                        if (action?.href) router.push(action.href);
+                                        else if (action?.onClick) action.onClick();
+                                    }}
+                                >
+                                    {headerActions.map((action) => (
+                                        <Dropdown.Item key={action.id} id={action.id}>
+                                            {action.label}
+                                        </Dropdown.Item>
+                                    ))}
+                                </Dropdown.Menu>
+                            </Dropdown.Popover>
+                        </Dropdown.Root>
+                    )}
                 </div>
-            </div>
 
-            {/* Desktop header */}
-            <div className="hidden h-16 items-center gap-4 border-b border-border-secondary bg-bg px-4 md:flex md:px-8">
-                <div className="min-w-0">
-                    <Breadcrumbs items={breadcrumbs} />
-                </div>
-                <div className="flex flex-1" />
-                <button
-                    type="button"
-                    onClick={openCommandMenu}
-                    className="w-full max-w-md cursor-pointer text-left"
-                    aria-label="Mở tìm kiếm toàn hệ thống"
-                >
-                    <Input
-                        iconLeading={<Search className="size-4" />}
-                        placeholder="Tìm khách hàng, CTV, ca làm việc ..."
-                        type="search"
-                        shortcut="⌘K"
-                        aria-label="Tìm kiếm toàn hệ thống"
-                        readOnly
-                        tabIndex={-1}
-                        className="pointer-events-none"
-                    />
-                </button>
-                <ThemePicker />
-                <div className="relative">
-                    <Button
-                        size="lg"
-                        color="tertiary"
-                        onClick={() => router.push("/chat")}
-                        iconLeading={<MessageCircle className="size-5" />}
-                        aria-label="Tin nhắn (2 chưa đọc)"
-                    />
-                    <Badge
-                        color="error"
-                        size="sm"
-                        className="pointer-events-none absolute -top-1 -right-1 min-w-5 justify-center px-1.5"
-                        aria-hidden
+                {/* Desktop header */}
+                <div className="hidden h-16 items-center gap-4 border-b border-border-secondary bg-bg px-4 md:flex md:px-8">
+                    <div className="min-w-0">
+                        <Breadcrumbs items={breadcrumbs} />
+                    </div>
+                    <div className="flex flex-1" />
+                    <button
+                        type="button"
+                        onClick={openCommandMenu}
+                        className="w-full max-w-md cursor-pointer text-left"
+                        aria-label="Mở tìm kiếm toàn hệ thống"
                     >
-                        2
-                    </Badge>
-                </div>
-                <div className="relative">
-                    <Button
-                        size="lg"
-                        color="tertiary"
-                        iconLeading={<Bell className="size-5" />}
-                        aria-label="Thông báo"
-                    />
-                    <Badge
-                        color="error"
-                        size="sm"
-                        className="pointer-events-none absolute -top-1 -right-1 min-w-5 justify-center px-1.5"
-                        aria-hidden
-                    >
-                        1
-                    </Badge>
+                        <Input
+                            iconLeading={<Search className="size-4" />}
+                            placeholder="Tìm khách hàng, CTV, ca làm việc ..."
+                            type="search"
+                            shortcut="⌘K"
+                            aria-label="Tìm kiếm toàn hệ thống"
+                            readOnly
+                            tabIndex={-1}
+                            className="pointer-events-none"
+                        />
+                    </button>
+                    <ThemePicker />
+                    <div className="relative">
+                        <Button
+                            size="lg"
+                            color="tertiary"
+                            onClick={() => router.push("/chat")}
+                            iconLeading={<MessageCircle className="size-5" />}
+                            aria-label="Tin nhắn (2 chưa đọc)"
+                        />
+                        <Badge
+                            color="error"
+                            size="sm"
+                            className="pointer-events-none absolute -top-1 -right-1 min-w-5 justify-center px-1.5"
+                            aria-hidden
+                        >
+                            2
+                        </Badge>
+                    </div>
+                    <div className="relative">
+                        <Button
+                            size="lg"
+                            color="tertiary"
+                            iconLeading={<Bell className="size-5" />}
+                            aria-label="Thông báo"
+                        />
+                        <Badge
+                            color="error"
+                            size="sm"
+                            className="pointer-events-none absolute -top-1 -right-1 min-w-5 justify-center px-1.5"
+                            aria-hidden
+                        >
+                            1
+                        </Badge>
+                    </div>
                 </div>
             </div>
-          </div>
 
             <CommandMenu
                 isOpen={isCommandOpen}

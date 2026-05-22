@@ -204,7 +204,7 @@ const SECTIONS: DocExample[] = [
               valueSize="sm"
               featuredIcon={<it.Icon className="size-5" />}
               featuredIconColor={it.color}
-              className="w-[160px] shrink-0 snap-start lg:w-auto lg:flex-1"
+              className="w-40 shrink-0 snap-start lg:w-auto lg:flex-1"
             />
           ))}
         </div>
@@ -219,7 +219,7 @@ const SECTIONS: DocExample[] = [
       valueSize="sm"
       featuredIcon={<Briefcase className="size-5" />}
       featuredIconColor="brand"
-      className="w-[160px] shrink-0 snap-start lg:w-auto lg:flex-1"
+      className="w-40 shrink-0 snap-start lg:w-auto lg:flex-1"
     />
     {/* repeat for each metric */}
   </div>

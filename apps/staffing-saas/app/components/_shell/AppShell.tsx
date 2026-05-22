@@ -13,6 +13,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { NAV_SECTIONS, activeHrefForPath } from "./nav";
 import { Header } from "./Header";
 import { BreadcrumbProvider } from "./BreadcrumbContext";
+import { HeaderActionsProvider } from "./HeaderActionsContext";
 import { ThemeProvider, useAppearance } from "./ThemeContext";
 import { logoutAction } from "../../login/actions";
 import { ThemePicker } from "./ThemePicker";
@@ -215,10 +216,12 @@ function AppShellInner({ children }: { children: ReactNode }) {
 
       {/* Content */}
       <main className="min-w-0 flex-1 overflow-y-auto bg-bg md:bg-bg-secondary">
-        <BreadcrumbProvider>
-          <Header onOpenNav={() => setNavOpen(true)} />
-          {children}
-        </BreadcrumbProvider>
+        <HeaderActionsProvider>
+          <BreadcrumbProvider>
+            <Header onOpenNav={() => setNavOpen(true)} />
+            {children}
+          </BreadcrumbProvider>
+        </HeaderActionsProvider>
       </main>
 
       {/* Mobile nav drawer */}
