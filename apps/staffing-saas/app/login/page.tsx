@@ -75,6 +75,7 @@ function LoginPageContent() {
                 placeholder="admin@example.com"
                 autoComplete="email"
                 required
+                defaultValue={state?.email ?? ""}
                 isInvalid={!!state?.error}
               />
             </div>

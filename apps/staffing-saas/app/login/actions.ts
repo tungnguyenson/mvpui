@@ -23,6 +23,7 @@ function clearSessionCookie() {
 export interface LoginState {
   error?: string;
   success?: boolean;
+  email?: string;
 }
 
 export async function loginAction(
@@ -34,11 +35,11 @@ export async function loginAction(
   const remember = formData.get("remember") === "true";
 
   if (!email || !email.includes("@")) {
-    return { error: "Vui lòng nhập email hợp lệ." };
+    return { error: "Vui lòng nhập email hợp lệ.", email };
   }
 
   if (!password || password.length < 5) {
-    return { error: "Mật khẩu phải chứa ít nhất 5 ký tự." };
+    return { error: "Mật khẩu phải chứa ít nhất 5 ký tự.", email };
   }
 
   if (email === ADMIN_USER && password === ADMIN_PASSWORD) {
@@ -46,7 +47,7 @@ export async function loginAction(
     return { success: true };
   }
 
-  return { error: "Email hoặc mật khẩu không chính xác." };
+  return { error: "Email hoặc mật khẩu không chính xác.", email };
 }
 
 export async function logoutAction(): Promise<void> {
