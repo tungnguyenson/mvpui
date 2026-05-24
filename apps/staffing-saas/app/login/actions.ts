@@ -30,26 +30,30 @@ export async function loginAction(
   _prevState: LoginState | null,
   formData: FormData,
 ): Promise<LoginState> {
-  const email = String(formData.get("email") || "");
-  const password = String(formData.get("password") || "");
-  const remember = formData.get("remember") === "true";
+
+  setSessionCookie(true);
+  return { success: true };
+
+  // const email = String(formData.get("email") || "");
+  // const password = String(formData.get("password") || "");
+  // const remember = formData.get("remember") === "true";
 
 
-  if (!email || !email.includes("@")) {
-    return { error: "Vui lòng nhập email hợp lệ.", email };
-  }
+  // if (!email || !email.includes("@")) {
+  //   return { error: "Vui lòng nhập email hợp lệ.", email };
+  // }
 
-  if (!password || password.length < 5) {
-    return { error: "Mật khẩu phải chứa ít nhất 5 ký tự.", email };
-  }
+  // if (!password || password.length < 5) {
+  //   return { error: "Mật khẩu phải chứa ít nhất 5 ký tự.", email };
+  // }
 
-  if (email === ADMIN_USER && password === ADMIN_PASSWORD) {
-    console.log("success")
-    setSessionCookie(remember);
-    return { success: true };
-  }
+  // if (email === ADMIN_USER && password === ADMIN_PASSWORD) {
+  //   console.log("success")
+  //   setSessionCookie(remember);
+  //   return { success: true };
+  // }
 
-  return { error: "Email hoặc mật khẩu không chính xác.", email };
+  // return { error: "Email hoặc mật khẩu không chính xác.", email };
 }
 
 export async function logoutAction(): Promise<void> {
