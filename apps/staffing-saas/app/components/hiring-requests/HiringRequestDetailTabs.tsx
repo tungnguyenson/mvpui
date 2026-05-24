@@ -31,7 +31,8 @@ import {
   JOB_POST_VISIBILITY_LABELS,
 } from "./hiring-requests-data";
 import { getCustomerLogo } from "../_shared/assets";
-import { CandidateFunnelPanel } from "./CandidateFunnelPanel";
+import { ScheduleTab } from "./schedule/ScheduleTab";
+import { InfoTab } from "./info/InfoTab";
 
 interface HiringRequestDetailTabsProps {
   record: HiringRequestRecord;
@@ -111,7 +112,7 @@ function OverviewPanel({
           iconPlacement="inline"
         />
         <MetricCard
-          label="Slot đã đi"
+          label="Đã đi làm"
           value={`${record.filledSlots}/${record.totalSlots}`}
           valueSize="md"
           helpText={`${slotFillRate}% · ${record.headcount} người × ngày làm việc`}
@@ -269,9 +270,8 @@ function JobPostListPanel({ record }: { record: HiringRequestRecord }) {
 
 function JobPostRow({ post }: { post: JobPost }) {
   const statusMeta = JOB_POST_STATUS_LABELS[post.status];
-  const payLabel = `${post.displayedPay.amount.toLocaleString("vi-VN")}đ/${
-    post.displayedPay.unit === "shift" ? "ca" : "h"
-  }`;
+  const payLabel = `${post.displayedPay.amount.toLocaleString("vi-VN")}đ/${post.displayedPay.unit === "shift" ? "ca" : "h"
+    }`;
   const bonus = post.adhocBonus;
 
   return (
@@ -356,12 +356,11 @@ export function HiringRequestDetailTabs({
     <Tabs variant="underline" size="md" defaultSelectedKey="overview">
       <TabList aria-label="Phần chi tiết hiring request">
         <Tab id="overview">Tổng quan</Tab>
+        <Tab id="info">Thông tin</Tab>
         <Tab id="job-posts" value={record.jobPosts.length}>
-          Tin tuyển dụng
+          Đăng tin
         </Tab>
-        <Tab id="funnel" value={record.candidates.length}>
-          Ứng viên
-        </Tab>
+        <Tab id="schedule">Tiến độ tuyển</Tab>
         <Tab id="timeline">Timeline</Tab>
       </TabList>
       <TabPanel id="overview">
@@ -374,11 +373,11 @@ export function HiringRequestDetailTabs({
       <TabPanel id="job-posts">
         <JobPostListPanel record={record} />
       </TabPanel>
-      <TabPanel id="funnel">
-        <CandidateFunnelPanel
-          candidates={record.candidates}
-          remaining={remaining}
-        />
+      <TabPanel id="schedule">
+        <ScheduleTab record={record} />
+      </TabPanel>
+      <TabPanel id="info">
+        <InfoTab record={record} />
       </TabPanel>
       <TabPanel id="timeline">
         <TimelinePanel record={record} />

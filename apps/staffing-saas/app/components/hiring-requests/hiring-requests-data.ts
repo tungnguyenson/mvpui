@@ -1,4 +1,28 @@
+import type { WeekDay } from "../shifts/lib/date-utils";
+
 export type HiringStatus = "draft" | "open" | "fulfilling" | "fulfilled" | "overdue" | "cancelled";
+
+export type AssignmentStatus = "assigned" | "confirmed" | "cancelled";
+
+export const ASSIGNMENT_STATUS_LABELS: Record<
+  AssignmentStatus,
+  { label: string; color: "success" | "warning" | "gray" }
+> = {
+  assigned: { label: "Đã gán", color: "warning" },
+  confirmed: { label: "Đã xác nhận", color: "success" },
+  cancelled: { label: "Đã huỷ", color: "gray" },
+};
+
+export interface HiringAssignment {
+  id: string;
+  hiringRequestId: string;
+  candidateId: string;
+  workerName: string;
+  workerId?: string;
+  date: string; // "DD/MM/YYYY"
+  status: AssignmentStatus;
+  note?: string;
+}
 
 export type CandidateStatus =
   | "assigned"
@@ -92,6 +116,8 @@ export interface HiringRequestRecord {
   candidates: HiringCandidate[];
   timeline: HiringTimelineEntry[];
   jobPosts: JobPost[];
+  weekdays?: WeekDay[]; // 0=Mon…6=Sun; defaults to Mon–Fri if absent
+  assignments?: HiringAssignment[];
 }
 
 export const HIRING_STATUS_LABELS: Record<
@@ -116,6 +142,46 @@ export const CANDIDATE_LABELS: Record<
   rejected: { label: "Bị loại", color: "error" },
   withdrawn: { label: "Rút hồ sơ", color: "gray" },
 };
+
+// HR-2401: CTV bán hàng cuối tuần — weekdays [5,6] (Sat+Sun)
+// Range 24/05–30/05/2026 → working days: 24/05 (Sun), 30/05 (Sat)
+const HR2401_ASSIGNMENTS: HiringAssignment[] = [
+  { id: "ha-2401-01", hiringRequestId: "hr-2401", candidateId: "cand-1", workerName: "Nguyễn Văn An", workerId: "nguyen-van-an", date: "24/05/2026", status: "confirmed" },
+  { id: "ha-2401-02", hiringRequestId: "hr-2401", candidateId: "cand-2", workerName: "Phạm Thu Dung", workerId: "pham-thu-dung", date: "24/05/2026", status: "confirmed" },
+  { id: "ha-2401-03", hiringRequestId: "hr-2401", candidateId: "cand-4", workerName: "Hồ Văn Tú", date: "24/05/2026", status: "assigned" },
+  { id: "ha-2401-04", hiringRequestId: "hr-2401", candidateId: "cand-5", workerName: "Lê Thị Lan", date: "24/05/2026", status: "assigned" },
+  { id: "ha-2401-05", hiringRequestId: "hr-2401", candidateId: "cand-1", workerName: "Nguyễn Văn An", workerId: "nguyen-van-an", date: "30/05/2026", status: "confirmed" },
+  { id: "ha-2401-06", hiringRequestId: "hr-2401", candidateId: "cand-2", workerName: "Phạm Thu Dung", workerId: "pham-thu-dung", date: "30/05/2026", status: "confirmed" },
+  { id: "ha-2401-07", hiringRequestId: "hr-2401", candidateId: "cand-4", workerName: "Hồ Văn Tú", date: "30/05/2026", status: "confirmed" },
+  { id: "ha-2401-08", hiringRequestId: "hr-2401", candidateId: "cand-5", workerName: "Lê Thị Lan", date: "30/05/2026", status: "assigned" },
+  { id: "ha-2401-09", hiringRequestId: "hr-2401", candidateId: "cand-6", workerName: "Nguyễn Minh Khoa", date: "30/05/2026", status: "assigned" },
+  { id: "ha-2401-10", hiringRequestId: "hr-2401", candidateId: "cand-7", workerName: "Đặng Thị Hoa", date: "30/05/2026", status: "assigned" },
+  { id: "ha-2401-11", hiringRequestId: "hr-2401", candidateId: "cand-8", workerName: "Bùi Văn Nam", date: "30/05/2026", status: "assigned" },
+  { id: "ha-2401-12", hiringRequestId: "hr-2401", candidateId: "cand-9", workerName: "Vũ Thị Thu", date: "30/05/2026", status: "assigned" },
+  { id: "ha-2401-13", hiringRequestId: "hr-2401", candidateId: "cand-10", workerName: "Trần Văn Đức", date: "30/05/2026", status: "cancelled", note: "CTV báo có việc đột xuất" },
+  { id: "ha-2401-14", hiringRequestId: "hr-2401", candidateId: "cand-11", workerName: "Lý Thị Ngọc", date: "30/05/2026", status: "assigned" },
+  { id: "ha-2401-15", hiringRequestId: "hr-2401", candidateId: "cand-12", workerName: "Ngô Quang Huy", date: "30/05/2026", status: "assigned" },
+];
+
+// HR-2402: CTV kho ca đêm — weekdays [0,1,2,3,4] (Mon–Fri)
+// Range 23/05–29/05/2026 → working days: 25(Mon),26(Tue),27(Wed),28(Thu),29(Fri)
+const HR2402_ASSIGNMENTS: HiringAssignment[] = [
+  { id: "ha-2402-01", hiringRequestId: "hr-2402", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "25/05/2026", status: "confirmed" },
+  { id: "ha-2402-02", hiringRequestId: "hr-2402", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "25/05/2026", status: "assigned" },
+  { id: "ha-2402-03", hiringRequestId: "hr-2402", candidateId: "cand-3", workerName: "Hồ Văn Tú", date: "25/05/2026", status: "assigned" },
+  { id: "ha-2402-04", hiringRequestId: "hr-2402", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "26/05/2026", status: "confirmed" },
+  { id: "ha-2402-05", hiringRequestId: "hr-2402", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "26/05/2026", status: "confirmed" },
+  { id: "ha-2402-06", hiringRequestId: "hr-2402", candidateId: "cand-3", workerName: "Hồ Văn Tú", date: "26/05/2026", status: "assigned" },
+  { id: "ha-2402-07", hiringRequestId: "hr-2402", candidateId: "cand-4", workerName: "Lê Thị Lan", date: "26/05/2026", status: "assigned" },
+  { id: "ha-2402-08", hiringRequestId: "hr-2402", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "27/05/2026", status: "confirmed" },
+  { id: "ha-2402-09", hiringRequestId: "hr-2402", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "27/05/2026", status: "assigned" },
+  { id: "ha-2402-10", hiringRequestId: "hr-2402", candidateId: "cand-3", workerName: "Hồ Văn Tú", date: "27/05/2026", status: "cancelled", note: "Xin nghỉ phép" },
+  { id: "ha-2402-11", hiringRequestId: "hr-2402", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "28/05/2026", status: "confirmed" },
+  { id: "ha-2402-12", hiringRequestId: "hr-2402", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "28/05/2026", status: "assigned" },
+  { id: "ha-2402-13", hiringRequestId: "hr-2402", candidateId: "cand-4", workerName: "Lê Thị Lan", date: "28/05/2026", status: "assigned" },
+  { id: "ha-2402-14", hiringRequestId: "hr-2402", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "29/05/2026", status: "assigned" },
+  { id: "ha-2402-15", hiringRequestId: "hr-2402", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "29/05/2026", status: "assigned" },
+];
 
 export const HIRING_REQUESTS: HiringRequestRecord[] = [
   {
@@ -184,6 +250,8 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       { id: "t-4", at: "16/05/2026", action: "Nhận thêm 5 worker (5/20 người)", actor: "Lê Thuỳ Trang" },
       { id: "t-5", at: "19/05/2026", action: "Nhận thêm 7 worker (12/20 người)", actor: "Lê Thuỳ Trang" },
     ],
+    weekdays: [5, 6],
+    assignments: HR2401_ASSIGNMENTS,
     jobPosts: [
       {
         id: "JP-8821",
@@ -274,6 +342,8 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
       { id: "t-4", at: "17/05/2026", action: "Nhận thêm 5 worker (5/15 người)", actor: "Nguyễn Quốc Đạt" },
       { id: "t-5", at: "20/05/2026", action: "Nhận thêm 3 worker (8/15 người)", actor: "Nguyễn Quốc Đạt" },
     ],
+    weekdays: [0, 1, 2, 3, 4],
+    assignments: HR2402_ASSIGNMENTS,
     jobPosts: [
       {
         id: "JP-8825",
@@ -434,6 +504,55 @@ export const HIRING_REQUESTS: HiringRequestRecord[] = [
         applicationCount: 22,
       },
     ],
+  },
+  {
+    id: "hr-2420",
+    code: "HR-2420",
+    title: "CTV kho ổn định tháng 5–6",
+    customer: "Ninja Van",
+    customerId: "gomart-distribution",
+    shiftId: "SC1004",
+    area: "Thuận An, Bình Dương",
+    headcount: 8,
+    filled: 5,
+    committedWorkers: 5,
+    filledSlots: 55,
+    totalSlots: 184,
+    startDate: "05/05/2026",
+    endDate: "05/06/2026",
+    deadline: "08/05/2026",
+    targetDeadline: "06/05/2026",
+    parentRequestId: null,
+    status: "open",
+    payRate: "₫68.000 / giờ",
+    workerProfile: [
+      "Có chứng nhận an toàn lao động",
+      "Cam kết làm đủ tháng",
+    ],
+    skills: ["Kho vận", "Bốc xếp", "Dài hạn"],
+    contact: "Lê Quang Thịnh (Warehouse Lead)",
+    notes: "Job dài hạn ổn định. Ưu tiên CTV đã từng làm tại Ninja Van.",
+    candidates: [
+      { id: "cand-1", workerId: "le-hoang-cuong", workerName: "Lê Hoàng Cường", city: "Đà Nẵng", experience: "40 ca kho", status: "assigned", matchScore: 88 },
+      { id: "cand-2", workerName: "Đinh Văn Toàn", city: "Bình Dương", experience: "30 ca kho", status: "assigned", matchScore: 81 },
+      { id: "cand-3", workerName: "Hồ Văn Tú", city: "TP.HCM", experience: "18 ca kho", status: "shortlisted", matchScore: 74 },
+    ],
+    timeline: [
+      { id: "t-1", at: "28/04/2026", action: "Tạo hiring request (0/8 người)", actor: "Ninja Van" },
+      { id: "t-2", at: "02/05/2026", action: "Nhận 5 worker (5/8 người)", actor: "Nguyễn Quốc Đạt" },
+    ],
+    weekdays: [0, 1, 2, 3, 4],
+    assignments: [
+      { id: "ha-2420-01", hiringRequestId: "hr-2420", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "05/05/2026", status: "confirmed" },
+      { id: "ha-2420-02", hiringRequestId: "hr-2420", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "05/05/2026", status: "confirmed" },
+      { id: "ha-2420-03", hiringRequestId: "hr-2420", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "06/05/2026", status: "confirmed" },
+      { id: "ha-2420-04", hiringRequestId: "hr-2420", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "06/05/2026", status: "assigned" },
+      { id: "ha-2420-05", hiringRequestId: "hr-2420", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "25/05/2026", status: "confirmed" },
+      { id: "ha-2420-06", hiringRequestId: "hr-2420", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "25/05/2026", status: "assigned" },
+      { id: "ha-2420-07", hiringRequestId: "hr-2420", candidateId: "cand-1", workerName: "Lê Hoàng Cường", workerId: "le-hoang-cuong", date: "26/05/2026", status: "confirmed" },
+      { id: "ha-2420-08", hiringRequestId: "hr-2420", candidateId: "cand-2", workerName: "Đinh Văn Toàn", date: "26/05/2026", status: "cancelled", note: "Xin nghỉ phép đột xuất" },
+    ],
+    jobPosts: [],
   },
 ];
 
