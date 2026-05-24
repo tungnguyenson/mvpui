@@ -8,7 +8,7 @@ import { CustomerView } from "./calendar/CustomerView";
 import { DayNavigator } from "./calendar/DayNavigator";
 import { DayView } from "./calendar/DayView";
 import { ShiftDetailModal } from "./calendar/ShiftDetailModal";
-import { ShiftsTableView } from "./calendar/ShiftsTableView";
+import { ShiftsTableView } from "./ShiftsTableView";
 import { WeekNavigator } from "./calendar/WeekNavigator";
 import { WeekView } from "./calendar/WeekView";
 import {
@@ -20,12 +20,12 @@ import {
   type CalendarView,
   type DisplayMode,
   type ShiftFilters,
-} from "./calendar/lib/filter-state";
+} from "./lib/filter-state";
 import {
   addDays,
   endOfWeekMonday,
   startOfWeekMonday,
-} from "./calendar/lib/date-utils";
+} from "./lib/date-utils";
 import { FilterChips } from "./filter/FilterChips";
 import { FilterSidebar } from "./filter/FilterSidebar";
 import { SHIFTS, type ShiftRecord } from "./shifts-data";
@@ -249,11 +249,7 @@ export function ShiftsCalendarPage() {
             totalInScope={totalInScope}
           />
           {displayMode === "table" ? (
-            <ShiftsTableView
-              shifts={filteredShifts}
-              selectedShiftId={selectedShift?.id ?? null}
-              onSelectShift={setSelectedShift}
-            />
+            <ShiftsTableView shifts={filteredShifts} />
           ) : calendarView === "week" ? (
             <WeekViewPanel
               anchor={anchor}

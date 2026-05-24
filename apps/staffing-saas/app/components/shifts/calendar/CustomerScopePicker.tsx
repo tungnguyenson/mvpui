@@ -1,7 +1,7 @@
 "use client";
 
 import { Select, SelectItem } from "@mvp-ui/ui";
-import type { CustomerOption } from "./lib/filter-state";
+import type { CustomerOption } from "../lib/filter-state";
 
 interface CustomerScopePickerProps {
   customerId: string | null;

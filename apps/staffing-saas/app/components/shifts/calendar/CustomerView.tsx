@@ -3,7 +3,7 @@
 import { Avatar } from "@mvp-ui/ui";
 import { useMemo } from "react";
 import { getCustomerLogo, type ShiftRecord, type ShiftStatus } from "../shifts-data";
-import { cn } from "./lib/cn";
+import { cn } from "../lib/cn";
 import {
   WEEKDAY_LABELS_VI,
   WEEKDAY_LABELS_VI_SHORT,
@@ -13,7 +13,7 @@ import {
   isSameDay,
   startOfWeekMonday,
   type WeekDay,
-} from "./lib/date-utils";
+} from "../lib/date-utils";
 
 interface CustomerViewProps {
   anchor: Date;

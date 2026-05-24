@@ -3,16 +3,16 @@
 import { Avatar } from "@mvp-ui/ui";
 import { ChevronRight } from "lucide-react";
 import { getCustomerLogo, type PlannedCheckIn, type ShiftRecord, type ShiftStatus } from "../shifts-data";
-import { workerAvatarUrl } from "./lib/avatars";
-import { cn } from "./lib/cn";
-import { formatTimeRangeCompact } from "./lib/date-utils";
+import { workerAvatarUrl } from "../lib/avatars";
+import { cn } from "../lib/cn";
+import { formatTimeRangeCompact } from "../lib/date-utils";
 import {
   getAttendedCount,
   getCheckIns,
   getLateCount,
   getNoShowCount,
   getOperationalContext,
-} from "./lib/operational";
+} from "../lib/operational";
 
 const STATUS_DOT: Record<ShiftStatus, string> = {
   open: "bg-warning-fg",

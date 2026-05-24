@@ -4,13 +4,13 @@ import { Tab, TabList, Tabs } from "@mvp-ui/ui";
 import { useEffect, useMemo, useState } from "react";
 import type { ShiftRecord } from "../shifts-data";
 import { DayShiftRow } from "./DayShiftRow";
-import { cn } from "./lib/cn";
-import { isSameDay, startOfDay } from "./lib/date-utils";
+import { cn } from "../lib/cn";
+import { isSameDay, startOfDay } from "../lib/date-utils";
 import {
   getDayStats,
   getOperationalState,
   type OperationalState,
-} from "./lib/operational";
+} from "../lib/operational";
 
 type DayTabId = OperationalState | "all";
 

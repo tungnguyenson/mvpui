@@ -9,7 +9,7 @@ import {
   type FillBucket,
   type ShiftFilters,
   type TimeBucket,
-} from "../calendar/lib/filter-state";
+} from "../lib/filter-state";
 import { OPERATORS, SHIFT_STATUS_LABELS, type ShiftStatus } from "../shifts-data";
 
 const OPERATOR_NAME_BY_ID = new Map(OPERATORS.map((o) => [o.id, o.name]));

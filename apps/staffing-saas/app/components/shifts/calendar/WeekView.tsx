@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 import type { ShiftRecord } from "../shifts-data";
 import { ShiftCard } from "./ShiftCard";
-import { cn } from "./lib/cn";
+import { cn } from "../lib/cn";
 import {
   WEEKDAY_LABELS_VI,
   WEEKDAY_LABELS_VI_SHORT,
@@ -12,12 +12,12 @@ import {
   isSameDay,
   startOfWeekMonday,
   type WeekDay,
-} from "./lib/date-utils";
+} from "../lib/date-utils";
 import {
   TIME_BUCKET_ORDER,
   getTimeBucket,
   type TimeBucket,
-} from "./lib/filter-state";
+} from "../lib/filter-state";
 
 interface WeekViewProps {
   anchor: Date;

@@ -1,9 +1,9 @@
 "use client";
 
 import { Avatar, ProgressBarBase } from "@mvp-ui/ui";
-import { cn } from "./lib/cn";
+import { cn } from "../lib/cn";
 import { SHIFT_STATUS_LABELS, type ShiftRecord, type ShiftStatus } from "../shifts-data";
-import { formatTimeRange } from "./lib/date-utils";
+import { formatTimeRange } from "../lib/date-utils";
 
 const STATUS_DOT_CLASS: Record<ShiftStatus, string> = {
   open: "bg-warning-fg",

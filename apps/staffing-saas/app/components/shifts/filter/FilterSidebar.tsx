@@ -14,7 +14,7 @@ import {
   Search,
   SlidersHorizontal,
 } from "lucide-react";
-import { cn } from "../calendar/lib/cn";
+import { cn } from "../lib/cn";
 import {
   DEFAULT_FILTERS,
   FILL_BUCKET_LABELS,
@@ -23,7 +23,7 @@ import {
   type FillBucket,
   type ShiftFilters,
   type TimeBucket,
-} from "../calendar/lib/filter-state";
+} from "../lib/filter-state";
 import { SHIFT_STATUS_LABELS, type ShiftStatus } from "../shifts-data";
 
 interface FilterSidebarProps {

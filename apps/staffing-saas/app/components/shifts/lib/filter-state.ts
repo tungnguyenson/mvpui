@@ -1,4 +1,4 @@
-import { getCustomerLogo, type ShiftRecord, type ShiftStatus } from "../../shifts-data";
+import { getCustomerLogo, type ShiftRecord, type ShiftStatus } from "../shifts-data";
 
 export type FillBucket = "low" | "mid" | "full";
 export type TimeBucket = "morning" | "afternoon" | "evening" | "night";

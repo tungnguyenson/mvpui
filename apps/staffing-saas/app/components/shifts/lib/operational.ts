@@ -1,4 +1,4 @@
-import type { PlannedCheckIn, ShiftRecord } from "../../shifts-data";
+import type { PlannedCheckIn, ShiftRecord } from "../shifts-data";
 
 const ENDING_THRESHOLD_MS = 60 * 60 * 1000; // <1h to end
 const GRACE_PERIOD_MS = 15 * 60 * 1000; // 15 min grace after start

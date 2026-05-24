@@ -7,7 +7,7 @@ import {
   endOfWeekMonday,
   formatDateRangeVi,
   startOfWeekMonday,
-} from "./lib/date-utils";
+} from "../lib/date-utils";
 
 interface WeekNavigatorProps {
   anchor: Date;

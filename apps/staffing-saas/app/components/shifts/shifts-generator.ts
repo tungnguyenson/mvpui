@@ -7,7 +7,7 @@ import {
   formatTimeHHmm,
   startOfWeekMonday,
   type WeekDay,
-} from "./calendar/lib/date-utils";
+} from "./lib/date-utils";
 import {
   OPERATORS,
   type PlannedCheckIn,

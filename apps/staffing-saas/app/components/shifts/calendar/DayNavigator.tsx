@@ -9,7 +9,7 @@ import {
   startOfDay,
   WEEKDAY_LABELS_VI,
   type WeekDay,
-} from "./lib/date-utils";
+} from "../lib/date-utils";
 
 interface DayNavigatorProps {
   anchor: Date;

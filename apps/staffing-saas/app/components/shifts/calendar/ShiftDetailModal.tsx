@@ -180,9 +180,15 @@ function ShiftDetailContent({
         <Button color="secondary" onClick={onClose}>
           Đóng
         </Button>
+        <Button color="secondary" asChild>
+          <Link href={`/shifts/${shift.id}/config`}>
+            Cấu hình
+            <ChevronRight className="size-4" />
+          </Link>
+        </Button>
         <Button asChild>
           <Link href={`/shifts/${shift.id}`}>
-            Xem cấu hình Ca làm việc
+            Chi tiết
             <ChevronRight className="size-4" />
           </Link>
         </Button>

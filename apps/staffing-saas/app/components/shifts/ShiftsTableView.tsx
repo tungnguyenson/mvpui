@@ -1,13 +1,14 @@
 "use client";
 
 import { Avatar, ProgressBarBase, Tab, TabList, Table, TableCard, Tabs } from "@mvp-ui/ui";
+import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import {
   getCustomerLogo,
   SHIFT_STATUS_LABELS,
   type ShiftRecord,
   type ShiftStatus,
-} from "../shifts-data";
+} from "./shifts-data";
 import { cn } from "./lib/cn";
 import {
   WEEKDAY_LABELS_VI,
@@ -37,15 +38,10 @@ const STATUS_TAB_DEFS: Array<{ id: StatusTabId; label: string }> = [
 
 interface ShiftsTableViewProps {
   shifts: ShiftRecord[];
-  selectedShiftId: string | null;
-  onSelectShift: (shift: ShiftRecord) => void;
 }
 
-export function ShiftsTableView({
-  shifts,
-  selectedShiftId,
-  onSelectShift,
-}: ShiftsTableViewProps) {
+export function ShiftsTableView({ shifts }: ShiftsTableViewProps) {
+  const router = useRouter();
   const [statusTab, setStatusTab] = useState<StatusTabId>("all");
 
   const counts = useMemo(() => {
@@ -101,9 +97,7 @@ export function ShiftsTableView({
             <Table
               aria-label="Danh sách ca làm việc"
               onRowAction={(key) => {
-                const id = String(key);
-                const target = visible.find((s) => s.id === id);
-                if (target) onSelectShift(target);
+                router.push(`/shifts/${String(key)}`);
               }}
             >
               <Table.Header>
@@ -117,13 +111,7 @@ export function ShiftsTableView({
                 ))}
               </Table.Header>
               <Table.Body items={visible}>
-                {(shift) => (
-                  <ShiftTableRow
-                    shift={shift}
-                    isSelected={selectedShiftId === shift.id}
-                    onSelect={onSelectShift}
-                  />
-                )}
+                {(shift) => <ShiftTableRow shift={shift} />}
               </Table.Body>
             </Table>
           </div>
@@ -135,11 +123,9 @@ export function ShiftsTableView({
 
 interface RowProps {
   shift: ShiftRecord;
-  isSelected: boolean;
-  onSelect: (shift: ShiftRecord) => void;
 }
 
-function ShiftTableRow({ shift, isSelected, onSelect }: RowProps) {
+function ShiftTableRow({ shift }: RowProps) {
   const status = SHIFT_STATUS_LABELS[shift.status];
   const start = new Date(shift.startAtMs);
   const end = new Date(shift.endAtMs);
@@ -158,14 +144,7 @@ function ShiftTableRow({ shift, isSelected, onSelect }: RowProps) {
         : "bg-warning-fg";
 
   return (
-    <Table.Row
-      id={shift.id}
-      className={cn(
-        "cursor-pointer",
-        isSelected && "bg-info-bg/40",
-      )}
-    >
-
+    <Table.Row id={shift.id} className="cursor-pointer">
       <Table.Cell>
         <div className="flex min-w-0 items-center gap-2">
           <Avatar
