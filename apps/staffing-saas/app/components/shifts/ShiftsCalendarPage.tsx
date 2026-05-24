@@ -1,7 +1,15 @@
 "use client";
 
-import { EmptyState, Tab, TabList, Tabs } from "@mvp-ui/ui";
-import { CalendarDays, Table2 } from "lucide-react";
+import {
+  ButtonUtility,
+  Drawer,
+  DrawerBody,
+  EmptyState,
+  Tab,
+  TabList,
+  Tabs,
+} from "@mvp-ui/ui";
+import { CalendarDays, SlidersHorizontal, Table2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { CustomerScopePicker } from "./calendar/CustomerScopePicker";
 import { CustomerView } from "./calendar/CustomerView";
@@ -13,6 +21,7 @@ import { WeekNavigator } from "./calendar/WeekNavigator";
 import { WeekView } from "./calendar/WeekView";
 import {
   applyFilters,
+  countActiveFilters,
   DEFAULT_FILTERS,
   extractCustomerOptions,
   extractOperatorOptions,
@@ -27,6 +36,7 @@ import {
   startOfWeekMonday,
 } from "./lib/date-utils";
 import { FilterChips } from "./filter/FilterChips";
+import { FilterContent } from "./filter/FilterSidebar";
 import { FilterSidebar } from "./filter/FilterSidebar";
 import { SHIFTS, type ShiftRecord } from "./shifts-data";
 
@@ -64,10 +74,15 @@ export function ShiftsCalendarPage() {
   const [filters, setFilters] = useState<ShiftFilters>(DEFAULT_FILTERS);
   const [sidebarCollapsed, setSidebarCollapsed] = useState<boolean>(false);
   const [selectedShift, setSelectedShift] = useState<ShiftRecord | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+  const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
 
-  // Hydrate from localStorage
+  // Hydrate from localStorage + detect mobile
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    const mobileNow = window.matchMedia("(max-width: 767px)").matches;
+    setIsMobile(mobileNow);
 
     const storedDisplay = window.localStorage.getItem(DISPLAY_STORAGE_KEY);
     if (storedDisplay === "calendar" || storedDisplay === "table") {
@@ -75,7 +90,9 @@ export function ShiftsCalendarPage() {
     }
 
     const storedSub = window.localStorage.getItem(SUBVIEW_STORAGE_KEY);
-    if (
+    if (mobileNow) {
+      setCalendarView("day");
+    } else if (
       storedSub === "week" ||
       storedSub === "day" ||
       storedSub === "customer"
@@ -110,6 +127,18 @@ export function ShiftsCalendarPage() {
     const collapsed = window.localStorage.getItem(COLLAPSE_STORAGE_KEY);
     if (collapsed === "1") setSidebarCollapsed(true);
   }, [customerOptions]);
+
+  // Track viewport changes
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 767px)");
+    const handler = (e: MediaQueryListEvent) => {
+      setIsMobile(e.matches);
+      if (e.matches) setCalendarView("day");
+    };
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   // Persist
   useEffect(() => {
@@ -180,11 +209,24 @@ export function ShiftsCalendarPage() {
   const showsDayNav =
     displayMode === "calendar" && calendarView === "day";
 
+  const activeFilterCount = countActiveFilters(filters);
+
+  const filterContentProps = {
+    filters,
+    onChange: setFilters,
+    regionOptions,
+    operatorOptions,
+    customerOptions,
+    customerIds: globalCustomerIds,
+    onCustomerIdsChange: setGlobalCustomerIds,
+    showCustomerSection: !showsHeaderCustomerPicker,
+  };
+
   return (
     <div className="flex min-h-[calc(100vh-3.5rem)] flex-col bg-bg-secondary">
       <header className="flex flex-col gap-3 border-b border-border-secondary bg-bg px-4 py-4 md:px-6">
-        {/* Level 1 + Level 2 */}
-        <div className="flex flex-wrap items-center gap-4">
+        {/* Display mode tabs + calendar sub-view tabs (sub-view hidden on mobile) + mobile filter button */}
+        <div className="flex items-center gap-4">
           <Tabs
             size="sm"
             variant="pill"
@@ -200,7 +242,7 @@ export function ShiftsCalendarPage() {
             </TabList>
           </Tabs>
           {displayMode === "calendar" && (
-            <>
+            <div className="hidden items-center gap-4 md:flex">
               <span aria-hidden="true" className="h-6 w-px bg-border-secondary" />
               <Tabs
                 size="sm"
@@ -216,11 +258,28 @@ export function ShiftsCalendarPage() {
                   ))}
                 </TabList>
               </Tabs>
-            </>
+            </div>
           )}
+          <div className="relative ml-auto md:hidden">
+            <ButtonUtility
+              size="sm"
+              color="tertiary"
+              icon={<SlidersHorizontal />}
+              aria-label={`Bộ lọc${activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}`}
+              onClick={() => setFilterDrawerOpen(true)}
+            />
+            {activeFilterCount > 0 && (
+              <span
+                aria-hidden="true"
+                className="absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-fg-brand px-1 text-[10px] font-semibold leading-none text-primary-fg"
+              >
+                {activeFilterCount}
+              </span>
+            )}
+          </div>
         </div>
 
-        {/* Level 3: date nav + (week-only) customer picker */}
+        {/* Date nav + customer picker */}
         <div className="flex flex-wrap items-center gap-3">
           {showsDayNav ? (
             <DayNavigator anchor={anchor} onChange={setAnchor} />
@@ -275,24 +334,34 @@ export function ShiftsCalendarPage() {
             />
           )}
         </main>
-        <FilterSidebar
-          filters={filters}
-          onChange={setFilters}
-          regionOptions={regionOptions}
-          operatorOptions={operatorOptions}
-          customerOptions={customerOptions}
-          customerIds={globalCustomerIds}
-          onCustomerIdsChange={setGlobalCustomerIds}
-          showCustomerSection={!showsHeaderCustomerPicker}
-          collapsed={sidebarCollapsed}
-          onCollapsedChange={setSidebarCollapsed}
-        />
+        {!isMobile && (
+          <FilterSidebar
+            {...filterContentProps}
+            collapsed={sidebarCollapsed}
+            onCollapsedChange={setSidebarCollapsed}
+          />
+        )}
       </div>
 
       <ShiftDetailModal
         shift={selectedShift}
         onClose={() => setSelectedShift(null)}
       />
+
+      {isMobile && (
+        <Drawer
+          isOpen={filterDrawerOpen}
+          onOpenChange={setFilterDrawerOpen}
+          title="Bộ lọc"
+          side="right"
+          size="sm"
+          showCloseButton
+        >
+          <DrawerBody>
+            <FilterContent {...filterContentProps} />
+          </DrawerBody>
+        </Drawer>
+      )}
     </div>
   );
 }

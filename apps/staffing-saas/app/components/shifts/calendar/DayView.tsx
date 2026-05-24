@@ -188,7 +188,7 @@ function KpiStrip({ stats }: KpiStripProps) {
     },
   ];
   return (
-    <div className="grid gap-px overflow-hidden rounded-lg border border-border-secondary bg-border-secondary lg:grid-cols-6">
+    <div className="grid grid-cols-2 gap-px overflow-hidden rounded-lg border border-border-secondary bg-border-secondary md:grid-cols-3 lg:grid-cols-6">
       {tiles.map((t) => (
         <div key={t.label} className="flex flex-col gap-1 bg-bg p-3">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-fg-tertiary">

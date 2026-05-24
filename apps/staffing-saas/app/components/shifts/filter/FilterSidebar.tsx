@@ -26,7 +26,18 @@ import {
 } from "../lib/filter-state";
 import { SHIFT_STATUS_LABELS, type ShiftStatus } from "../shifts-data";
 
-interface FilterSidebarProps {
+const STATUS_ORDER: ShiftStatus[] = [
+  "critical",
+  "open",
+  "filling",
+  "full",
+  "closed",
+];
+
+const FILL_ORDER: FillBucket[] = ["low", "mid", "full"];
+const TIME_ORDER: TimeBucket[] = ["morning", "afternoon", "evening", "night"];
+
+export interface FilterContentProps {
   filters: ShiftFilters;
   onChange: (next: ShiftFilters) => void;
   regionOptions: string[];
@@ -45,22 +56,9 @@ interface FilterSidebarProps {
   customerIds: string[];
   onCustomerIdsChange: (next: string[]) => void;
   showCustomerSection: boolean;
-  collapsed: boolean;
-  onCollapsedChange: (next: boolean) => void;
 }
 
-const STATUS_ORDER: ShiftStatus[] = [
-  "critical",
-  "open",
-  "filling",
-  "full",
-  "closed",
-];
-
-const FILL_ORDER: FillBucket[] = ["low", "mid", "full"];
-const TIME_ORDER: TimeBucket[] = ["morning", "afternoon", "evening", "night"];
-
-export function FilterSidebar({
+export function FilterContent({
   filters,
   onChange,
   regionOptions,
@@ -69,44 +67,10 @@ export function FilterSidebar({
   customerIds,
   onCustomerIdsChange,
   showCustomerSection,
-  collapsed,
-  onCollapsedChange,
-}: FilterSidebarProps) {
+}: FilterContentProps) {
   const activeCount = countActiveFilters(filters);
 
-  if (collapsed) {
-    return (
-      <aside className="flex w-14 shrink-0 flex-col items-center gap-3 border-l border-border-secondary bg-bg py-4">
-        <ButtonUtility
-          size="sm"
-          color="tertiary"
-          icon={<ChevronsLeft />}
-          aria-label="Mở rộng bộ lọc"
-          onClick={() => onCollapsedChange(false)}
-        />
-        <div className="relative">
-          <ButtonUtility
-            size="sm"
-            color="tertiary"
-            icon={<SlidersHorizontal />}
-            aria-label={`Bộ lọc (${activeCount} đang dùng)`}
-            onClick={() => onCollapsedChange(false)}
-          />
-          {activeCount > 0 && (
-            <span
-              aria-hidden="true"
-              className="absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-fg-brand px-1 text-[10px] font-semibold leading-none text-primary-fg"
-            >
-              {activeCount}
-            </span>
-          )}
-        </div>
-      </aside>
-    );
-  }
-
   const setSearch = (v: string) => onChange({ ...filters, search: v });
-
   const setRegions = (next: string[]) => onChange({ ...filters, regions: next });
   const setOperators = (next: string[]) =>
     onChange({ ...filters, operators: next });
@@ -133,26 +97,7 @@ export function FilterSidebar({
   };
 
   return (
-    <aside className="flex w-72 shrink-0 flex-col gap-6 border-l border-border-secondary bg-bg px-4 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <SlidersHorizontal className="size-4 text-fg-tertiary" />
-          <h2 className="text-sm font-semibold text-fg">Bộ lọc</h2>
-          {activeCount > 0 && (
-            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-info-bg px-1.5 text-xs font-semibold text-info-fg">
-              {activeCount}
-            </span>
-          )}
-        </div>
-        <ButtonUtility
-          size="sm"
-          color="tertiary"
-          icon={<ChevronsRight />}
-          aria-label="Thu gọn bộ lọc"
-          onClick={() => onCollapsedChange(true)}
-        />
-      </div>
-
+    <div className="flex flex-col gap-6">
       {showCustomerSection && (
         <Section title="Khách hàng">
           <MultiSelect
@@ -316,7 +261,7 @@ export function FilterSidebar({
         </ChipGroup>
       </Section>
 
-      <div className="mt-2 flex justify-end border-t border-border-secondary pt-3">
+      <div className="flex justify-end border-t border-border-secondary pt-3">
         <Button
           color="tertiary"
           size="sm"
@@ -326,6 +271,75 @@ export function FilterSidebar({
           Xóa lọc
         </Button>
       </div>
+    </div>
+  );
+}
+
+interface FilterSidebarProps extends FilterContentProps {
+  collapsed: boolean;
+  onCollapsedChange: (next: boolean) => void;
+}
+
+export function FilterSidebar({
+  collapsed,
+  onCollapsedChange,
+  ...contentProps
+}: FilterSidebarProps) {
+  const activeCount = countActiveFilters(contentProps.filters);
+
+  if (collapsed) {
+    return (
+      <aside className="flex w-14 shrink-0 flex-col items-center gap-3 border-l border-border-secondary bg-bg py-4">
+        <ButtonUtility
+          size="sm"
+          color="tertiary"
+          icon={<ChevronsLeft />}
+          aria-label="Mở rộng bộ lọc"
+          onClick={() => onCollapsedChange(false)}
+        />
+        <div className="relative">
+          <ButtonUtility
+            size="sm"
+            color="tertiary"
+            icon={<SlidersHorizontal />}
+            aria-label={`Bộ lọc (${activeCount} đang dùng)`}
+            onClick={() => onCollapsedChange(false)}
+          />
+          {activeCount > 0 && (
+            <span
+              aria-hidden="true"
+              className="absolute -top-1 -right-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-fg-brand px-1 text-[10px] font-semibold leading-none text-primary-fg"
+            >
+              {activeCount}
+            </span>
+          )}
+        </div>
+      </aside>
+    );
+  }
+
+  return (
+    <aside className="flex w-72 shrink-0 flex-col gap-6 border-l border-border-secondary bg-bg px-4 py-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <SlidersHorizontal className="size-4 text-fg-tertiary" />
+          <h2 className="text-sm font-semibold text-fg">Bộ lọc</h2>
+          {activeCount > 0 && (
+            <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-info-bg px-1.5 text-xs font-semibold text-info-fg">
+              {activeCount}
+            </span>
+          )}
+        </div>
+        <ButtonUtility
+          size="sm"
+          color="tertiary"
+          icon={<ChevronsRight />}
+          aria-label="Thu gọn bộ lọc"
+          onClick={() => onCollapsedChange(true)}
+        />
+      </div>
+
+      <FilterContent {...contentProps} />
     </aside>
   );
 }
