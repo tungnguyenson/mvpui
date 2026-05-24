@@ -15,9 +15,8 @@ export function PageScaffold({
     <div className="flex flex-col">
       {header}
       <div
-        className={`flex flex-col gap-8 px-0 pt-4 pb-24 md:px-8 md:py-8 md:pb-8${
-          contentClassName ? ` ${contentClassName}` : ""
-        }`}
+        className={`flex flex-col gap-0 md:gap-8 px-0 pt-4 pb-24 md:px-8 md:py-8 md:pb-8${contentClassName ? ` ${contentClassName}` : ""
+          }`}
       >
         {children}
       </div>

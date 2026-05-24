@@ -13,6 +13,8 @@ import Link from "next/link";
 import { SetHeaderActions } from "../_shell/HeaderActionsContext";
 import {
   ArrowRight,
+  ArrowUpRight,
+  ArrowDownRight,
   CheckCircle2,
   Clock3,
   Download,
@@ -62,7 +64,7 @@ interface VerificationItem {
 
 const METRICS: Metric[] = [
   {
-    label: "Số CTV cần tuyển",
+    label: "CTV cần tuyển",
     value: "1,420",
     change: "18%",
     trend: "up",
@@ -92,8 +94,8 @@ const METRICS: Metric[] = [
     ],
   },
   {
-    label: "CTV không hài lòng",
-    value: "12",
+    label: "CTV hài lòng",
+    value: "90%",
     change: "5%",
     trend: "down",
     spark: [
@@ -213,6 +215,23 @@ const COLUMNS = [
   { id: "rating", name: "Đánh giá" },
 ];
 
+function MobileMetricTile({ label, value, trend }: Pick<Metric, "label" | "value" | "trend">) {
+  const isUp = trend === "up";
+  const iconBg = isUp ? "bg-success-bg text-fg-success" : "bg-error-bg text-fg-error";
+  const Icon = isUp ? ArrowUpRight : ArrowDownRight;
+  return (
+    <div className="flex flex-col gap-1 rounded-xl border border-border-secondary bg-bg p-4 shadow-xs">
+      <p className="text-sm font-medium text-fg-tertiary leading-snug">{label}</p>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-2xl font-semibold text-fg">{value}</p>
+        <div className={`flex size-6 shrink-0 items-center justify-center rounded-md ${iconBg}`} aria-hidden="true">
+          <Icon className="size-3.5" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ModuleTile({ title, description, href, stat, tone }: ModuleCard) {
   const toneClass =
     tone === "success"
@@ -252,7 +271,7 @@ function SectionCard({
   children: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-border-secondary bg-bg shadow-xs">
+    <div className="sm:rounded-xl border border-border-secondary bg-bg shadow-xs">
       <div className="flex flex-col gap-3 border-b border-border-secondary px-5 py-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <h2 className="text-base font-semibold text-fg">{title}</h2>
@@ -302,19 +321,28 @@ export function Dashboard() {
       }
     >
 
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 sm:gap-5 grid-cols-2 xl:grid-cols-4 p-4 sm:p-0">
         {METRICS.map((metric) => (
-          <MetricCard
-            key={metric.label}
-            {...metric}
-            changeStyle="text"
-            changeLabel="so với tuần trước"
-            variant="framed"
-          />
+          <div key={metric.label}>
+            <div className="sm:hidden">
+              <MobileMetricTile
+                label={metric.label}
+                value={metric.value}
+                trend={metric.trend}
+              />
+            </div>
+            <MetricCard
+              {...metric}
+              changeStyle="text"
+              changeLabel="so với tuần trước"
+              variant="framed"
+              className="hidden sm:flex"
+            />
+          </div>
         ))}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 lg:grid-cols-2 xl:grid-cols-4 p-4 sm:p-0">
         {MODULES.map((module) => (
           <ModuleTile key={module.href} {...module} />
         ))}
@@ -523,7 +551,7 @@ export function Dashboard() {
         </div>
       </SectionCard>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-3 p-4 sm:p-0">
         <Link
           href={APP_ROUTES.shifts}
           className="rounded-xl border border-border-secondary bg-bg p-5 shadow-xs transition-colors hover:bg-bg-secondary"

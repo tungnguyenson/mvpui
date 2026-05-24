@@ -1,6 +1,6 @@
 const ADMIN_USER =
-  process.env.NEXT_PUBLIC_ADMIN_USER || "admin@example.com";
-const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || "admin";
+  process.env.ADMIN_USER || "admin@example.com";
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || "admin";
 
 const SESSION_COOKIE = "session";
 
@@ -34,6 +34,7 @@ export async function loginAction(
   const password = String(formData.get("password") || "");
   const remember = formData.get("remember") === "true";
 
+
   if (!email || !email.includes("@")) {
     return { error: "Vui lòng nhập email hợp lệ.", email };
   }
@@ -43,6 +44,7 @@ export async function loginAction(
   }
 
   if (email === ADMIN_USER && password === ADMIN_PASSWORD) {
+    console.log("success")
     setSessionCookie(remember);
     return { success: true };
   }

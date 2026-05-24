@@ -150,28 +150,31 @@ export function HiringRequestsPage() {
         />
       }
     >
-      <MetricStrip
-        items={[
-          {
-            icon: <Briefcase className="size-4" />,
-            color: "brand",
-            value: openCount,
-            label: "Request mở",
-          },
-          {
-            icon: <AlertOctagon className="size-4" />,
-            color: "error",
-            value: overdueCount,
-            label: "Quá hạn",
-          },
-          {
-            icon: <UserPlus className="size-4" />,
-            color: "warning",
-            value: totalNeeded,
-            label: "CTV cần fill",
-          },
-        ]}
-      />
+      <div className="p-4 sm:p-0">
+        <MetricStrip
+          items={[
+            {
+              icon: <Briefcase className="size-4" />,
+              color: "brand",
+              value: openCount,
+              label: "Request mở",
+            },
+            {
+              icon: <AlertOctagon className="size-4" />,
+              color: "error",
+              value: overdueCount,
+              label: "Quá hạn",
+            },
+            {
+              icon: <UserPlus className="size-4" />,
+              color: "warning",
+              value: totalNeeded,
+              label: "CTV cần fill",
+            },
+          ]}
+
+        />
+      </div>
 
       <TableCard.Root>
         <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">

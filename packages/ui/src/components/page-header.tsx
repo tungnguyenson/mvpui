@@ -125,7 +125,7 @@ export const PageHeader = forwardRef<HTMLElement, PageHeaderProps>(
           // need vertical breathing room). When only `primaryAction` (FAB) or
           // nothing renders, the header element has no visible content and
           // collapses to zero height.
-          actions ? "bg-bg px-4 py-3 shadow-xs" : "",
+          actions ? "bg-bg px-4 py-4 shadow-xs" : "",
           className,
         )}
         {...props}

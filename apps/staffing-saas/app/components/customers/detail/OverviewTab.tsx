@@ -122,7 +122,7 @@ export function OverviewTab({ extras }: OverviewTabProps) {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 px-4 sm:px-0">
         <SummaryTile label="Tình trạng hoạt động">
           <StatusBadge
             label={management.operationalStatusLabel}
