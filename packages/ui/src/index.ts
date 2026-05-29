@@ -270,6 +270,8 @@ export type { DatePickerProps } from "./components/date-picker.js";
 export { DatePicker } from "./components/date-picker.js";
 export type { AppNavProps, AppNavItemProps, AppNavItemDef } from "./components/app-nav.js";
 export { AppNav, AppNavItem } from "./components/app-nav.js";
+export type { HeaderNavProps, HeaderNavItemDef } from "./components/header-nav.js";
+export { HeaderNav } from "./components/header-nav.js";
 export type {
 	SidebarNavItemDef,
 	SidebarNavSectionDef,

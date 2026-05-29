@@ -98,6 +98,7 @@ export const componentSections: NavSection[] = [
       { name: "Breadcrumbs", href: "/components/breadcrumbs" },
       { name: "Page Header", href: "/components/page-header" },
       { name: "Sidebar Nav", href: "/components/sidebar-nav" },
+      { name: "Header Nav", href: "/components/header-nav" },
       { name: "Tabs", href: "/components/tabs" },
       { name: "Pagination", href: "/components/pagination" },
       { name: "Carousel", href: "/components/carousel" },
