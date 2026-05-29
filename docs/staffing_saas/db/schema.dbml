@@ -1,0 +1,1246 @@
+// =====================================================================
+// Staffing SaaS — Database Schema (DBML)
+// Target: PostgreSQL
+// Derived from docs/staffing_saas/*.md + apps/staffing-saas demo fixtures.
+// Companion analysis: ./db-analysis.md
+//
+// Conventions:
+//   - PK: bigint identity (surrogate). Human codes (HR-2451, JP-8821,
+//     SC1001, payment batch code) kept as separate unique `code` columns.
+//   - Money: bigint, VND, no decimals. (fixtures store "₫4.850.000" strings —
+//     parse to integer cents-free VND.)
+//   - Percent / ratio: numeric(6,4) as 0..1 fraction (fixtures store "15%").
+//   - Timestamps: timestamptz. Pure calendar dates: date.
+//   - All staffing-internal tables carry organization_id (multi-tenant — see
+//     analysis doc §Tenancy). Customer-scoped child tables inherit org via parent.
+//   - Snapshot columns (price_snapshot, pay_rate_snapshot, bonus_snapshot) are
+//     INTENTIONALLY denormalized — they freeze pricing/policy at commit time so
+//     later config edits don't rewrite history. See analysis §Snapshot strategy.
+// =====================================================================
+
+// ---------------------------------------------------------------------
+// ENUMS
+// ---------------------------------------------------------------------
+
+Enum user_status {
+  active
+  invited
+  suspended
+  inactive
+}
+Enum role_scope_type {
+  org
+  branch
+  team
+  custom
+}
+
+Enum customer_status {
+  hiring
+  lead
+  onboarding
+  paused
+}
+Enum customer_verification_status {
+  active
+  pending
+  rejected
+}
+
+Enum pricing_status {
+  active
+  inactive
+}
+Enum pricing_shift_type {
+  day_regular
+  day_overtime
+  night_regular
+  night_overtime
+  day_holiday
+  night_holiday
+}
+
+Enum customer_shift_status {
+  active
+  inactive
+}
+Enum attendance_mode {
+  precise
+  simple
+}
+Enum overtime_calc_mode {
+  after_scheduled_end
+  daily_hour_threshold
+}
+
+Enum hiring_request_status {
+  pending
+  accepted
+  fulfilling
+  completed
+  cancelled
+}
+Enum job_post_status {
+  draft
+  published
+  paused
+  closed
+}
+Enum job_post_visibility {
+  public
+  unlisted
+  private
+}
+Enum pay_unit {
+  shift
+  hour
+}
+Enum approval_status {
+  pending
+  approved
+  rejected
+}
+
+Enum candidate_stage {
+  new
+  contact
+  onboarding
+  hired
+  rejected
+  ghosted
+  blacklist
+}
+Enum candidate_source {
+  facebook
+  zalo
+  tiktok
+  referral
+  direct
+}
+Enum document_state {
+  missing
+  submitted
+  verified
+  rejected
+}
+Enum application_status {
+  applied
+  shortlisted
+  accepted
+  rejected
+  cancelled_by_worker
+}
+
+// Unified per-day commitment lifecycle (ShiftAssignment ≡ HiringAssignment).
+Enum assignment_status {
+  assigned
+  confirmed
+  checked_in
+  completed
+  no_show
+  late
+  cancelled
+}
+
+Enum worker_status {
+  active
+  pending
+  locked
+}
+Enum verification_status {
+  verified
+  in_review
+  missing_docs
+  rejected
+}
+Enum violation_severity {
+  minor
+  moderate
+  severe
+}
+Enum violation_worker_status {
+  normal
+  warning
+  suspended
+  locked
+}
+
+Enum timesheet_status {
+  in_progress
+  closed
+  needs_review
+  exception
+}
+Enum attendance_punch_status {
+  on_time
+  late
+  early_leave
+  absent
+  no_checkout
+}
+
+Enum bonus_status {
+  running
+  ended
+  cancelled
+  draft
+}
+Enum bonus_payout_kind {
+  fixed
+  per_shift
+  per_hour
+  tiered
+}
+
+Enum batch_status {
+  new
+  locked
+  running
+  completed
+  cancelled
+}
+Enum payout_method {
+  bank
+  ewallet
+  cash
+}
+Enum payout_status {
+  processing
+  transferred
+  rejected
+  invalid_account
+}
+Enum adjustment_kind {
+  debt
+  offset
+  adhoc_other
+}
+
+Enum reconciliation_status {
+  open
+  pending_approval
+  approved
+  disputed
+}
+Enum discrepancy_type {
+  missing_checkout
+  rate_mismatch
+  extra_shift
+  missing_shift
+  penalty
+}
+
+// =====================================================================
+// SUBSYSTEM 1 — ORG, IDENTITY & RBAC
+// =====================================================================
+
+Table organization {
+  id bigint [pk, increment]
+  name varchar [not null]
+  slug varchar [unique, not null]
+  created_at timestamptz [not null, default: `now()`]
+  Note: 'Staffing company tenant. super_admin spans organizations; everything else is org-scoped.'
+}
+
+// Staffing-internal users (ops, recruiters, finance) — NOT workers, NOT customer contacts.
+Table app_user {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  full_name varchar [not null]
+  email varchar [not null]
+  phone varchar
+  status user_status [not null, default: 'active']
+  region varchar
+  manager_id bigint              // self-FK, reporting line
+  joined_at date
+  last_active_at timestamptz
+  notes text
+  created_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    (organization_id, email) [unique]
+    status
+    region
+  }
+}
+
+Table app_user_activity {
+  id bigint [pk, increment]
+  app_user_id bigint [not null]
+  at timestamptz [not null]
+  action varchar [not null]
+  detail text
+  Indexes { (app_user_id, at) }
+}
+
+Table role {
+  id bigint [pk, increment]
+  organization_id bigint          // null = system role (super_admin etc.)
+  key varchar [not null]          // org_admin, ops_manager, recruiter, finance, viewer...
+  name varchar [not null]
+  description text
+  scope_type role_scope_type [not null, default: 'org']
+  is_system boolean [not null, default: false]
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  Indexes { (organization_id, key) [unique] }
+}
+
+// Catalog of resource:action permissions (permissions.md §3).
+Table permission {
+  id bigint [pk, increment]
+  key varchar [unique, not null]  // 'customers:edit', 'shifts:approve', 'impersonate:user'...
+  resource varchar [not null]     // 'customers', 'shifts', ... ('*' for specials)
+  action varchar [not null]       // view|create|edit|delete|approve|assign|export | special
+  label_vi varchar [not null]
+  is_special boolean [not null, default: false]
+  Indexes { (resource, action) }
+}
+
+Table role_permission {
+  role_id bigint [not null]
+  permission_id bigint [not null]
+  Indexes { (role_id, permission_id) [pk] }
+}
+
+// Multi-role per user (permissions.md §7.3). Time-bound + scope (Phase 2).
+Table user_role {
+  id bigint [pk, increment]
+  app_user_id bigint [not null]
+  role_id bigint [not null]
+  scope_type role_scope_type
+  scope_ref varchar               // branch/team id when scoped
+  assigned_by bigint              // app_user.id
+  assigned_at timestamptz [not null, default: `now()`]
+  expires_at timestamptz          // null = permanent
+  Indexes {
+    (app_user_id, role_id, scope_ref) [unique]
+    expires_at
+  }
+}
+
+Table audit_log {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  actor_id bigint                 // app_user.id
+  at timestamptz [not null, default: `now()`]
+  action varchar [not null]       // 'assign_role', 'edit_role_permissions', ...
+  resource varchar [not null]
+  resource_ref varchar
+  old_value jsonb
+  new_value jsonb
+  severity varchar [default: 'info'] // info | warn (privilege-escalation attempts)
+  Indexes {
+    (organization_id, at)
+    (actor_id, at)
+    resource
+  }
+}
+
+Ref: app_user.organization_id > organization.id
+Ref: app_user.manager_id > app_user.id
+Ref: app_user_activity.app_user_id > app_user.id
+Ref: role.organization_id > organization.id
+Ref: role_permission.role_id > role.id
+Ref: role_permission.permission_id > permission.id
+Ref: user_role.app_user_id > app_user.id
+Ref: user_role.role_id > role.id
+Ref: user_role.assigned_by > app_user.id
+Ref: audit_log.organization_id > organization.id
+Ref: audit_log.actor_id > app_user.id
+
+// =====================================================================
+// SUBSYSTEM 2 — CUSTOMER & STABLE CONFIG
+// =====================================================================
+
+Table customer {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  // brand profile
+  brand_name varchar [not null]
+  url_slug varchar
+  service_tags text[]              // ['SaaS ATS - ...', 'On-demand Staffing - ...']
+  logo_url varchar
+  // status
+  status customer_status [not null, default: 'lead']
+  verification_status customer_verification_status [not null, default: 'pending']
+  // management profile
+  company_type varchar
+  company_size varchar
+  industry varchar
+  is_key_account boolean [not null, default: false]
+  account_manager_id bigint        // app_user.id (staffing AM)
+  hubspot_url varchar
+  // legal / invoicing
+  legal_name varchar
+  tax_id varchar
+  legal_address text
+  invoice_email varchar
+  notes text
+  created_at timestamptz [not null, default: `now()`]
+
+  Indexes {
+    organization_id
+    status
+    (organization_id, brand_name)
+  }
+}
+
+// Customer-side contacts (the customer's own staff) — distinct from app_user.
+Table customer_user {
+  id bigint [pk, increment]
+  customer_id bigint [not null]
+  full_name varchar [not null]
+  email varchar
+  phone varchar
+  Indexes { customer_id }
+}
+
+Table customer_document {
+  id bigint [pk, increment]
+  customer_id bigint [not null]
+  name varchar [not null]
+  type varchar                     // contract | appendix | ...
+  valid_from date
+  valid_to date
+  renewal_term varchar
+  note text
+  file_url varchar
+  created_at timestamptz [not null, default: `now()`]
+  Indexes { customer_id }
+}
+
+// Job position / "Vị trí" / "Loại việc".
+Table customer_position {
+  id bigint [pk, increment]
+  customer_id bigint [not null]
+  name varchar [not null]
+  description text
+  requirements text
+  benefits text
+  instructions text
+  Indexes { customer_id }
+}
+
+Table position_document {
+  id bigint [pk, increment]
+  position_id bigint [not null]
+  name varchar [not null]
+  url varchar
+  Indexes { position_id }
+}
+
+// Work site / "Địa điểm".
+Table customer_location {
+  id bigint [pk, increment]
+  customer_id bigint [not null]
+  short_name varchar [not null]
+  address text
+  province varchar
+  Indexes {
+    customer_id
+    province
+  }
+}
+
+// Pay & fee config / "Cấu hình chi trả & phí".
+Table customer_pricing_config {
+  id bigint [pk, increment]
+  customer_id bigint [not null]
+  name varchar [not null]
+  status pricing_status [not null, default: 'active']
+  province varchar
+  category varchar                 // "Kho bãi"
+  job_type varchar                 // "CTV Làm việc kho"
+  service_class varchar            // "Linh hoạt"
+  applied_from date
+  applied_to date
+  // night-shift window + extras
+  night_start time
+  night_end time
+  short_shift_config varchar
+  contract_ref varchar
+  apply_cancel_policy boolean [not null, default: true]
+  quote_link varchar
+  contract_image_url varchar
+  ctv_note text
+  job_description text
+  internal_note text
+  created_at timestamptz [not null, default: `now()`]
+  Indexes {
+    customer_id
+    status
+    (customer_id, province, job_type)
+  }
+}
+
+// One row per shift-type in a pricing config (6 rows: day/night × regular/OT/holiday).
+Table customer_pricing_rate {
+  id bigint [pk, increment]
+  pricing_config_id bigint [not null]
+  shift_type pricing_shift_type [not null]
+  pay_amount bigint                // VND/hour paid to worker
+  fee_amount bigint                // VND/hour billed to customer
+  gm0 numeric(6,4)                 // gross-margin baseline, fraction
+  expected_share numeric(6,4)
+  actual_share_l30 numeric(6,4)
+  Indexes { (pricing_config_id, shift_type) [unique] }
+}
+
+// Reconciliation config / "Cấu hình đối soát" (1:1 with customer).
+Table customer_reconciliation_config {
+  id bigint [pk, increment]
+  customer_id bigint [unique, not null]
+  cycle_per_month smallint
+  cycle_start_day smallint
+  cycle_end_day smallint
+  statement_due_rule varchar
+  invoice_due_rule varchar
+  debt_cutoff_rule varchar
+  payment_term_days smallint
+  invoice_issuance_method varchar
+  template_file_url varchar
+  template_link_url varchar
+  payment_required_docs text[]
+  channel_kind varchar             // Zalo | Teams | ...
+  booking_group_url varchar
+  reconciliation_group_url varchar
+  notes text
+}
+
+Table customer_reconciliation_contact {
+  id bigint [pk, increment]
+  customer_id bigint [not null]
+  role varchar                     // "Chức năng"
+  full_name varchar
+  phone varchar
+  email varchar
+  coverage_area varchar
+  Indexes { customer_id }
+}
+
+// Reusable shift = position + location + weekly schedule + pricing + policy.
+// NO calendar dates / headcount — those live on hiring_request. (customer_shift.md §2)
+Table customer_shift {
+  id bigint [pk, increment]
+  customer_id bigint [not null]
+  code varchar [not null]          // 'SC1001'
+  name varchar [not null]
+  status customer_shift_status [not null, default: 'active']
+  position_id bigint [not null]
+  location_id bigint [not null]
+  pricing_config_id bigint [not null]
+  // weekly schedule
+  start_time time [not null]
+  end_time time [not null]         // <= start_time ⇒ overnight
+  break_minutes int [default: 0]
+  // policy
+  require_full_attendance boolean [not null, default: false]
+  rounding_minutes int [not null, default: 1]
+  attendance_mode attendance_mode [not null, default: 'precise']
+  allows_overtime boolean [not null, default: false]
+  overtime_calc_mode overtime_calc_mode
+  overtime_min_minutes_after_shift int
+  overtime_daily_hour_limit int
+  created_at timestamptz [not null, default: `now()`]
+  updated_at timestamptz [not null, default: `now()`]
+  Indexes {
+    customer_id
+    status
+    (customer_id, code) [unique]
+    position_id
+    location_id
+    pricing_config_id
+  }
+}
+
+// Weekdays for a shift (Mon=1..Sun=7). Child table over int[] for queryability.
+Table customer_shift_weekday {
+  customer_shift_id bigint [not null]
+  weekday smallint [not null]      // 1..7
+  Indexes { (customer_shift_id, weekday) [pk] }
+}
+
+Ref: customer.organization_id > organization.id
+Ref: customer.account_manager_id > app_user.id
+Ref: customer_user.customer_id > customer.id
+Ref: customer_document.customer_id > customer.id
+Ref: customer_position.customer_id > customer.id
+Ref: position_document.position_id > customer_position.id
+Ref: customer_location.customer_id > customer.id
+Ref: customer_pricing_config.customer_id > customer.id
+Ref: customer_pricing_rate.pricing_config_id > customer_pricing_config.id
+Ref: customer_reconciliation_config.customer_id > customer.id
+Ref: customer_reconciliation_contact.customer_id > customer.id
+Ref: customer_shift.customer_id > customer.id
+Ref: customer_shift.position_id > customer_position.id
+Ref: customer_shift.location_id > customer_location.id
+Ref: customer_shift.pricing_config_id > customer_pricing_config.id
+Ref: customer_shift_weekday.customer_shift_id > customer_shift.id
+
+// =====================================================================
+// SUBSYSTEM 3 — DEMAND: HIRING REQUESTS, JOB POSTS, APPLICATIONS, ASSIGNMENTS
+// =====================================================================
+
+// Customer-facing order. Clean fields only (hiring_request_and_job_post.md §2.1).
+Table hiring_request {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  customer_id bigint [not null]
+  shift_id bigint [not null]       // customer_shift
+  code varchar [not null]          // 'HR-2451'
+  start_date date [not null]
+  end_date date [not null]
+  headcount int [not null]
+  customer_note text
+  status hiring_request_status [not null, default: 'pending']
+  parent_request_id bigint         // HR-supplement chain (§4.2)
+  target_deadline date             // default startDate - 1
+  // INTENTIONAL snapshot: price + policy frozen at creation (audit/billing).
+  price_snapshot jsonb
+  created_at timestamptz [not null, default: `now()`]
+  accepted_at timestamptz
+  completed_at timestamptz
+  Indexes {
+    organization_id
+    customer_id
+    shift_id
+    status
+    (organization_id, code) [unique]
+    parent_request_id
+    (start_date, end_date)
+  }
+}
+
+// Staffing-internal marketing posting. 1 HR : N posts (§2.2).
+Table job_post {
+  id bigint [pk, increment]
+  hiring_request_id bigint [not null]
+  code varchar [not null]          // 'JP-8821'
+  title varchar [not null]
+  displayed_pay_amount bigint
+  displayed_pay_unit pay_unit
+  pay_cycle varchar                // 'Tiền ngay' | 'Hàng tháng' | ...
+  visibility job_post_visibility [not null, default: 'public']
+  description_override text
+  requirements_override text
+  benefits_override text
+  status job_post_status [not null, default: 'draft']
+  // adhoc bonus (staffing-funded, requires approval) — 1:1 inline
+  adhoc_bonus_amount bigint
+  adhoc_bonus_unit pay_unit
+  adhoc_bonus_reason text
+  adhoc_bonus_approval approval_status
+  adhoc_bonus_approved_by bigint   // app_user.id
+  adhoc_bonus_approved_at timestamptz
+  published_at timestamptz
+  paused_at timestamptz
+  closed_at timestamptz
+  created_at timestamptz [not null, default: `now()`]
+  Indexes {
+    hiring_request_id
+    status
+    visibility
+    (hiring_request_id, code) [unique]
+  }
+}
+
+// Recruiting funnel record / CRM (candidates-data.ts). Person, pre-hire.
+Table candidate {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  code varchar [not null]
+  full_name varchar [not null]
+  phone varchar [not null]
+  email varchar
+  dob date
+  gender varchar
+  city varchar
+  district varchar
+  applied_position varchar
+  worker_id bigint                 // set when hired → links to worker
+  stage candidate_stage [not null, default: 'new']
+  source candidate_source
+  recruiter_id bigint              // app_user.id
+  score int
+  experience text
+  skills text[]
+  expected_pay varchar
+  notes_short text
+  applied_at timestamptz
+  last_touch_at timestamptz
+  Indexes {
+    organization_id
+    stage
+    (organization_id, code) [unique]
+    worker_id
+    phone
+  }
+}
+
+Table candidate_document {
+  id bigint [pk, increment]
+  candidate_id bigint [not null]
+  label varchar [not null]
+  state document_state [not null, default: 'missing']
+  note text
+  Indexes { candidate_id }
+}
+
+Table candidate_interaction {
+  id bigint [pk, increment]
+  candidate_id bigint [not null]
+  at timestamptz [not null]
+  channel varchar                  // call|sms|zalo|system|note|interview
+  actor varchar
+  summary varchar
+  detail text
+  Indexes { (candidate_id, at) }
+}
+
+Table candidate_interview {
+  id bigint [pk, increment]
+  candidate_id bigint [not null]
+  at timestamptz
+  mode varchar                     // Online | Trực tiếp | Ca thử
+  interviewer varchar
+  outcome varchar                  // Đạt | Không đạt | Chờ kết quả | Đã hẹn
+  note text
+  Indexes { candidate_id }
+}
+
+Table candidate_note {
+  id bigint [pk, increment]
+  candidate_id bigint [not null]
+  at timestamptz [not null]
+  actor varchar
+  body text
+  Indexes { candidate_id }
+}
+
+// candidate applies to a specific job_post. hiring_request_id denormalized for fast fulfill stats (§2.3).
+Table application {
+  id bigint [pk, increment]
+  job_post_id bigint [not null]
+  hiring_request_id bigint [not null]  // denormalized from job_post
+  candidate_id bigint [not null]
+  worker_id bigint                     // resolved on hire
+  status application_status [not null, default: 'applied']
+  applied_at timestamptz [not null, default: `now()`]
+  accepted_at timestamptz
+  Indexes {
+    job_post_id
+    hiring_request_id
+    candidate_id
+    status
+    (job_post_id, candidate_id) [unique]
+  }
+}
+
+// Per-day commitment (unifies ShiftAssignment + HiringAssignment).
+// 1 accepted application → N rows (one per working day in HR range ∩ shift weekdays).
+Table shift_assignment {
+  id bigint [pk, increment]
+  hiring_request_id bigint [not null]  // single source of contract
+  application_id bigint                // funnel origin (nullable for direct booking)
+  worker_id bigint [not null]
+  work_date date [not null]
+  status assignment_status [not null, default: 'assigned']
+  check_in_at timestamptz
+  check_out_at timestamptz
+  paid_hours numeric(6,2)              // after rounding + break + OT from shift policy
+  // INTENTIONAL snapshots — rate/bonus frozen at assign time.
+  pay_rate_snapshot bigint
+  bonus_snapshot bigint
+  created_by bigint                    // app_user.id
+  note text
+  created_at timestamptz [not null, default: `now()`]
+  Indexes {
+    (hiring_request_id, work_date)
+    worker_id
+    status
+    // one worker can't double-book the same HR on the same day
+    (hiring_request_id, worker_id, work_date) [unique]
+  }
+}
+
+Ref: hiring_request.organization_id > organization.id
+Ref: hiring_request.customer_id > customer.id
+Ref: hiring_request.shift_id > customer_shift.id
+Ref: hiring_request.parent_request_id > hiring_request.id
+Ref: job_post.hiring_request_id > hiring_request.id
+Ref: job_post.adhoc_bonus_approved_by > app_user.id
+Ref: candidate.organization_id > organization.id
+Ref: candidate.recruiter_id > app_user.id
+Ref: candidate.worker_id > worker.id
+Ref: candidate_document.candidate_id > candidate.id
+Ref: candidate_interaction.candidate_id > candidate.id
+Ref: candidate_interview.candidate_id > candidate.id
+Ref: candidate_note.candidate_id > candidate.id
+Ref: application.job_post_id > job_post.id
+Ref: application.hiring_request_id > hiring_request.id
+Ref: application.candidate_id > candidate.id
+Ref: application.worker_id > worker.id
+Ref: shift_assignment.hiring_request_id > hiring_request.id
+Ref: shift_assignment.application_id > application.id
+Ref: shift_assignment.worker_id > worker.id
+Ref: shift_assignment.created_by > app_user.id
+
+// =====================================================================
+// SUBSYSTEM 4 — SUPPLY: WORKERS, VERIFICATION, VIOLATIONS, SOCIAL INSURANCE
+// =====================================================================
+
+Table worker {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  code varchar                     // 6-digit CTV code, e.g. '220001'
+  name varchar [not null]
+  phone varchar [not null]
+  city varchar
+  district varchar
+  status worker_status [not null, default: 'pending']
+  rating numeric(2,1)
+  weekly_shifts int [default: 0]
+  total_shifts int [default: 0]
+  joined_at date
+  bio text
+  Indexes {
+    organization_id
+    status
+    phone
+    (organization_id, code) [unique]
+  }
+}
+
+Table worker_tag {
+  worker_id bigint [not null]
+  tag varchar [not null]
+  Indexes { (worker_id, tag) [pk] }
+}
+
+// KYC / verification (1:1 with worker).
+Table worker_verification {
+  id bigint [pk, increment]
+  worker_id bigint [unique, not null]
+  status verification_status [not null, default: 'in_review']
+  phone_verified boolean [not null, default: false]
+  national_id varchar
+  tax_id varchar
+  bank_name varchar
+  bank_account varchar
+  submitted_at timestamptz
+  last_updated timestamptz
+  reviewer_id bigint               // app_user.id
+  missing_docs text[]
+  risk_flags text[]
+}
+
+Table verification_document {
+  id bigint [pk, increment]
+  worker_verification_id bigint [not null]
+  name varchar [not null]
+  uploaded_at timestamptz
+  status varchar                   // Đạt | Chờ duyệt | Cần bổ sung
+  reviewer varchar
+  Indexes { worker_verification_id }
+}
+
+Table verification_timeline {
+  id bigint [pk, increment]
+  worker_verification_id bigint [not null]
+  at timestamptz [not null]
+  action varchar
+  actor varchar
+  note text
+  Indexes { (worker_verification_id, at) }
+}
+
+// Violation rollup status lives on worker via this 1:1 + cases.
+Table worker_violation_profile {
+  id bigint [pk, increment]
+  worker_id bigint [unique, not null]
+  status violation_worker_status [not null, default: 'normal']
+  latest_severity violation_severity
+  total_cases int [not null, default: 0]
+  total_penalty bigint [default: 0]
+  latest_at timestamptz
+  notes text
+}
+
+Table violation_case {
+  id bigint [pk, increment]
+  worker_id bigint [not null]
+  occurred_at timestamptz [not null]
+  severity violation_severity [not null]
+  category varchar
+  description text
+  shift_assignment_id bigint       // optional link to the day it happened
+  customer_id bigint
+  penalty bigint [default: 0]
+  resolution varchar               // Đã xử lý | Đang xử lý | Chờ phản hồi
+  reviewer_id bigint               // app_user.id
+  Indexes {
+    worker_id
+    severity
+    occurred_at
+  }
+}
+
+// Monthly social-insurance income tracking (social-insurance-data.ts).
+Table worker_social_insurance {
+  id bigint [pk, increment]
+  worker_id bigint [not null]
+  period_month date [not null]     // first-of-month
+  monthly_hours numeric(7,2)
+  monthly_shifts int
+  income_current bigint
+  income_prev1 bigint
+  income_prev2 bigint
+  Indexes { (worker_id, period_month) [unique] }
+}
+
+Ref: worker.organization_id > organization.id
+Ref: worker_tag.worker_id > worker.id
+Ref: worker_verification.worker_id > worker.id
+Ref: worker_verification.reviewer_id > app_user.id
+Ref: verification_document.worker_verification_id > worker_verification.id
+Ref: verification_timeline.worker_verification_id > worker_verification.id
+Ref: worker_violation_profile.worker_id > worker.id
+Ref: violation_case.worker_id > worker.id
+Ref: violation_case.shift_assignment_id > shift_assignment.id
+Ref: violation_case.customer_id > customer.id
+Ref: violation_case.reviewer_id > app_user.id
+Ref: worker_social_insurance.worker_id > worker.id
+
+// =====================================================================
+// SUBSYSTEM 5 — TIMEKEEPING (realized attendance)
+// =====================================================================
+
+// One timesheet per shift-day occurrence of a customer_shift.
+Table timesheet {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  customer_id bigint [not null]
+  shift_id bigint [not null]       // customer_shift
+  code varchar
+  work_date date [not null]
+  schedule varchar                 // "13:00 - 18:00" display
+  expected_count int
+  checked_in_count int
+  status timesheet_status [not null, default: 'in_progress']
+  exceptions int [default: 0]
+  notes text
+  Indexes {
+    organization_id
+    customer_id
+    shift_id
+    work_date
+    status
+  }
+}
+
+// Realized check-in/out per worker. References the committed shift_assignment
+// (realized ← committed) rather than duplicating it.
+Table attendance_record {
+  id bigint [pk, increment]
+  timesheet_id bigint [not null]
+  shift_assignment_id bigint       // links realized punch to per-day commitment
+  worker_id bigint [not null]
+  role varchar
+  check_in_at timestamptz
+  check_out_at timestamptz
+  worked_hours numeric(6,2)
+  payout bigint
+  status attendance_punch_status [not null, default: 'on_time']
+  note text
+  Indexes {
+    timesheet_id
+    worker_id
+    shift_assignment_id
+  }
+}
+
+Ref: timesheet.organization_id > organization.id
+Ref: timesheet.customer_id > customer.id
+Ref: timesheet.shift_id > customer_shift.id
+Ref: attendance_record.timesheet_id > timesheet.id
+Ref: attendance_record.shift_assignment_id > shift_assignment.id
+Ref: attendance_record.worker_id > worker.id
+
+// =====================================================================
+// SUBSYSTEM 6 — BONUSES (Thưởng Adhoc campaigns)
+// =====================================================================
+
+Table bonus {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  title varchar [not null]
+  description text
+  status bonus_status [not null, default: 'draft']
+  manager_id bigint                // app_user.id
+  period_from date
+  period_to date
+  // conditions
+  min_shifts int
+  min_hours_per_shift numeric(5,2)
+  conditions_notes text
+  // payout
+  payout_kind bonus_payout_kind
+  payout_amount bigint
+  payout_cadence varchar
+  payout_note text
+  // budget / progress
+  budget_max bigint
+  requested bigint
+  approved bigint
+  qualified int
+  applied_count int
+  applied_amount bigint
+  paid_amount bigint
+  Indexes {
+    organization_id
+    status
+  }
+}
+
+Table bonus_job_scope {
+  id bigint [pk, increment]
+  bonus_id bigint [not null]
+  code varchar [not null]
+  label varchar
+  Indexes { bonus_id }
+}
+
+Table bonus_applied_worker {
+  id bigint [pk, increment]
+  bonus_id bigint [not null]
+  worker_id bigint [not null]
+  confirmed_amount bigint
+  paid_amount bigint
+  Indexes { (bonus_id, worker_id) [unique] }
+}
+
+Table bonus_changelog {
+  id bigint [pk, increment]
+  bonus_id bigint [not null]
+  at timestamptz [not null]
+  by varchar
+  note text
+  Indexes { bonus_id }
+}
+
+Ref: bonus.organization_id > organization.id
+Ref: bonus.manager_id > app_user.id
+Ref: bonus_job_scope.bonus_id > bonus.id
+Ref: bonus_applied_worker.bonus_id > bonus.id
+Ref: bonus_applied_worker.worker_id > worker.id
+Ref: bonus_changelog.bonus_id > bonus.id
+
+// =====================================================================
+// SUBSYSTEM 7 — WORKER PAYMENT BATCHES (payment_page.md)
+// =====================================================================
+
+Table payment_batch {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  code varchar [not null]          // '2_4_2026'
+  cycle_name varchar [not null]
+  period_from date
+  period_to date
+  due_date date
+  payout_date date
+  status batch_status [not null, default: 'new']
+  operated_by_customer_id bigint   // "Công ty vận hành"
+  carry_over_batch_id bigint       // "Dư nợ" link to prior batch
+  job_code_allowlist text[]
+  // KPI summary (derived, persisted for fast list/detail render)
+  total_amount bigint
+  total_net_amount bigint
+  worker_count int
+  company_count int
+  total_hours numeric(10,2)
+  invalid_account_count int [default: 0]
+  // timeline / audit
+  created_at timestamptz [not null, default: `now()`]
+  locked_at timestamptz
+  completed_at timestamptz
+  updated_at timestamptz
+  updated_by bigint                // app_user.id
+  adjustments_confirmed_at timestamptz
+  adjustments_confirmed_by bigint  // app_user.id
+  Indexes {
+    organization_id
+    status
+    (organization_id, code) [unique]
+  }
+}
+
+Table payment_batch_line_item {
+  id bigint [pk, increment]
+  batch_id bigint [not null]
+  worker_id bigint [not null]
+  payout_method payout_method [not null]
+  bank_name varchar
+  bank_account_masked varchar
+  bank_verified boolean [not null, default: false]
+  total_hours numeric(8,2)
+  net_amount bigint
+  payout_status payout_status [not null, default: 'processing']
+  Indexes {
+    batch_id
+    worker_id
+    payout_status
+  }
+}
+
+Table payment_batch_adjustment {
+  id bigint [pk, increment]
+  batch_id bigint [not null]
+  worker_id bigint [not null]
+  job_code varchar
+  transaction_date date
+  kind adjustment_kind [not null]
+  amount bigint [not null]         // signed VND
+  description text
+  pic_id bigint                    // app_user.id
+  confirmed boolean [not null, default: false]
+  Indexes {
+    batch_id
+    worker_id
+    kind
+  }
+}
+
+// Donut breakdown by transaction category (payment_page.md §4.2).
+Table payment_batch_transaction_type {
+  id bigint [pk, increment]
+  batch_id bigint [not null]
+  label varchar [not null]
+  amount bigint [not null]         // signed
+  share numeric(6,4)               // fraction
+  sort_order int
+  Indexes { batch_id }
+}
+
+// "Thù lao theo công ty" per-customer bar (payment_page.md §4.3).
+Table payment_batch_company_breakdown {
+  id bigint [pk, increment]
+  batch_id bigint [not null]
+  customer_id bigint [not null]
+  amount bigint [not null]
+  Indexes { (batch_id, customer_id) [unique] }
+}
+
+Ref: payment_batch.organization_id > organization.id
+Ref: payment_batch.operated_by_customer_id > customer.id
+Ref: payment_batch.carry_over_batch_id > payment_batch.id
+Ref: payment_batch.updated_by > app_user.id
+Ref: payment_batch.adjustments_confirmed_by > app_user.id
+Ref: payment_batch_line_item.batch_id > payment_batch.id
+Ref: payment_batch_line_item.worker_id > worker.id
+Ref: payment_batch_adjustment.batch_id > payment_batch.id
+Ref: payment_batch_adjustment.worker_id > worker.id
+Ref: payment_batch_adjustment.pic_id > app_user.id
+Ref: payment_batch_transaction_type.batch_id > payment_batch.id
+Ref: payment_batch_company_breakdown.batch_id > payment_batch.id
+Ref: payment_batch_company_breakdown.customer_id > customer.id
+
+// =====================================================================
+// SUBSYSTEM 8 — RECONCILIATION (customer billing statements)
+// =====================================================================
+
+// A reconciliation run/statement per customer per cycle.
+Table reconciliation {
+  id bigint [pk, increment]
+  organization_id bigint [not null]
+  customer_id bigint [not null]
+  code varchar [not null]
+  period varchar                   // display range
+  total_shifts int
+  total_amount bigint
+  variance bigint
+  variance_percent numeric(6,4)
+  status reconciliation_status [not null, default: 'open']
+  owner_id bigint                  // app_user.id
+  closed_at timestamptz
+  notes text
+  Indexes {
+    organization_id
+    customer_id
+    status
+    (organization_id, code) [unique]
+  }
+}
+
+Table reconciliation_discrepancy {
+  id bigint [pk, increment]
+  reconciliation_id bigint [not null]
+  type discrepancy_type [not null]
+  shift_assignment_id bigint
+  worker_id bigint
+  expected varchar
+  actual varchar
+  delta varchar
+  note text
+  Indexes { reconciliation_id }
+}
+
+Table reconciliation_approval {
+  id bigint [pk, increment]
+  reconciliation_id bigint [not null]
+  at timestamptz [not null]
+  actor_id bigint                  // app_user.id
+  action varchar
+  note text
+  Indexes { reconciliation_id }
+}
+
+Ref: reconciliation.organization_id > organization.id
+Ref: reconciliation.customer_id > customer.id
+Ref: reconciliation.owner_id > app_user.id
+Ref: reconciliation_discrepancy.reconciliation_id > reconciliation.id
+Ref: reconciliation_discrepancy.shift_assignment_id > shift_assignment.id
+Ref: reconciliation_discrepancy.worker_id > worker.id
+Ref: reconciliation_approval.reconciliation_id > reconciliation.id
+Ref: reconciliation_approval.actor_id > app_user.id
+
+// =====================================================================
+// SUBSYSTEM 9 — BILLING / WALLET / SERVICE PACKAGES  (STUB — deferred)
+// Docs mark "Gói dịch vụ" + "Ví công ty" as TBD (customer_page.md §4–5),
+// and permissions.md lists a `billing` resource. Thin stubs only.
+// =====================================================================
+
+Table service_package {
+  id bigint [pk, increment]
+  customer_id bigint [not null]
+  name varchar [not null]          // 'SaaS ATS', 'On-demand Staffing'
+  plan_tier varchar                // Free | Enterprise | ...
+  billing_cycle varchar
+  seat_count int
+  status varchar
+  Indexes { customer_id }
+  Note: 'DEFERRED — schema stub. Confirm fields when "Gói dịch vụ" screens land.'
+}
+
+Table customer_wallet {
+  id bigint [pk, increment]
+  customer_id bigint [unique, not null]
+  balance bigint [not null, default: 0]
+  payout_method varchar
+  Note: 'DEFERRED — "Ví công ty". Stub.'
+}
+
+Table wallet_transaction {
+  id bigint [pk, increment]
+  wallet_id bigint [not null]
+  at timestamptz [not null, default: `now()`]
+  amount bigint [not null]         // signed
+  kind varchar                     // topup | spend | refund
+  reference varchar
+  Indexes { wallet_id }
+  Note: 'DEFERRED — stub.'
+}
+
+Ref: service_package.customer_id > customer.id
+Ref: customer_wallet.customer_id > customer.id
+Ref: wallet_transaction.wallet_id > customer_wallet.id

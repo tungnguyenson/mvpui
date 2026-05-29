@@ -1,23 +1,29 @@
-export { AppShell } from "./AppShell";
-export { Header } from "./Header";
-export { PageScaffold } from "./PageScaffold";
 export { AppPageHeader, type AppPageHeaderProps } from "./AppPageHeader";
+export { AppShell } from "./AppShell";
 export {
-  BreadcrumbProvider,
-  SetPageBreadcrumb,
-  useBreadcrumbOverride,
+	BreadcrumbProvider,
+	SetPageBreadcrumb,
+	useBreadcrumbOverride,
 } from "./BreadcrumbContext";
+export { Header } from "./Header";
 export {
-  ThemeProvider,
-  useAppearance,
-  type ThemeMode,
-  type AppearanceMode,
+	type NavLayout,
+	NavLayoutProvider,
+	useNavLayout,
+} from "./NavLayoutContext";
+export {
+	APP_ROUTES,
+	activeHrefForPath,
+	breadcrumbsForPath,
+	labelForPath,
+	NAV_LAYOUT_COOKIE,
+	NAV_SECTIONS,
+} from "./nav";
+export { PageScaffold } from "./PageScaffold";
+export {
+	type AppearanceMode,
+	type ThemeMode,
+	ThemeProvider,
+	useAppearance,
 } from "./ThemeContext";
 export { ThemePicker } from "./ThemePicker";
-export {
-  APP_ROUTES,
-  NAV_SECTIONS,
-  activeHrefForPath,
-  breadcrumbsForPath,
-  labelForPath,
-} from "./nav";

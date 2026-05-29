@@ -1,10 +1,11 @@
+import { cookies } from "next/headers";
 import type { ReactNode } from "react";
-import { AppShell } from "../components/_shell";
+import { AppShell, NAV_LAYOUT_COOKIE, type NavLayout } from "../components/_shell";
 
-export default function WorkspaceLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
-  return <AppShell>{children}</AppShell>;
+export default async function WorkspaceLayout({ children }: { children: ReactNode }) {
+	const store = await cookies();
+	const initialNavLayout: NavLayout =
+		store.get(NAV_LAYOUT_COOKIE)?.value === "header" ? "header" : "sidebar";
+
+	return <AppShell initialNavLayout={initialNavLayout}>{children}</AppShell>;
 }
