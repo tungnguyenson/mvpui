@@ -1,345 +1,388 @@
 "use client";
 
 import {
-  AvatarProfilePhoto,
-  Badge,
-  BadgeWithDot,
-  Button,
-  Input,
-  MetricCard,
-  Table,
-  TableCard,
+	AvatarProfilePhoto,
+	Badge,
+	Button,
+	Dropdown,
+	Input,
+	Tab,
+	TabList,
+	Table,
+	TableCard,
+	Tabs,
 } from "@mvp-ui/ui";
-import {
-  Inbox,
-  LayoutGrid,
-  Plus,
-  Rows3,
-  Search,
-  Sparkles,
-  Trophy,
-  UserPlus,
-  Users,
-} from "lucide-react";
+import { Plus, Search, UserPlus } from "lucide-react";
 import { useMemo, useState } from "react";
+import { getAvatarFor, getInitials } from "../_shared/assets";
 import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { getAvatarFor, getInitials } from "../_shared/assets";
 import { CandidateQuickView } from "./CandidateQuickView";
 import {
-  CANDIDATES,
-  type CandidateRecord,
-  type CandidateSource,
-  type CandidateStage,
-  SOURCE_LABELS,
-  STAGE_LABELS,
-  STAGE_ORDER,
-  TERMINAL_STAGES,
-  fmtSource,
-} from "./candidates-data";
-import { CandidatesKanban } from "./CandidatesKanban";
+	ACTION_TABS,
+	ACTIONS,
+	type ActionDef,
+	JOBTYPE_PREF_LABELS,
+	SHIFT_PREF_LABELS,
+	SOURCING_LEADS,
+	type SourcingLead,
+	type SourcingTab,
+	TAB_LABELS,
+	TAB_ORDER,
+} from "./sourcing-data";
 
-const STAGE_FILTERS: { id: "all" | CandidateStage; label: string }[] = [
-  { id: "all", label: "Tất cả" },
-  ...STAGE_ORDER.map((s) => ({ id: s, label: STAGE_LABELS[s].label })),
-  ...TERMINAL_STAGES.map((s) => ({ id: s, label: STAGE_LABELS[s].label })),
-];
+/** Demo: leads owned by this user show full phone; others are masked. */
+const CURRENT_USER = "Lê Thuỳ Trang";
 
-const SOURCE_FILTERS: { id: "all" | CandidateSource; label: string }[] = [
-  { id: "all", label: "Tất cả nguồn" },
-  ...(Object.keys(SOURCE_LABELS) as CandidateSource[]).map((s) => ({
-    id: s,
-    label: SOURCE_LABELS[s],
-  })),
+type TimeWindow = "7" | "30" | "90" | "all";
+const TIME_OPTIONS: { id: TimeWindow; label: string }[] = [
+	{ id: "7", label: "7 ngày" },
+	{ id: "30", label: "30 ngày" },
+	{ id: "90", label: "90 ngày" },
+	{ id: "all", label: "Tất cả" },
 ];
+const TODAY = new Date(2026, 4, 29); // demo "today" = 29/05/2026
+
+function parseVnDate(s: string): Date | null {
+	const m = s.match(/(\d{2})\/(\d{2})\/(\d{4})/);
+	if (!m) return null;
+	return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+}
+
+function withinWindow(dateStr: string, window: TimeWindow): boolean {
+	if (window === "all") return true;
+	const d = parseVnDate(dateStr);
+	if (!d) return true;
+	const days = (TODAY.getTime() - d.getTime()) / 86_400_000;
+	return days <= Number(window);
+}
+
+function maskPhone(phone: string): string {
+	const digits = phone.replace(/\D/g, "");
+	return `***${digits.slice(-4)}`;
+}
 
 const COLUMNS = [
-  { id: "candidate", name: "Ứng viên", isRowHeader: true as const },
-  { id: "applied", name: "Vị trí ứng tuyển" },
-  { id: "source", name: "Nguồn" },
-  { id: "stage", name: "Stage" },
-  { id: "score", name: "Match" },
-  { id: "recruiter", name: "Phụ trách" },
-  { id: "last", name: "Liên hệ gần nhất" },
+	{ id: "candidate", name: "Ứng viên", isRowHeader: true as const },
+	{ id: "phone", name: "SĐT" },
+	{ id: "area", name: "Khu vực" },
+	{ id: "companies", name: "Cty ưu tiên" },
+	{ id: "shift", name: "Ca muốn làm" },
+	{ id: "jobtype", name: "Loại việc" },
+	{ id: "cccd", name: "CCCD T/S" },
+	{ id: "available", name: "Ngày đi làm" },
+	{ id: "pic", name: "Phụ trách" },
+	{ id: "action", name: "Hành động" },
+	{ id: "note", name: "Ghi chú" },
 ];
 
-function ScoreCell({ score }: { score: number }) {
-  const color = score >= 85 ? "text-success" : score >= 65 ? "text-fg" : "text-fg-tertiary";
-  return <span className={`text-sm font-semibold ${color}`}>{score}</span>;
+function CccdFlag({ ok }: { ok: boolean }) {
+	return ok ? (
+		<Badge color="success" type="pill-color" size="sm">
+			Có
+		</Badge>
+	) : (
+		<span className="text-sm text-fg-tertiary">—</span>
+	);
 }
 
-function CandidateRow({
-  record,
-  onSelect,
+function LeadRow({
+	lead,
+	onSelect,
+	onClaim,
+	onAction,
 }: {
-  record: CandidateRecord;
-  onSelect: (record: CandidateRecord) => void;
+	lead: SourcingLead;
+	onSelect: (lead: SourcingLead) => void;
+	onClaim: (id: string) => void;
+	onAction: (id: string, action: ActionDef) => void;
 }) {
-  const stage = STAGE_LABELS[record.stage];
-  return (
-    <Table.Row id={record.id} onAction={() => onSelect(record)}>
-      <Table.Cell>
-        <div className="flex items-center gap-3">
-          <AvatarProfilePhoto
-            size="sm"
-            state={
-              record.stage === "hired"
-                ? "verified"
-                : record.stage === "blacklist"
-                  ? "blocked"
-                  : null
-            }
-            src={getAvatarFor(record.fullName, record.id)}
-            alt={record.fullName}
-            initials={getInitials(record.fullName)}
-          />
-          <div className="min-w-0">
-            <div className="truncate text-sm font-medium text-fg">{record.fullName}</div>
-            <div className="truncate text-sm text-fg-tertiary">
-              {record.code} • {record.phone}
-            </div>
-          </div>
-        </div>
-      </Table.Cell>
-      <Table.Cell>
-        <div className="text-sm text-fg">{record.appliedPosition}</div>
-        {record.hiringRequestCode ? (
-          <div className="text-sm text-fg-tertiary">{record.hiringRequestCode}</div>
-        ) : null}
-      </Table.Cell>
-      <Table.Cell>
-        <Badge color="gray" type="pill-color" size="sm">
-          {fmtSource(record.source)}
-        </Badge>
-      </Table.Cell>
-      <Table.Cell>
-        <BadgeWithDot color={stage.color} type="pill-color" size="sm">
-          {stage.label}
-        </BadgeWithDot>
-      </Table.Cell>
-      <Table.Cell>
-        <ScoreCell score={record.score} />
-      </Table.Cell>
-      <Table.Cell>
-        <div className="text-sm text-fg">{record.recruiter}</div>
-      </Table.Cell>
-      <Table.Cell>
-        <div className="text-sm text-fg-tertiary">{record.lastTouchAt}</div>
-      </Table.Cell>
-    </Table.Row>
-  );
-}
+	const owned = lead.pic === null || lead.pic === CURRENT_USER;
+	const canAct = ACTION_TABS.includes(lead.tab) && lead.pic !== null;
 
-type ViewMode = "table" | "kanban";
+	return (
+		<Table.Row id={lead.id}>
+			<Table.Cell>
+				<button
+					type="button"
+					onClick={() => onSelect(lead)}
+					className="flex items-center gap-3 text-left"
+				>
+					<AvatarProfilePhoto
+						size="sm"
+						src={getAvatarFor(lead.fullName, lead.id)}
+						alt={lead.fullName}
+						initials={getInitials(lead.fullName)}
+					/>
+					<div className="min-w-0">
+						<div className="truncate text-sm font-medium text-fg hover:underline">
+							{lead.fullName}
+						</div>
+						<div className="truncate text-sm text-fg-tertiary">{lead.code}</div>
+					</div>
+				</button>
+			</Table.Cell>
+			<Table.Cell>
+				<span className="text-sm text-fg">{owned ? lead.phone : maskPhone(lead.phone)}</span>
+			</Table.Cell>
+			<Table.Cell>
+				<div className="text-sm text-fg">{lead.gender === "male" ? "Nam" : "Nữ"}</div>
+				<div className="text-sm text-fg-tertiary">
+					{lead.province} • {lead.districts.join(", ")}
+				</div>
+			</Table.Cell>
+			<Table.Cell>
+				<div className="flex flex-wrap gap-1">
+					{lead.preferredCompanies.length === 0 ? (
+						<span className="text-sm text-fg-tertiary">—</span>
+					) : (
+						lead.preferredCompanies.map((c) => (
+							<Badge key={c} color="gray" type="pill-color" size="sm">
+								{c}
+							</Badge>
+						))
+					)}
+				</div>
+			</Table.Cell>
+			<Table.Cell>
+				<span className="text-sm text-fg">
+					{lead.shiftPrefs.map((s) => SHIFT_PREF_LABELS[s]).join(", ")}
+				</span>
+			</Table.Cell>
+			<Table.Cell>
+				<span className="text-sm text-fg">
+					{lead.jobTypePrefs.map((j) => JOBTYPE_PREF_LABELS[j]).join(", ")}
+				</span>
+			</Table.Cell>
+			<Table.Cell>
+				<div className="flex items-center gap-1.5">
+					<CccdFlag ok={lead.cccdFront} />
+					<CccdFlag ok={lead.cccdBack} />
+				</div>
+			</Table.Cell>
+			<Table.Cell>
+				<span className="text-sm text-fg-tertiary">{lead.availableFrom}</span>
+			</Table.Cell>
+			<Table.Cell>
+				{lead.pic === null ? (
+					<Button
+						color="secondary"
+						size="sm"
+						iconLeading={<UserPlus className="size-4" />}
+						onClick={() => onClaim(lead.id)}
+					>
+						Nhận lead
+					</Button>
+				) : (
+					<span className="text-sm text-fg">{lead.pic}</span>
+				)}
+			</Table.Cell>
+			<Table.Cell>
+				{canAct ? (
+					<Dropdown.Root>
+						<Dropdown.Trigger color="secondary" size="sm">
+							Chọn
+						</Dropdown.Trigger>
+						<Dropdown.Popover className="w-60">
+							<Dropdown.Menu>
+								{ACTIONS.map((a) => (
+									<Dropdown.Item key={a.id} label={a.label} onAction={() => onAction(lead.id, a)} />
+								))}
+							</Dropdown.Menu>
+						</Dropdown.Popover>
+					</Dropdown.Root>
+				) : (
+					<span className="text-sm text-fg-tertiary">—</span>
+				)}
+			</Table.Cell>
+			<Table.Cell>
+				{lead.rejectReason ? (
+					<span className="text-sm text-fg-error">{lead.rejectReason}</span>
+				) : (
+					<span className="text-sm text-fg-tertiary">{lead.notesShort ?? "—"}</span>
+				)}
+			</Table.Cell>
+		</Table.Row>
+	);
+}
 
 export function CandidatesPage() {
-  const [search, setSearch] = useState("");
-  const [stageFilter, setStageFilter] = useState<(typeof STAGE_FILTERS)[number]["id"]>(
-    "all",
-  );
-  const [sourceFilter, setSourceFilter] = useState<
-    (typeof SOURCE_FILTERS)[number]["id"]
-  >("all");
-  const [view, setView] = useState<ViewMode>("kanban");
-  const [selected, setSelected] = useState<CandidateRecord | null>(null);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+	const [leads, setLeads] = useState<SourcingLead[]>(SOURCING_LEADS);
+	const [tab, setTab] = useState<SourcingTab>("todo");
+	const [search, setSearch] = useState("");
+	const [picFilter, setPicFilter] = useState<string>("all");
+	const [timeFilter, setTimeFilter] = useState<TimeWindow>("30");
+	const [selected, setSelected] = useState<SourcingLead | null>(null);
+	const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const filtered = useMemo(() => {
-    return CANDIDATES.filter((c) => {
-      const matchesStage = stageFilter === "all" ? true : c.stage === stageFilter;
-      const matchesSource = sourceFilter === "all" ? true : c.source === sourceFilter;
-      const q = search.toLowerCase();
-      const matchesSearch =
-        q === "" ||
-        c.fullName.toLowerCase().includes(q) ||
-        c.phone.toLowerCase().includes(q) ||
-        c.code.toLowerCase().includes(q) ||
-        (c.email?.toLowerCase().includes(q) ?? false);
-      return matchesStage && matchesSource && matchesSearch;
-    });
-  }, [search, stageFilter, sourceFilter]);
+	const picOptions = useMemo(() => {
+		const names = new Set(leads.map((l) => l.pic).filter((p): p is string => p !== null));
+		return Array.from(names).sort();
+	}, [leads]);
 
-  const inPipeline = CANDIDATES.filter((c) => STAGE_ORDER.includes(c.stage) && c.stage !== "hired").length;
-  const newThisWeek = CANDIDATES.filter((c) => c.stage === "new").length;
-  const trialingNow = CANDIDATES.filter((c) => c.stage === "onboarding").length;
-  const hiredCount = CANDIDATES.filter((c) => c.stage === "hired").length;
-  const totalProcessed = CANDIDATES.length;
-  const conversion = totalProcessed > 0 ? Math.round((hiredCount / totalProcessed) * 100) : 0;
+	const counts = useMemo(() => {
+		const c: Record<SourcingTab, number> = {
+			todo: 0,
+			interviewed: 0,
+			"shift-locked": 0,
+			"no-show-day1": 0,
+			"worked-day1": 0,
+			archived: 0,
+		};
+		for (const l of leads) c[l.tab] += 1;
+		return c;
+	}, [leads]);
 
-  const openDrawer = (record: CandidateRecord) => {
-    setSelected(record);
-    setIsDrawerOpen(true);
-  };
-  const closeDrawer = () => setIsDrawerOpen(false);
+	const filtered = useMemo(() => {
+		const q = search.toLowerCase();
+		return leads.filter((l) => {
+			if (l.tab !== tab) return false;
+			if (picFilter === "unclaimed" && l.pic !== null) return false;
+			if (picFilter !== "all" && picFilter !== "unclaimed" && l.pic !== picFilter) return false;
+			if (!withinWindow(l.lastTouchAt, timeFilter)) return false;
+			if (q === "") return true;
+			return (
+				l.fullName.toLowerCase().includes(q) ||
+				l.phone.replace(/\D/g, "").includes(q.replace(/\D/g, "")) ||
+				l.code.toLowerCase().includes(q)
+			);
+		});
+	}, [leads, tab, picFilter, timeFilter, search]);
 
-  return (
-    <PageScaffold
-      header={
-        <AppPageHeader
-          title="Ứng viên"
-          description="Theo dõi pipeline ứng viên theo từng hiring request, từ lúc nhận đơn đến khi kích hoạt thành CTV chính thức."
-          actions={
-            <>
-              <Button color="secondary" size="sm">Import CSV</Button>
-              <Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
-                Thêm ứng viên
-              </Button>
-            </>
-          }
-        />
-      }
-    >
-      {/* <div className="grid gap-4 lg:grid-cols-4">
-        <MetricCard
-          label="Đang trong pipeline"
-          value={`${inPipeline}`}
-          helpText="Số ứng viên đang ở các bước trước khi nhận việc."
-          iconChip={<Users className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="brand"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Mới + sàng lọc"
-          value={`${newThisWeek}`}
-          helpText="Ứng viên cần chăm sóc ngay trong tuần này."
-          iconChip={<Inbox className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="warning"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Ca thử + onboarding"
-          value={`${trialingNow}`}
-          helpText="Ứng viên đang chạy ca thử hoặc hoàn tất hồ sơ CTV."
-          iconChip={<Sparkles className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="success"
-          iconPlacement="inline"
-        />
-        <MetricCard
-          label="Tỉ lệ chuyển thành CTV"
-          value={`${conversion}%`}
-          helpText={`${hiredCount}/${totalProcessed} ứng viên đã trở thành CTV chính thức.`}
-          iconChip={<Trophy className="size-5" />}
-          iconChipStyle="tint"
-          featuredIconColor="brand"
-          iconPlacement="inline"
-        />
-      </div> */}
+	const openDrawer = (lead: SourcingLead) => {
+		setSelected(lead);
+		setIsDrawerOpen(true);
+	};
 
-      <TableCard.Root>
-        <div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
-          <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto_auto]">
-            <Input
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Tìm theo tên, SĐT, email hoặc mã ứng viên"
-              iconLeading={<Search className="size-4" />}
-              aria-label="Tìm ứng viên"
-            />
-            <div className="flex items-center gap-2 rounded-lg border border-border-secondary bg-bg p-1">
-              <button
-                type="button"
-                onClick={() => setView("table")}
-                aria-pressed={view === "table"}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${view === "table"
-                  ? "bg-bg-secondary text-fg"
-                  : "text-fg-tertiary hover:text-fg"
-                  }`}
-              >
-                <Rows3 className="size-4" />
-                Bảng
-              </button>
-              <button
-                type="button"
-                onClick={() => setView("kanban")}
-                aria-pressed={view === "kanban"}
-                className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${view === "kanban"
-                  ? "bg-bg-secondary text-fg"
-                  : "text-fg-tertiary hover:text-fg"
-                  }`}
-              >
-                <LayoutGrid className="size-4" />
-                Kanban
-              </button>
-            </div>
-            <select
-              value={sourceFilter}
-              onChange={(event) =>
-                setSourceFilter(event.target.value as typeof sourceFilter)
-              }
-              aria-label="Lọc theo nguồn ứng viên"
-              className="rounded-lg border border-border-secondary bg-bg px-3 py-2 text-sm text-fg shadow-xs focus:outline-none focus:ring-2 focus:ring-border-brand"
-            >
-              {SOURCE_FILTERS.map((source) => (
-                <option key={source.id} value={source.id}>
-                  {source.label}
-                </option>
-              ))}
-            </select>
-          </div>
-          {view === "table" && (
-            <div className="flex flex-wrap gap-2">
-              {STAGE_FILTERS.map((filter) => {
-                const active = filter.id === stageFilter;
-                return (
-                  <button
-                    key={filter.id}
-                    type="button"
-                    onClick={() => setStageFilter(filter.id)}
-                    className={`rounded-full border px-3 py-1.5 text-sm font-medium transition-colors ${active
-                      ? "border-border-brand bg-bg-secondary text-fg"
-                      : "border-border-secondary bg-bg text-fg-tertiary hover:text-fg"
-                      }`}
-                  >
-                    {filter.label}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-          <div className="flex items-center justify-between gap-2 text-sm text-fg-tertiary">
-            <span>{filtered.length} ứng viên phù hợp với bộ lọc hiện tại.</span>
-            <span className="inline-flex items-center gap-1.5">
-              <UserPlus className="size-4" />
-              Click vào ứng viên để xem nhanh
-            </span>
-          </div>
-        </div>
+	const claimLead = (id: string) => {
+		setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, pic: CURRENT_USER } : l)));
+	};
 
-        {view === "table" ? (
-          <div className="overflow-x-auto">
-            <Table aria-label="Danh sách ứng viên">
-              <Table.Header>
-                {COLUMNS.map((column) => (
-                  <Table.Head
-                    key={column.id}
-                    id={column.id}
-                    label={column.name}
-                    {...(column.isRowHeader && { isRowHeader: true })}
-                  />
-                ))}
-              </Table.Header>
-              <Table.Body items={filtered}>
-                {(record) => (
-                  <CandidateRow record={record} onSelect={openDrawer} />
-                )}
-              </Table.Body>
-            </Table>
-          </div>
-        ) : (
-          <div className="px-4 py-4">
-            <CandidatesKanban candidates={filtered} onSelect={openDrawer} />
-          </div>
-        )}
-      </TableCard.Root>
+	const applyAction = (id: string, action: ActionDef) => {
+		setLeads((prev) =>
+			prev.map((l) =>
+				l.id === id
+					? {
+							...l,
+							tab: action.target,
+							lastAction: action.id,
+							...(action.isReject ? { rejectReason: action.label } : {}),
+						}
+					: l
+			)
+		);
+	};
 
-      <CandidateQuickView
-        candidate={selected}
-        isOpen={isDrawerOpen}
-        onClose={closeDrawer}
-      />
-    </PageScaffold>
-  );
+	return (
+		<PageScaffold
+			header={
+				<AppPageHeader
+					title="Quản lý sourcing"
+					description="Pool ứng viên đa nguồn — triage theo hành động, ghi nhận người phụ trách (PIC) để tính thù lao giới thiệu."
+					actions={
+						<>
+							<Button color="secondary" size="sm">
+								Import CSV
+							</Button>
+							<Button color="primary" size="sm" iconLeading={<Plus className="size-4" />}>
+								Thêm ứng viên
+							</Button>
+						</>
+					}
+				/>
+			}
+		>
+			<Tabs
+				selectedKey={tab}
+				onSelectionChange={(key) => setTab(key as SourcingTab)}
+				variant="underline"
+			>
+				<TabList aria-label="Tab sourcing">
+					{TAB_ORDER.map((t) => (
+						<Tab key={t} id={t} value={counts[t]}>
+							{TAB_LABELS[t]}
+						</Tab>
+					))}
+				</TabList>
+			</Tabs>
+
+			<TableCard.Root>
+				<div className="flex flex-col gap-4 border-b border-border-secondary px-4 py-4">
+					<div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_auto_auto]">
+						<Input
+							value={search}
+							onChange={(event) => setSearch(event.target.value)}
+							placeholder="Tìm theo tên, SĐT hoặc mã ứng viên"
+							iconLeading={<Search className="size-4" />}
+							aria-label="Tìm ứng viên"
+						/>
+						<select
+							value={picFilter}
+							onChange={(event) => setPicFilter(event.target.value)}
+							aria-label="Lọc theo người phụ trách"
+							className="rounded-lg border border-border-secondary bg-bg px-3 py-2 text-sm text-fg shadow-xs focus:outline-none focus:ring-2 focus:ring-border-brand"
+						>
+							<option value="all">Tất cả PIC</option>
+							<option value="unclaimed">Chưa nhận lead</option>
+							{picOptions.map((name) => (
+								<option key={name} value={name}>
+									{name}
+								</option>
+							))}
+						</select>
+						<select
+							value={timeFilter}
+							onChange={(event) => setTimeFilter(event.target.value as TimeWindow)}
+							aria-label="Lọc theo thời gian"
+							className="rounded-lg border border-border-secondary bg-bg px-3 py-2 text-sm text-fg shadow-xs focus:outline-none focus:ring-2 focus:ring-border-brand"
+						>
+							{TIME_OPTIONS.map((opt) => (
+								<option key={opt.id} value={opt.id}>
+									{opt.label}
+								</option>
+							))}
+						</select>
+					</div>
+					<div className="flex items-center justify-between gap-2 text-sm text-fg-tertiary">
+						<span>{filtered.length} ứng viên trong tab này.</span>
+						<span className="inline-flex items-center gap-1.5">
+							<UserPlus className="size-4" />
+							Click tên để xem nhanh
+						</span>
+					</div>
+				</div>
+
+				<div className="overflow-x-auto">
+					<Table aria-label="Danh sách sourcing">
+						<Table.Header>
+							{COLUMNS.map((column) => (
+								<Table.Head
+									key={column.id}
+									id={column.id}
+									label={column.name}
+									{...(column.isRowHeader && { isRowHeader: true })}
+								/>
+							))}
+						</Table.Header>
+						<Table.Body items={filtered}>
+							{(lead) => (
+								<LeadRow
+									lead={lead}
+									onSelect={openDrawer}
+									onClaim={claimLead}
+									onAction={applyAction}
+								/>
+							)}
+						</Table.Body>
+					</Table>
+				</div>
+			</TableCard.Root>
+
+			<CandidateQuickView
+				candidate={selected}
+				isOpen={isDrawerOpen}
+				onClose={() => setIsDrawerOpen(false)}
+			/>
+		</PageScaffold>
+	);
 }
