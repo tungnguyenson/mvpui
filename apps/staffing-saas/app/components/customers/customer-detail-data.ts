@@ -43,6 +43,27 @@ export interface CustomerUserRecord {
   phone: string;
 }
 
+export type CustomerPositionAttire = "fnb" | "manufacturing" | "warehousing";
+
+export interface CustomerAttireOption {
+  id: CustomerPositionAttire;
+  label: string;
+  imageSrc: string;
+}
+
+export const CUSTOMER_ATTIRE_OPTIONS: CustomerAttireOption[] = [
+  { id: "fnb", label: "F&B - Dịch vụ", imageSrc: "/attires/fnb.webp" },
+  { id: "manufacturing", label: "Sản xuất", imageSrc: "/attires/manufacturing.webp" },
+  { id: "warehousing", label: "Kho vận", imageSrc: "/attires/warehousing.webp" },
+];
+
+export function getAttireOption(
+  attire: CustomerPositionAttire | null | undefined
+): CustomerAttireOption | null {
+  if (!attire) return null;
+  return CUSTOMER_ATTIRE_OPTIONS.find((o) => o.id === attire) ?? null;
+}
+
 export interface CustomerPosition {
   id: string;
   name: string;
@@ -50,6 +71,7 @@ export interface CustomerPosition {
   requirements: string;
   benefits: string;
   instructions: string;
+  attire: CustomerPositionAttire | null;
 }
 
 export interface CustomerLocation {
@@ -344,6 +366,7 @@ const DEFAULT_POSITIONS: CustomerPosition[] = [
     name: "CTV lấy hàng",
     description:
       "Nhận đơn theo wave, picking hàng tại kệ theo SKU, gom hàng về khu vực soạn đơn. Yêu cầu di chuyển nhiều, đọc được mã SKU và quét scanner.",
+    attire: "warehousing",
     ...POSITION_DETAILS_DEFAULT,
   },
   {
@@ -351,6 +374,7 @@ const DEFAULT_POSITIONS: CustomerPosition[] = [
     name: "CTV đóng gói",
     description:
       "Soạn hàng theo đơn, kiểm tra số lượng và chất lượng, đóng gói bằng thùng/túi theo SOP, dán nhãn vận chuyển. Yêu cầu cẩn thận, làm việc theo nhịp.",
+    attire: "warehousing",
     ...POSITION_DETAILS_DEFAULT,
   },
   {
@@ -358,6 +382,7 @@ const DEFAULT_POSITIONS: CustomerPosition[] = [
     name: "CTV giao hàng",
     description:
       "Nhận đơn từ kho, vận chuyển đến địa chỉ khách, thu tiền COD nếu có. Yêu cầu có phương tiện cá nhân, thông thuộc khu vực giao.",
+    attire: null,
     ...POSITION_DETAILS_DEFAULT,
   },
 ];

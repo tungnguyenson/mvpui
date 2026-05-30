@@ -1,10 +1,15 @@
 "use client";
 
 import { Button, Input, TextArea } from "@mvp-ui/ui";
+import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useState } from "react";
-import { type CustomerPosition } from "../customer-detail-data";
+import {
+  CUSTOMER_ATTIRE_OPTIONS,
+  type CustomerPosition,
+  type CustomerPositionAttire,
+} from "../customer-detail-data";
 import { SectionCard } from "./SectionCard";
 
 interface PositionEditViewProps {
@@ -18,6 +23,7 @@ interface PositionFormState {
   requirements: string;
   benefits: string;
   instructions: string;
+  attire: CustomerPositionAttire | null;
 }
 
 const EMPTY_FORM_STATE: PositionFormState = {
@@ -26,6 +32,7 @@ const EMPTY_FORM_STATE: PositionFormState = {
   requirements: "",
   benefits: "",
   instructions: "",
+  attire: null,
 };
 
 function toFormState(position: CustomerPosition): PositionFormState {
@@ -35,6 +42,7 @@ function toFormState(position: CustomerPosition): PositionFormState {
     requirements: position.requirements,
     benefits: position.benefits,
     instructions: position.instructions,
+    attire: position.attire,
   };
 }
 
@@ -102,6 +110,11 @@ export function PositionEditView({ position, backHref }: PositionEditViewProps) 
             value={form.instructions}
             onChange={(value) => update("instructions", value)}
           />
+
+          <AttirePicker
+            value={form.attire}
+            onChange={(attire) => update("attire", attire)}
+          />
         </div>
       </SectionCard>
 
@@ -118,5 +131,59 @@ export function PositionEditView({ position, backHref }: PositionEditViewProps) 
         </Link>
       </div>
     </div>
+  );
+}
+
+interface AttirePickerProps {
+  value: CustomerPositionAttire | null;
+  onChange: (attire: CustomerPositionAttire | null) => void;
+}
+
+function AttirePicker({ value, onChange }: AttirePickerProps) {
+  return (
+    <fieldset className="flex flex-col gap-2">
+      <legend className="text-sm font-medium text-fg-secondary">
+        Đồng phục / Trang phục
+      </legend>
+      <p className="text-sm text-fg-tertiary">
+        Chọn hình ảnh đồng phục đại diện cho vị trí. Bấm lại để bỏ chọn.
+      </p>
+      <div className="mt-1 flex flex-wrap gap-3">
+        {CUSTOMER_ATTIRE_OPTIONS.map((option) => {
+          const isSelected = value === option.id;
+          return (
+            <button
+              key={option.id}
+              type="button"
+              aria-pressed={isSelected}
+              onClick={() => onChange(isSelected ? null : option.id)}
+              className={`group relative flex w-28 flex-col overflow-hidden rounded-xl border bg-bg text-left transition focus:outline-none focus-visible:ring-2 focus-visible:ring-border-brand ${
+                isSelected
+                  ? "border-border-brand ring-2 ring-border-brand"
+                  : "border-border-secondary hover:border-border"
+              }`}
+            >
+              <span className="relative block aspect-1/2 w-full overflow-hidden bg-bg-secondary">
+                <Image
+                  src={option.imageSrc}
+                  alt={option.label}
+                  fill
+                  sizes="112px"
+                  className="object-cover"
+                />
+                {isSelected && (
+                  <span className="absolute right-1.5 top-1.5 flex size-5 items-center justify-center rounded-full bg-primary text-primary-fg shadow-sm">
+                    <Check className="size-3.5" />
+                  </span>
+                )}
+              </span>
+              <span className="px-2 py-1.5 text-xs font-medium text-fg">
+                {option.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </fieldset>
   );
 }

@@ -3,9 +3,13 @@
 import { Button, Table } from "@mvp-ui/ui";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Pencil, Plus } from "lucide-react";
+import Image from "next/image";
+import { Pencil, Plus, Shirt } from "lucide-react";
 import { useMemo } from "react";
-import type { CustomerPosition } from "../customer-detail-data";
+import {
+  getAttireOption,
+  type CustomerPosition,
+} from "../customer-detail-data";
 import { PositionEditView } from "./PositionEditView";
 
 interface PositionsTabProps {
@@ -100,7 +104,10 @@ function PositionsList({ positions, buildHref }: PositionsListProps) {
             {(position) => (
               <Table.Row id={position.id}>
                 <Table.Cell>
-                  <span className="font-medium text-fg">{position.name}</span>
+                  <div className="flex items-center gap-3">
+                    <AttireThumbnail position={position} />
+                    <span className="font-medium text-fg">{position.name}</span>
+                  </div>
                 </Table.Cell>
                 <Table.Cell>
                   <p className="max-w-xl text-sm text-fg-secondary">
@@ -132,5 +139,30 @@ function PositionsList({ positions, buildHref }: PositionsListProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+function AttireThumbnail({ position }: { position: CustomerPosition }) {
+  const attire = getAttireOption(position.attire);
+  if (!attire) {
+    return (
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-border-secondary bg-bg-secondary text-fg-quaternary">
+        <Shirt className="size-4" />
+      </span>
+    );
+  }
+  return (
+    <span
+      className="relative block size-10 shrink-0 overflow-hidden rounded-lg border border-border-secondary bg-bg-secondary"
+      title={attire.label}
+    >
+      <Image
+        src={attire.imageSrc}
+        alt={attire.label}
+        fill
+        sizes="40px"
+        className="object-cover object-top"
+      />
+    </span>
   );
 }
