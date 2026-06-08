@@ -1,0 +1,303 @@
+/* ───────────────────────────────────────────────────────────────────
+   CTV referral feature — scoped brand remap + bespoke preview artifacts.
+
+   The whole feature is themed by ONE variable `--bp` (the CTV's chosen
+   referral-page color, set inline on `.ctv-referral`). Remapping the
+   `--brand-*` ramp from `--bp` re-skins every @mvp-ui/ui component inside
+   (Button, Badge color="brand", ProgressBar, focus rings, bg-primary,
+   text-fg-brand, bg-info-bg…) live as the swatch changes — same mechanism
+   globals.css uses at :root, here scoped + dynamic.
+
+   The mini-form + poster are intentionally LIGHT, theme-independent: they
+   preview the public referral page, so they keep literal colors even when
+   the app is in dark mode (like a screenshot).
+   ─────────────────────────────────────────────────────────────────── */
+
+.ctv-referral {
+  /* default brand — overridden by inline style={{ '--bp': color }} */
+  --bp: #0e7490;
+
+  /* dynamic brand ramp driven by --bp */
+  --brand-25: color-mix(in srgb, var(--bp), #fff 95%);
+  --brand-50: color-mix(in srgb, var(--bp), #fff 90%);
+  --brand-100: color-mix(in srgb, var(--bp), #fff 80%);
+  --brand-200: color-mix(in srgb, var(--bp), #fff 64%);
+  --brand-300: color-mix(in srgb, var(--bp), #fff 46%);
+  --brand-400: color-mix(in srgb, var(--bp), #fff 28%);
+  --brand-500: color-mix(in srgb, var(--bp), #fff 12%);
+  --brand-600: var(--bp);
+  --brand-700: color-mix(in srgb, var(--bp), #000 22%);
+  --brand-800: color-mix(in srgb, var(--bp), #000 38%);
+  --brand-900: color-mix(in srgb, var(--bp), #000 50%);
+  --brand-950: color-mix(in srgb, var(--bp), #000 62%);
+
+  /* Re-declare every brand-derived --color-* alias here so it RECOMPUTES
+     against the scoped --brand-* above. Theme.css declares these at :root, so
+     their var(--brand-*) resolves at :root (indigo) and inherits as a fixed
+     value — overriding --brand-* on a descendant alone does NOT re-skin them.
+     Mirrors the tokens that reference --brand-* in @mvp-ui/tokens/theme.css. */
+  --color-brand-25: var(--brand-25);
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+  --color-primary: var(--brand-600);
+  --color-primary-hover: var(--brand-700);
+  --color-primary-active: var(--brand-800);
+  --color-fg-brand: var(--brand-600);
+  --color-border-brand: var(--brand-300);
+  --color-ring: var(--brand-500);
+  --color-info-bg: var(--brand-50);
+  --color-info-border: var(--brand-200);
+  --color-info-fg: var(--brand-700);
+  --color-tag-brand-bg: var(--brand-50);
+  --color-tag-brand-border: var(--brand-200);
+  --color-tag-brand-fg: var(--brand-700);
+  --color-tag-brand-accent: var(--brand-500);
+
+  /* convenience aliases for the bespoke preview artifacts below */
+  --bp-700: var(--brand-700);
+  --bp-400: var(--brand-400);
+  --bp-100: var(--brand-100);
+  --bp-50: var(--brand-50);
+}
+
+/* faint grid overlay for the colored header band */
+.ctv-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 30px 30px;
+  -webkit-mask-image: radial-gradient(ellipse at 80% 0%, #000 10%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 80% 0%, #000 10%, transparent 72%);
+  pointer-events: none;
+}
+
+/* ── Mini live preview of the referral form (light, recolors via --bp) ── */
+.mini-form {
+  width: 116px;
+  flex: none;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 3px rgba(10, 13, 18, 0.1), 0 1px 2px rgba(10, 13, 18, 0.06);
+  background: #fff;
+}
+.mini-form .mf-hero {
+  background: linear-gradient(160deg, var(--bp), var(--bp-700));
+  padding: 9px 9px 11px;
+  color: #fff;
+}
+.mini-form .mf-logo {
+  height: 9px;
+  width: auto;
+  display: block;
+  filter: brightness(0) invert(1);
+  margin-bottom: 8px;
+}
+.mini-form .mf-ref {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 7px;
+  padding: 5px;
+}
+.mini-form .mf-av {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex: none;
+}
+.mini-form .mf-av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mini-form .mf-lines {
+  flex: 1;
+}
+.mini-form .mf-lines span {
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.55);
+}
+.mini-form .mf-lines span:first-child {
+  width: 70%;
+  margin-bottom: 3px;
+  background: rgba(255, 255, 255, 0.8);
+}
+.mini-form .mf-lines span:last-child {
+  width: 45%;
+}
+.mini-form .mf-h {
+  height: 5px;
+  width: 80%;
+  border-radius: 3px;
+  background: #fff;
+  margin: 9px 0 4px;
+}
+.mini-form .mf-h2 {
+  height: 5px;
+  width: 55%;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.6);
+}
+.mini-form .mf-body {
+  padding: 8px;
+}
+.mini-form .mf-field {
+  height: 13px;
+  border-radius: 4px;
+  background: #f0f0f0;
+  margin-bottom: 6px;
+}
+.mini-form .mf-chip-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 8px;
+}
+.mini-form .mf-chip {
+  height: 11px;
+  flex: 1;
+  border-radius: 6px;
+  background: var(--bp-50);
+  border: 1px solid var(--bp-100);
+}
+.mini-form .mf-chip.on {
+  background: var(--bp);
+  border-color: var(--bp);
+}
+.mini-form .mf-btn {
+  height: 16px;
+  border-radius: 5px;
+  background: var(--bp);
+}
+.mini-form .mf-tag {
+  font-weight: 600;
+  font-size: 8px;
+  color: #a3a3a3;
+  text-align: center;
+  padding: 4px 0 6px;
+}
+
+/* ── Share poster (light, recolors via --bp) ── */
+.ctv-poster {
+  width: 270px;
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+  color: #fff;
+  text-align: center;
+  background: linear-gradient(155deg, var(--bp), color-mix(in srgb, var(--bp), #000 42%));
+  box-shadow: 0 12px 32px rgba(10, 13, 18, 0.18);
+}
+.ctv-poster .pgrid {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 56%;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events: none;
+}
+.ctv-poster > *:not(.pgrid) {
+  position: relative;
+}
+.ctv-poster .ptop {
+  padding: 18px 18px 12px;
+}
+.ctv-poster .plogo {
+  height: 22px;
+  margin: 0 auto 16px;
+  display: block;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+.ctv-poster .pav {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  overflow: hidden;
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
+}
+.ctv-poster .pav img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ctv-poster .pname {
+  font-weight: 700;
+  font-size: 16px;
+}
+.ctv-poster .prole {
+  font-weight: 500;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.78);
+  margin-top: 2px;
+}
+.ctv-poster .phead {
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  margin: 14px 14px 4px;
+}
+.ctv-poster .phead span {
+  color: #ffe08a;
+}
+.ctv-poster .psub {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 22px 16px;
+}
+.ctv-poster .pqr {
+  background: #fff;
+  margin: 0 18px;
+  padding: 14px;
+  border-radius: 16px;
+  display: inline-block;
+  line-height: 0;
+}
+.ctv-poster .pfoot {
+  padding: 12px 14px 16px;
+}
+.ctv-poster .plink {
+  font-weight: 600;
+  font-size: 12px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  color: #fff;
+}
+.ctv-poster .pcta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  font-weight: 600;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.16);
+  padding: 5px 12px;
+  border-radius: 9999px;
+}
+
+/* mono link pill */
+.ctv-mono {
+  font-family: var(--font-mono, ui-monospace, "SF Mono", Menlo, monospace);
+}

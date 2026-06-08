@@ -6,7 +6,7 @@
  * docs/staffing_saas/sourcing.md.
  */
 
-import { CANDIDATES, type CandidateRecord } from "./candidates-data";
+import { CANDIDATES, type CandidateRecord, type DocumentState } from "./candidates-data";
 
 // ─── Tabs ────────────────────────────────────────────────────────────────
 
@@ -95,6 +95,24 @@ export const JOBTYPE_PREF_LABELS: Record<JobTypePref, string> = {
 	"full-time": "Toàn thời gian",
 };
 
+// ─── Work status ─────────────────────────────────────────────────────────────
+
+export type WorkStatusState = "none" | "pending" | "worked";
+
+export const WORK_STATUS_LABELS: Record<WorkStatusState, string> = {
+	none: "Chưa đi làm",
+	pending: "Chờ đi làm",
+	worked: "Đã đi làm",
+};
+
+export interface WorkStatus {
+	state: WorkStatusState;
+	/** Ngày dự kiến đi làm (pending) hoặc ngày đã đi làm (worked). */
+	date: string | null;
+	/** Kho / điểm làm việc đã chốt; null khi chưa đi làm. */
+	warehouse: string | null;
+}
+
 // ─── Lead record ───────────────────────────────────────────────────────────
 
 export interface SourcingLead extends CandidateRecord {
@@ -114,7 +132,10 @@ export interface SourcingLead extends CandidateRecord {
 	jobTypePrefs: JobTypePref[];
 	cccdFront: boolean;
 	cccdBack: boolean;
+	/** Trạng thái xác thực CCCD: missing → chưa có, submitted → chưa xác thực, verified → đã xác thực. */
+	cccdState: DocumentState;
 	availableFrom: string;
+	workStatus: WorkStatus;
 	over18Confirmed: boolean;
 }
 
@@ -131,6 +152,8 @@ interface LeadOverride {
 	shiftPrefs: ShiftPref[];
 	jobTypePrefs: JobTypePref[];
 	availableFrom: string;
+	/** Kho / điểm làm việc đã chốt (chỉ dùng khi đã chốt ca / đã đi làm). */
+	warehouse?: string;
 }
 
 const OVERRIDES: Record<string, LeadOverride> = {
@@ -176,6 +199,7 @@ const OVERRIDES: Record<string, LeadOverride> = {
 		shiftPrefs: ["afternoon-evening"],
 		jobTypePrefs: ["part-time"],
 		availableFrom: "20/05/2026",
+		warehouse: "Kho TBN3",
 	},
 	"cand-006": {
 		tab: "worked-day1",
@@ -184,6 +208,7 @@ const OVERRIDES: Record<string, LeadOverride> = {
 		shiftPrefs: ["morning", "afternoon-evening"],
 		jobTypePrefs: ["part-time"],
 		availableFrom: "10/05/2026",
+		warehouse: "Kho SOC1",
 	},
 	"cand-007": {
 		tab: "archived",
@@ -220,6 +245,7 @@ const OVERRIDES: Record<string, LeadOverride> = {
 		shiftPrefs: ["afternoon-evening"],
 		jobTypePrefs: ["part-time"],
 		availableFrom: "22/05/2026",
+		warehouse: "Kho Linh Trung",
 	},
 	"cand-011": {
 		tab: "interviewed",
@@ -238,6 +264,74 @@ const OVERRIDES: Record<string, LeadOverride> = {
 		jobTypePrefs: ["full-time"],
 		availableFrom: "19/06/2026",
 	},
+	"cand-013": {
+		lastAction: "knm-1",
+		preferredCompanies: ["Shopee Express", "GHTK"],
+		shiftPrefs: ["morning", "afternoon-evening"],
+		jobTypePrefs: ["part-time"],
+		availableFrom: "26/05/2026",
+	},
+	"cand-014": {
+		preferredCompanies: ["Con Cưng"],
+		shiftPrefs: ["morning"],
+		jobTypePrefs: ["full-time"],
+		availableFrom: "27/05/2026",
+	},
+	"cand-015": {
+		tab: "interviewed",
+		lastAction: "lock-interview",
+		preferredCompanies: ["GHN", "Lazada Logistics"],
+		shiftPrefs: ["night"],
+		jobTypePrefs: ["full-time"],
+		availableFrom: "24/05/2026",
+	},
+	"cand-016": {
+		tab: "shift-locked",
+		refCode: "phuclh",
+		referrer: "Lê Hoàng Phúc",
+		lastAction: "lock-shift",
+		preferredCompanies: ["Vincom Retail", "Bách Hoá Xanh"],
+		shiftPrefs: ["afternoon-evening"],
+		jobTypePrefs: ["part-time"],
+		availableFrom: "26/05/2026",
+		warehouse: "Kho Q12",
+	},
+	"cand-017": {
+		tab: "worked-day1",
+		lastAction: "lock-shift",
+		preferredCompanies: ["GHTK", "GHN"],
+		shiftPrefs: ["morning", "afternoon-evening"],
+		jobTypePrefs: ["full-time"],
+		availableFrom: "18/05/2026",
+		warehouse: "Kho Tân Tạo",
+	},
+	"cand-018": {
+		tab: "no-show-day1",
+		lastAction: "lock-shift",
+		preferredCompanies: ["Lazada Logistics"],
+		shiftPrefs: ["afternoon-evening"],
+		jobTypePrefs: ["part-time"],
+		availableFrom: "21/05/2026",
+		warehouse: "Kho VSIP",
+	},
+	"cand-019": {
+		tab: "archived",
+		lastAction: "has-job",
+		rejectReason: "Đã có việc / không còn nhu cầu.",
+		preferredCompanies: ["GHTK"],
+		shiftPrefs: ["night"],
+		jobTypePrefs: ["full-time"],
+		availableFrom: "20/05/2026",
+	},
+	// Unclaimed organic lead → demo "Nhận lead"
+	"cand-020": {
+		pic: null,
+		refCode: null,
+		preferredCompanies: ["Shopee Express", "Vincom Retail"],
+		shiftPrefs: ["morning"],
+		jobTypePrefs: ["part-time"],
+		availableFrom: "29/05/2026",
+	},
 };
 
 const STAGE_TO_TAB: Record<CandidateRecord["stage"], SourcingTab> = {
@@ -250,13 +344,23 @@ const STAGE_TO_TAB: Record<CandidateRecord["stage"], SourcingTab> = {
 	blacklist: "archived",
 };
 
+function tabToWorkState(tab: SourcingTab): WorkStatusState {
+	if (tab === "worked-day1") return "worked";
+	if (tab === "shift-locked" || tab === "no-show-day1") return "pending";
+	return "none";
+}
+
 function augment(record: CandidateRecord): SourcingLead {
 	const o = OVERRIDES[record.id];
 	const cccd = record.documents.find((d) => d.id === "cccd");
-	const hasCccd = cccd?.state === "verified" || cccd?.state === "submitted";
+	const cccdState: DocumentState = cccd?.state ?? "missing";
+	const hasCccd = cccdState === "verified" || cccdState === "submitted";
+	const tab = o?.tab ?? STAGE_TO_TAB[record.stage];
+	const workState = tabToWorkState(tab);
+	const availableFrom = o?.availableFrom ?? record.appliedAt;
 	return {
 		...record,
-		tab: o?.tab ?? STAGE_TO_TAB[record.stage],
+		tab,
 		refCode: o?.refCode ?? null,
 		pic: o?.pic === undefined ? record.recruiter : o.pic,
 		referrer: o?.referrer ?? null,
@@ -268,8 +372,14 @@ function augment(record: CandidateRecord): SourcingLead {
 		shiftPrefs: o?.shiftPrefs ?? ["morning"],
 		jobTypePrefs: o?.jobTypePrefs ?? ["part-time"],
 		cccdFront: hasCccd,
-		cccdBack: cccd?.state === "verified",
-		availableFrom: o?.availableFrom ?? record.appliedAt,
+		cccdBack: cccdState === "verified",
+		cccdState,
+		availableFrom,
+		workStatus: {
+			state: workState,
+			date: workState === "none" ? null : availableFrom,
+			warehouse: workState === "none" ? null : (o?.warehouse ?? null),
+		},
 		over18Confirmed: true,
 	};
 }

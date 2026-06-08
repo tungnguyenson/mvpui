@@ -12,12 +12,18 @@ import {
 	TableCard,
 	Tabs,
 } from "@mvp-ui/ui";
-import { Plus, Search, UserPlus } from "lucide-react";
+import { Mars, Plus, Search, UserPlus, Venus } from "lucide-react";
 import { useMemo, useState } from "react";
 import { getAvatarFor, getInitials } from "../_shared/assets";
 import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
+import { type DocumentState, SOURCE_LABELS } from "./candidates-data";
 import { CandidateQuickView } from "./CandidateQuickView";
+import {
+	SHIFT_OPTIONS_BY_CUSTOMER,
+	type ShiftOption,
+	shiftShortage,
+} from "./shift-options-data";
 import {
 	ACTION_TABS,
 	ACTIONS,
@@ -29,6 +35,8 @@ import {
 	type SourcingTab,
 	TAB_LABELS,
 	TAB_ORDER,
+	WORK_STATUS_LABELS,
+	type WorkStatus,
 } from "./sourcing-data";
 
 /** Demo: leads owned by this user show full phone; others are masked. */
@@ -63,26 +71,116 @@ function maskPhone(phone: string): string {
 }
 
 const COLUMNS = [
-	{ id: "candidate", name: "Ứng viên", isRowHeader: true as const },
-	{ id: "phone", name: "SĐT" },
-	{ id: "area", name: "Khu vực" },
-	{ id: "companies", name: "Cty ưu tiên" },
-	{ id: "shift", name: "Ca muốn làm" },
-	{ id: "jobtype", name: "Loại việc" },
-	{ id: "cccd", name: "CCCD T/S" },
-	{ id: "available", name: "Ngày đi làm" },
-	{ id: "pic", name: "Phụ trách" },
+	{ id: "candidate", name: "Thông tin CTV", isRowHeader: true as const },
+	{ id: "source", name: "Nguồn" },
+	{ id: "contact", name: "Liên hệ" },
+	{ id: "prefArea", name: "Khách hàng / Khu vực" },
+	{ id: "prefTime", name: "Ca / Loại hình" },
+	{ id: "cccd", name: "Hồ sơ (CCCD)" },
+	{ id: "work", name: "Trạng thái đi làm" },
 	{ id: "action", name: "Hành động" },
-	{ id: "note", name: "Ghi chú" },
 ];
 
-function CccdFlag({ ok }: { ok: boolean }) {
-	return ok ? (
-		<Badge color="success" type="pill-color" size="sm">
-			Có
+const CCCD_DISPLAY: Record<DocumentState, { label: string; color: "gray" | "warning" | "success" | "error" }> = {
+	missing: { label: "Chưa có", color: "gray" },
+	submitted: { label: "Chưa xác thực", color: "warning" },
+	verified: { label: "Đã xác thực", color: "success" },
+	rejected: { label: "Bị loại", color: "error" },
+};
+
+function GenderIcon({ gender }: { gender: "male" | "female" }) {
+	const Icon = gender === "male" ? Mars : Venus;
+	return (
+		<Icon
+			className="size-3.5 shrink-0 text-fg-tertiary"
+			aria-label={gender === "male" ? "Nam" : "Nữ"}
+		/>
+	);
+}
+
+function SourceCell({ lead }: { lead: SourcingLead }) {
+	if (lead.source === "referral") {
+		return (
+			<div className="flex flex-col items-start gap-0.5">
+				<Badge color="brand" type="pill-color" size="sm">
+					Giới thiệu
+				</Badge>
+				{lead.referrer ? (
+					<span className="text-sm text-fg-tertiary">bởi {lead.referrer}</span>
+				) : null}
+			</div>
+		);
+	}
+	if (lead.source === "direct") {
+		return (
+			<Badge color="gray" type="pill-color" size="sm">
+				Hệ thống
+			</Badge>
+		);
+	}
+	return (
+		<Badge color="gray" type="pill-color" size="sm">
+			{SOURCE_LABELS[lead.source]}
 		</Badge>
-	) : (
-		<span className="text-sm text-fg-tertiary">—</span>
+	);
+}
+
+function CccdBadge({ state }: { state: DocumentState }) {
+	const d = CCCD_DISPLAY[state];
+	return (
+		<Badge color={d.color} type="pill-color" size="sm">
+			{d.label}
+		</Badge>
+	);
+}
+
+function WorkStatusCell({ status }: { status: WorkStatus }) {
+	if (status.state === "none") {
+		return <span className="text-sm text-fg-tertiary">Chưa đi làm</span>;
+	}
+	const isWorked = status.state === "worked";
+	return (
+		<div className="flex flex-col items-start gap-0.5">
+			<Badge color={isWorked ? "success" : "warning"} type="pill-color" size="sm">
+				{WORK_STATUS_LABELS[status.state]}
+			</Badge>
+			<span className="text-sm text-fg-tertiary">
+				{status.date}
+				{!isWorked && status.warehouse ? ` • ${status.warehouse}` : ""}
+			</span>
+		</div>
+	);
+}
+
+/** Popover chọn ca khi "Chốt ca làm": Khách hàng → Ca, kèm số cần / thiếu. */
+function ShiftPicker({ onPick }: { onPick: (shift: ShiftOption) => void }) {
+	return (
+		<Dropdown.Root>
+			<Dropdown.Trigger color="primary" size="sm">
+				Chốt ca làm
+			</Dropdown.Trigger>
+			<Dropdown.Popover className="w-80">
+				<Dropdown.Menu>
+					{SHIFT_OPTIONS_BY_CUSTOMER.map((group) => (
+						<Dropdown.Section key={group.customer}>
+							<Dropdown.SectionHeader>{group.customer}</Dropdown.SectionHeader>
+							{group.shifts.map((s) => {
+								const short = shiftShortage(s);
+								return (
+									<Dropdown.Item
+										key={s.id}
+										label={`${s.shift} · ${s.site}`}
+										addon={short > 0 ? `Thiếu ${short}/${s.required}` : `Đủ ${s.required}`}
+										selectionIndicator="none"
+										onAction={() => onPick(s)}
+									/>
+								);
+							})}
+						</Dropdown.Section>
+					))}
+				</Dropdown.Menu>
+			</Dropdown.Popover>
+		</Dropdown.Root>
 	);
 }
 
@@ -91,23 +189,22 @@ function LeadRow({
 	onSelect,
 	onClaim,
 	onAction,
+	onLockShift,
 }: {
 	lead: SourcingLead;
 	onSelect: (lead: SourcingLead) => void;
 	onClaim: (id: string) => void;
 	onAction: (id: string, action: ActionDef) => void;
+	onLockShift: (id: string, shift: ShiftOption) => void;
 }) {
 	const owned = lead.pic === null || lead.pic === CURRENT_USER;
 	const canAct = ACTION_TABS.includes(lead.tab) && lead.pic !== null;
 
 	return (
-		<Table.Row id={lead.id}>
+		<Table.Row id={lead.id} onAction={() => onSelect(lead)} className="cursor-pointer">
+			{/* Thông tin CTV — ảnh, tên, giới tính, mã số */}
 			<Table.Cell>
-				<button
-					type="button"
-					onClick={() => onSelect(lead)}
-					className="flex items-center gap-3 text-left"
-				>
+				<div className="flex items-center gap-3 text-left">
 					<AvatarProfilePhoto
 						size="sm"
 						src={getAvatarFor(lead.fullName, lead.id)}
@@ -115,24 +212,30 @@ function LeadRow({
 						initials={getInitials(lead.fullName)}
 					/>
 					<div className="min-w-0">
-						<div className="truncate text-sm font-medium text-fg hover:underline">
-							{lead.fullName}
+						<div className="flex items-center gap-1.5">
+							<span className="truncate text-sm font-medium text-fg">
+								{lead.fullName}
+							</span>
+							<GenderIcon gender={lead.gender} />
 						</div>
 						<div className="truncate text-sm text-fg-tertiary">{lead.code}</div>
 					</div>
-				</button>
+				</div>
 			</Table.Cell>
+			{/* Nguồn */}
+			<Table.Cell>
+				<SourceCell lead={lead} />
+			</Table.Cell>
+			{/* Liên hệ */}
 			<Table.Cell>
 				<span className="text-sm text-fg">{owned ? lead.phone : maskPhone(lead.phone)}</span>
 			</Table.Cell>
+			{/* Preference — khách hàng / khu vực */}
 			<Table.Cell>
-				<div className="text-sm text-fg">{lead.gender === "male" ? "Nam" : "Nữ"}</div>
-				<div className="text-sm text-fg-tertiary">
-					{lead.province} • {lead.districts.join(", ")}
+				<div className="text-sm text-fg">
+					{lead.districts.join(", ")} - {lead.province}
 				</div>
-			</Table.Cell>
-			<Table.Cell>
-				<div className="flex flex-wrap gap-1">
+				<div className="mt-1 flex flex-wrap gap-1">
 					{lead.preferredCompanies.length === 0 ? (
 						<span className="text-sm text-fg-tertiary">—</span>
 					) : (
@@ -144,63 +247,62 @@ function LeadRow({
 					)}
 				</div>
 			</Table.Cell>
+			{/* Preference — ca / loại hình */}
 			<Table.Cell>
-				<span className="text-sm text-fg">
+				<div className="text-sm text-fg">
 					{lead.shiftPrefs.map((s) => SHIFT_PREF_LABELS[s]).join(", ")}
-				</span>
-			</Table.Cell>
-			<Table.Cell>
-				<span className="text-sm text-fg">
+				</div>
+				<div className="text-sm text-fg-tertiary">
 					{lead.jobTypePrefs.map((j) => JOBTYPE_PREF_LABELS[j]).join(", ")}
-				</span>
-			</Table.Cell>
-			<Table.Cell>
-				<div className="flex items-center gap-1.5">
-					<CccdFlag ok={lead.cccdFront} />
-					<CccdFlag ok={lead.cccdBack} />
 				</div>
 			</Table.Cell>
+			{/* Hồ sơ — CCCD */}
 			<Table.Cell>
-				<span className="text-sm text-fg-tertiary">{lead.availableFrom}</span>
+				<CccdBadge state={lead.cccdState} />
 			</Table.Cell>
+			{/* Trạng thái đi làm */}
 			<Table.Cell>
-				{lead.pic === null ? (
-					<Button
-						color="secondary"
-						size="sm"
-						iconLeading={<UserPlus className="size-4" />}
-						onClick={() => onClaim(lead.id)}
-					>
-						Nhận lead
-					</Button>
-				) : (
-					<span className="text-sm text-fg">{lead.pic}</span>
-				)}
+				<WorkStatusCell status={lead.workStatus} />
 			</Table.Cell>
+			{/* Hành động — phụ trách + claim + dropdown + lý do loại */}
 			<Table.Cell>
-				{canAct ? (
-					<Dropdown.Root>
-						<Dropdown.Trigger color="secondary" size="sm">
-							Chọn
-						</Dropdown.Trigger>
-						<Dropdown.Popover className="w-60">
-							<Dropdown.Menu>
-								{ACTIONS.map((a) => (
-									<Dropdown.Item key={a.id} label={a.label} onAction={() => onAction(lead.id, a)} />
-								))}
-							</Dropdown.Menu>
-						</Dropdown.Popover>
-					</Dropdown.Root>
-				) : (
-					<span className="text-sm text-fg-tertiary">—</span>
-				)}
-			</Table.Cell>
-			<Table.Cell>
-				{lead.rejectReason ? (
-					<span className="text-sm text-fg-error">{lead.rejectReason}</span>
-				) : (
-					<span className="text-sm text-fg-tertiary">{lead.notesShort ?? "—"}</span>
-				)}
+				<div className="flex flex-col items-start gap-1.5">
+					{lead.pic === null ? (
+						<Button
+							color="secondary"
+							size="sm"
+							iconLeading={<UserPlus className="size-4" />}
+							onClick={() => onClaim(lead.id)}
+						>
+							Nhận lead
+						</Button>
+					) : (
+						<span className="text-sm text-fg">{lead.pic}</span>
+					)}
+					{canAct ? (
+						<>
+							<ShiftPicker onPick={(shift) => onLockShift(lead.id, shift)} />
+							<Dropdown.Root>
+								<Dropdown.Trigger color="secondary" size="sm">
+									Hành động khác
+								</Dropdown.Trigger>
+								<Dropdown.Popover className="w-60">
+									<Dropdown.Menu>
+										{ACTIONS.filter((a) => a.id !== "lock-shift").map((a) => (
+											<Dropdown.Item
+												key={a.id}
+												label={a.label}
+												onAction={() => onAction(lead.id, a)}
+											/>
+										))}
+									</Dropdown.Menu>
+								</Dropdown.Popover>
+							</Dropdown.Root>
+						</>
+					) : lead.rejectReason ? (
+						<span className="text-sm text-fg-error">{lead.rejectReason}</span>
+					) : null}
+				</div>
 			</Table.Cell>
 		</Table.Row>
 	);
@@ -263,11 +365,26 @@ export function CandidatesPage() {
 			prev.map((l) =>
 				l.id === id
 					? {
-							...l,
-							tab: action.target,
-							lastAction: action.id,
-							...(action.isReject ? { rejectReason: action.label } : {}),
-						}
+						...l,
+						tab: action.target,
+						lastAction: action.id,
+						...(action.isReject ? { rejectReason: action.label } : {}),
+					}
+					: l
+			)
+		);
+	};
+
+	const lockShift = (id: string, shift: ShiftOption) => {
+		setLeads((prev) =>
+			prev.map((l) =>
+				l.id === id
+					? {
+						...l,
+						tab: "shift-locked",
+						lastAction: "lock-shift",
+						workStatus: { state: "pending", date: shift.date, warehouse: shift.site },
+					}
 					: l
 			)
 		);
@@ -278,7 +395,7 @@ export function CandidatesPage() {
 			header={
 				<AppPageHeader
 					title="Quản lý sourcing"
-					description="Pool ứng viên đa nguồn — triage theo hành động, ghi nhận người phụ trách (PIC) để tính thù lao giới thiệu."
+					// description="Pool ứng viên đa nguồn — triage theo hành động, ghi nhận người phụ trách (PIC) để tính thù lao giới thiệu."
 					actions={
 						<>
 							<Button color="secondary" size="sm">
@@ -371,6 +488,7 @@ export function CandidatesPage() {
 									onSelect={openDrawer}
 									onClaim={claimLead}
 									onAction={applyAction}
+									onLockShift={lockShift}
 								/>
 							)}
 						</Table.Body>
