@@ -14,9 +14,9 @@ interface ScreenHeaderProps {
  */
 export function ScreenHeader({ title, subtitle, children }: ScreenHeaderProps) {
   return (
-    <header className="relative overflow-hidden bg-primary px-5 pb-[70px] pt-[calc(env(safe-area-inset-top)+0.875rem)] text-primary-fg">
+    <header className="relative overflow-hidden bg-primary px-5 pb-[70px] pt-[calc(env(safe-area-inset-top)+0.875rem)] text-primary-fg lg:px-0">
       <div className="ctv-grid" aria-hidden />
-      <div className="relative">
+      <div className="relative lg:mx-auto lg:max-w-4xl lg:px-8">
         <CtvAppBar />
         <h1 className="mt-4 text-[21px] font-bold leading-tight tracking-[-0.02em]">{title}</h1>
         <p className="mt-1.5 max-w-[300px] text-[13px] leading-relaxed text-primary-fg/80">{subtitle}</p>

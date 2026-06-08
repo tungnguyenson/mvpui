@@ -39,7 +39,7 @@ export default function HomePage() {
   const verification = VERIFICATION_BADGE[worker.verification];
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-5">
+    <div className="flex flex-col gap-6 px-4 py-5 lg:mx-auto lg:max-w-5xl lg:gap-7 lg:px-8 lg:py-8">
       {/* Greeting */}
       <section className="flex items-center justify-between gap-3">
         <AvatarLabelGroup
@@ -79,6 +79,8 @@ export default function HomePage() {
         ]}
       />
 
+      {/* Next shift + quick actions — side by side on desktop */}
+      <div className="contents lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
       {/* Next shift */}
       <section className="flex flex-col gap-3">
         <div className="flex items-center justify-between">
@@ -136,6 +138,7 @@ export default function HomePage() {
           })}
         </div>
       </section>
+      </div>
     </div>
   );
 }

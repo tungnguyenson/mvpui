@@ -72,9 +72,14 @@ export function ThuongScreen() {
         subtitle="Mỗi người đi làm buổi đầu — bạn nhận 30.000đ. Giới thiệu càng nhiều trong tháng, thưởng vượt mốc càng lớn."
       />
 
-      <div className="relative z-10 -mt-14.5 flex flex-col gap-3.5 px-4 pb-6">
-        <EarningsCard />
-        <MilestoneCard />
+      <div className="relative z-10 -mt-14.5 flex flex-col gap-3.5 px-4 pb-6 lg:mx-auto lg:max-w-4xl lg:grid lg:grid-cols-2 lg:items-start lg:gap-4 lg:px-8">
+        {/* Left column on desktop */}
+        <div className="contents lg:flex lg:flex-col lg:gap-3.5">
+          <EarningsCard />
+          <MilestoneCard />
+        </div>
+        {/* Right column on desktop */}
+        <div className="contents lg:flex lg:flex-col lg:gap-3.5">
         <HowItWorks />
 
         <section>
@@ -104,6 +109,7 @@ export function ThuongScreen() {
             ))}
           </ul>
         </section>
+        </div>
       </div>
     </div>
   );

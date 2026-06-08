@@ -89,7 +89,7 @@ export function ShareScreen() {
         subtitle="Chia sẻ link hoặc mã QR trang giới thiệu của bạn để mời người đi làm. Mỗi người đi làm buổi đầu — bạn nhận thưởng."
       />
 
-      <div className="relative z-10 -mt-14.5 flex flex-col gap-3.5 px-4 pb-6">
+      <div className="relative z-10 -mt-14.5 flex flex-col gap-3.5 px-4 pb-6 lg:mx-auto lg:max-w-4xl lg:grid lg:grid-cols-2 lg:items-start lg:gap-5 lg:px-8">
         {/* Share card */}
         <Card className="shadow-lg">
           <CardContent className="flex flex-col items-center gap-4 p-[18px]">
@@ -201,6 +201,8 @@ export function ShareScreen() {
           </CardContent>
         </Card>
 
+        {/* Right column on desktop: color picker + stats + reward teaser */}
+        <div className="contents lg:flex lg:flex-col lg:gap-3.5">
         {/* Color picker */}
         <ColorPicker color={color} onChange={setColor} />
 
@@ -230,6 +232,7 @@ export function ShareScreen() {
             <ChevronRight className="size-4" />
           </span>
         </Link>
+        </div>
       </div>
     </div>
   );

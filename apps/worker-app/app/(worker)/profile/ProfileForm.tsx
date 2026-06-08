@@ -105,7 +105,7 @@ export function ProfileForm() {
   };
 
   return (
-    <div className="flex flex-col gap-5 px-4 py-5 pb-8">
+    <div className="flex flex-col gap-5 px-4 py-5 pb-8 lg:mx-auto lg:max-w-4xl lg:px-8 lg:py-8">
       {saved && (
         <Alert variant="success">
           <AlertTitle>Đã lưu hồ sơ</AlertTitle>
@@ -135,6 +135,8 @@ export function ProfileForm() {
         </CardContent>
       </Card>
 
+      {/* Detail sections — two columns on desktop */}
+      <div className="contents lg:grid lg:grid-cols-2 lg:items-start lg:gap-5">
       {/* Basic info */}
       <FormSection
         icon={<UserRound className="size-4" />}
@@ -268,11 +270,12 @@ export function ProfileForm() {
           onChange={(e) => setTaxId(e.target.value)}
         />
       </FormSection>
+      </div>
 
       <Button
         color="primary"
         size="lg"
-        className="w-full justify-center"
+        className="w-full justify-center lg:w-auto lg:self-end lg:px-8"
         onClick={handleSave}
       >
         Lưu thay đổi
