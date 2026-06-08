@@ -33,3 +33,5 @@ apps/*/android/app/src/main/assets/public/
 apps/*/android/capacitor-cordova-android-plugins/
 
 .tmp-screenshots
+
+design-handoff

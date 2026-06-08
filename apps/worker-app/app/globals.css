@@ -1,0 +1,46 @@
+@import "tailwindcss";
+@import "@mvp-ui/tokens/theme.css";
+@import "@mvp-ui/tokens/mobile.css";
+
+/* Scan UI package source so Tailwind generates utilities for CVA class strings */
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+
+/* Map Tailwind `dark:` variant to the project's [data-theme="dark"] convention. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* --------------------------------------------------------------------------
+   Consumer brand-token override — Untitled UI purple → indigo/violet.
+
+   Worker app picks a distinct, energetic indigo so it reads as its own
+   product, separate from the staffing-saas navy. Redefining the --brand-*
+   ramp re-skins the whole @mvp-ui/ui surface (bg-primary, focus rings,
+   fg-brand, info-*) without touching the library. This block comes after the
+   imports, so its :root wins by cascade order.
+   -------------------------------------------------------------------------- */
+:root {
+  --brand-25: #f5f6ff;
+  --brand-50: #eef0ff;
+  --brand-100: #e0e3ff;
+  --brand-200: #c7ccfe;
+  --brand-300: #a5acfb;
+  --brand-400: #8389f7;
+  --brand-500: #6366f1;
+  --brand-600: #4f46e5;
+  --brand-700: #4338ca;
+  --brand-800: #3730a3;
+  --brand-900: #2e2a78;
+  --brand-950: #1e1b4b;
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-fg);
+  }
+}
