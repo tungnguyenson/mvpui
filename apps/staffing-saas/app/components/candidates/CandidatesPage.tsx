@@ -4,8 +4,13 @@ import {
 	AvatarProfilePhoto,
 	Badge,
 	Button,
+	Dialog,
 	Dropdown,
 	Input,
+	Modal,
+	ModalBody,
+	ModalHeader,
+	ModalOverlay,
 	Tab,
 	TabList,
 	Table,
@@ -20,7 +25,8 @@ import { PageScaffold } from "../_shell/PageScaffold";
 import { type DocumentState, SOURCE_LABELS } from "./candidates-data";
 import { CandidateQuickView } from "./CandidateQuickView";
 import {
-	SHIFT_OPTIONS_BY_CUSTOMER,
+	groupShiftsByCustomer,
+	SHIFT_OPTIONS,
 	type ShiftOption,
 	shiftShortage,
 } from "./shift-options-data";
@@ -152,35 +158,116 @@ function WorkStatusCell({ status }: { status: WorkStatus }) {
 	);
 }
 
-/** Popover chọn ca khi "Chốt ca làm": Khách hàng → Ca, kèm số cần / thiếu. */
-function ShiftPicker({ onPick }: { onPick: (shift: ShiftOption) => void }) {
+function ShiftShortageBadge({ shift }: { shift: ShiftOption }) {
+	const short = shiftShortage(shift);
+	return short > 0 ? (
+		<Badge color="warning" type="pill-color" size="sm">
+			Thiếu {short}/{shift.required}
+		</Badge>
+	) : (
+		<Badge color="success" type="pill-color" size="sm">
+			Đủ {shift.required}
+		</Badge>
+	);
+}
+
+/**
+ * Dialog "Chốt ca làm" — tìm/chọn ca. Khách hàng → ca, kèm số cần / thiếu.
+ * Danh sách dài nên dùng dialog có ô tìm kiếm + cuộn.
+ */
+function ShiftDialog({
+	leadName,
+	isOpen,
+	onClose,
+	onPick,
+}: {
+	leadName: string;
+	isOpen: boolean;
+	onClose: () => void;
+	onPick: (shift: ShiftOption) => void;
+}) {
+	const [query, setQuery] = useState("");
+
+	const groups = useMemo(() => {
+		const q = query.trim().toLowerCase();
+		const matched = q
+			? SHIFT_OPTIONS.filter((s) =>
+				`${s.customer} ${s.shift} ${s.site} ${s.region}`.toLowerCase().includes(q),
+			)
+			: SHIFT_OPTIONS;
+		return groupShiftsByCustomer(matched);
+	}, [query]);
+
 	return (
-		<Dropdown.Root>
-			<Dropdown.Trigger color="primary" size="sm">
-				Chốt ca làm
-			</Dropdown.Trigger>
-			<Dropdown.Popover className="w-80">
-				<Dropdown.Menu>
-					{SHIFT_OPTIONS_BY_CUSTOMER.map((group) => (
-						<Dropdown.Section key={group.customer}>
-							<Dropdown.SectionHeader>{group.customer}</Dropdown.SectionHeader>
-							{group.shifts.map((s) => {
-								const short = shiftShortage(s);
-								return (
-									<Dropdown.Item
-										key={s.id}
-										label={`${s.shift} · ${s.site}`}
-										addon={short > 0 ? `Thiếu ${short}/${s.required}` : `Đủ ${s.required}`}
-										selectionIndicator="none"
-										onAction={() => onPick(s)}
-									/>
-								);
-							})}
-						</Dropdown.Section>
-					))}
-				</Dropdown.Menu>
-			</Dropdown.Popover>
-		</Dropdown.Root>
+		<ModalOverlay
+			isOpen={isOpen}
+			onOpenChange={(next) => {
+				if (!next) {
+					setQuery("");
+					onClose();
+				}
+			}}
+			isDismissable
+		>
+			<Modal size="lg">
+				<Dialog aria-label="Chọn ca để chốt">
+					<ModalHeader>
+						<h2 className="text-lg font-semibold text-fg">Chốt ca làm</h2>
+						<p className="text-sm text-fg-tertiary">
+							Chọn ca cho <span className="font-medium text-fg-secondary">{leadName}</span>
+						</p>
+						<div className="mt-3">
+							<Input
+								value={query}
+								onChange={(event) => setQuery(event.target.value)}
+								placeholder="Tìm khách hàng, ca, kho hoặc khu vực"
+								iconLeading={<Search className="size-4" />}
+								aria-label="Tìm ca làm việc"
+								autoFocus
+							/>
+						</div>
+					</ModalHeader>
+					<ModalBody className="max-h-[55vh] py-2">
+						{groups.length === 0 ? (
+							<div className="py-10 text-center text-sm text-fg-tertiary">
+								Không tìm thấy ca phù hợp.
+							</div>
+						) : (
+							<div className="flex flex-col gap-5">
+								{groups.map((group) => (
+									<div key={group.customer} className="flex flex-col gap-1.5">
+										<div className="px-1 text-xs font-semibold tracking-wide text-fg-tertiary uppercase">
+											{group.customer}
+										</div>
+										<div className="flex flex-col gap-1">
+											{group.shifts.map((s) => (
+												<button
+													key={s.id}
+													type="button"
+													onClick={() => {
+														setQuery("");
+														onPick(s);
+													}}
+													className="flex items-center justify-between gap-3 rounded-lg border border-border-secondary px-3 py-2.5 text-left transition-colors hover:border-border-brand hover:bg-bg-secondary focus:outline-none focus-visible:ring-2 focus-visible:ring-border-brand"
+												>
+													<div className="min-w-0">
+														<div className="truncate text-sm font-medium text-fg">{s.shift}</div>
+														<div className="truncate text-sm text-fg-tertiary">
+															{s.site} • {s.region} • {s.date}
+														</div>
+													</div>
+													<ShiftShortageBadge shift={s} />
+												</button>
+											))}
+										</div>
+									</div>
+								))}
+							</div>
+						)}
+					</ModalBody>
+				</Dialog>
+			</Modal>
+		</ModalOverlay>
 	);
 }
 
@@ -199,6 +286,7 @@ function LeadRow({
 }) {
 	const owned = lead.pic === null || lead.pic === CURRENT_USER;
 	const canAct = ACTION_TABS.includes(lead.tab) && lead.pic !== null;
+	const [shiftOpen, setShiftOpen] = useState(false);
 
 	return (
 		<Table.Row id={lead.id} onAction={() => onSelect(lead)} className="cursor-pointer">
@@ -281,23 +369,33 @@ function LeadRow({
 					)}
 					{canAct ? (
 						<>
-							<ShiftPicker onPick={(shift) => onLockShift(lead.id, shift)} />
 							<Dropdown.Root>
 								<Dropdown.Trigger color="secondary" size="sm">
-									Hành động khác
+									Chọn hành động
 								</Dropdown.Trigger>
 								<Dropdown.Popover className="w-60">
 									<Dropdown.Menu>
-										{ACTIONS.filter((a) => a.id !== "lock-shift").map((a) => (
+										{ACTIONS.map((a) => (
 											<Dropdown.Item
 												key={a.id}
 												label={a.label}
-												onAction={() => onAction(lead.id, a)}
+												onAction={() =>
+													a.id === "lock-shift" ? setShiftOpen(true) : onAction(lead.id, a)
+												}
 											/>
 										))}
 									</Dropdown.Menu>
 								</Dropdown.Popover>
 							</Dropdown.Root>
+							<ShiftDialog
+								leadName={lead.fullName}
+								isOpen={shiftOpen}
+								onClose={() => setShiftOpen(false)}
+								onPick={(shift) => {
+									onLockShift(lead.id, shift);
+									setShiftOpen(false);
+								}}
+							/>
 						</>
 					) : lead.rejectReason ? (
 						<span className="text-sm text-fg-error">{lead.rejectReason}</span>

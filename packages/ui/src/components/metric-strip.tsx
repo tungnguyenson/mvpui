@@ -45,9 +45,11 @@ export interface MetricStripProps extends HTMLAttributes<HTMLDivElement> {
   /** Items to render across the strip. */
   items: MetricStripItem[];
   /**
-   * Layout direction below the `lg` breakpoint.
-   * `stack` (default) stacks items vertically on mobile, row above `lg`.
-   * `scroll` horizontally scrolls on mobile (items have natural width), row above `lg`.
+   * Layout direction when the strip's own container is narrow (`< @lg`, 32rem).
+   * Uses container queries, not viewport — so it lays out correctly inside a
+   * fixed-width shell (e.g. a 448px phone frame) regardless of viewport size.
+   * `stack` (default) stacks items vertically when narrow, row when wide.
+   * `scroll` horizontally scrolls when narrow (items have natural width), row when wide.
    */
   mobileLayout?: "stack" | "scroll";
 }
@@ -81,8 +83,8 @@ export const MetricStrip = forwardRef<HTMLDivElement, MetricStripProps>(
         className={cn(
           "flex divide-border-secondary rounded-xl border border-border-secondary bg-bg shadow-xs",
           isScroll
-            ? "w-max divide-x overflow-visible lg:w-full lg:overflow-hidden"
-            : "overflow-hidden flex-col divide-y lg:flex-row lg:divide-x lg:divide-y-0",
+            ? "w-max divide-x overflow-visible @lg:w-full @lg:overflow-hidden"
+            : "overflow-hidden flex-col divide-y @lg:flex-row @lg:divide-x @lg:divide-y-0",
           className,
         )}
         {...rest}
@@ -102,11 +104,11 @@ export const MetricStrip = forwardRef<HTMLDivElement, MetricStripProps>(
                   {item.icon}
                 </div>
               ) : null}
-              <div className={cn("flex flex-col", isScroll ? "min-w-0" : "min-w-0")}>
-                <span className="text-lg font-semibold leading-6 text-fg lg:text-xl lg:leading-7">
+              <div className="flex min-w-0 flex-col">
+                <span className="truncate text-lg font-semibold leading-6 text-fg @lg:text-xl @lg:leading-7">
                   {item.value}
                 </span>
-                <span className={cn("text-xs font-medium text-fg-tertiary lg:text-sm", isScroll ? "whitespace-nowrap" : "truncate")}>
+                <span className={cn("text-xs font-medium text-fg-tertiary @lg:text-sm", isScroll ? "whitespace-nowrap" : "truncate")}>
                   {item.label}
                 </span>
               </div>
@@ -114,8 +116,8 @@ export const MetricStrip = forwardRef<HTMLDivElement, MetricStripProps>(
           );
 
           const sharedClass = cn(
-            "flex items-center gap-3 p-3 lg:p-4",
-            isScroll ? "shrink-0 lg:flex-1 lg:min-w-0" : "min-w-0 flex-1",
+            "flex items-center gap-3 p-3 @lg:p-4",
+            isScroll ? "shrink-0 @lg:flex-1 @lg:min-w-0" : "min-w-0 flex-1",
             item.href &&
               "cursor-pointer transition-colors hover:bg-bg-secondary focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-border-brand",
           );
@@ -139,13 +141,15 @@ export const MetricStrip = forwardRef<HTMLDivElement, MetricStripProps>(
 
     if (isScroll) {
       return (
-        <div className="-mx-4 overflow-x-auto px-4 scrollbar-none lg:mx-0 lg:overflow-visible lg:px-0">
-          {strip}
+        <div className="@container">
+          <div className="-mx-4 overflow-x-auto px-4 scrollbar-none @lg:mx-0 @lg:overflow-visible @lg:px-0">
+            {strip}
+          </div>
         </div>
       );
     }
 
-    return strip;
+    return <div className="@container">{strip}</div>;
   },
 );
 MetricStrip.displayName = "MetricStrip";
