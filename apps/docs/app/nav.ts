@@ -25,6 +25,7 @@ export const componentSections: NavSection[] = [
     items: [
       { name: "Button", href: "/components/button" },
       { name: "Button Group", href: "/components/button-group" },
+      { name: "Segmented", href: "/components/segmented" },
       { name: "FAB", href: "/components/fab" },
       { name: "Utility Buttons", href: "/components/utility-buttons" },
       { name: "Social Button", href: "/components/social-button" },

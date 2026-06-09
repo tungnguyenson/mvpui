@@ -193,6 +193,13 @@ export type { RadioButtonProps, RadioButtonBaseProps, RadioGroupProps, RadioGrou
 export { RadioButton, RadioButtonBase, RadioGroup } from "./components/radio.js";
 export type { ToggleProps } from "./components/toggle.js";
 export { Toggle, ToggleBase } from "./components/toggle.js";
+export type {
+	SegmentedProps,
+	SegmentedItemProps,
+	SegmentedSize,
+	SegmentedVariant,
+} from "./components/segmented.js";
+export { Segmented, SegmentedItem } from "./components/segmented.js";
 export type { TextAreaProps, TextAreaBaseProps } from "./components/textarea.js";
 export { TextArea, TextAreaBase } from "./components/textarea.js";
 export type { SelectProps, SelectCommonProps, SelectItemType } from "./components/select.js";

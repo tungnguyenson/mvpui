@@ -48,6 +48,7 @@ export default defineConfig({
     checkbox: "src/components/checkbox.tsx",
     radio: "src/components/radio.tsx",
     toggle: "src/components/toggle.tsx",
+    segmented: "src/components/segmented.tsx",
     textarea: "src/components/textarea.tsx",
     select: "src/components/select.tsx",
     combobox: "src/components/combobox.tsx",

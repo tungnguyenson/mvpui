@@ -16,7 +16,8 @@ Import all components from `@mvp-ui/ui`.
 | SocialButton | `SocialButton` | OAuth / social sign-in flows | Pass `provider` prop; see social-logos exports for icons |
 | AppStoreButtons | `AppStoreButton`, `GooglePlayButton`, `AppGalleryButton`, `GalaxyStoreButton` (+ Outline variants) | App store CTAs | Outline variants: `AppStoreOutlineButton` etc. |
 | MacAppStoreButton | `MacAppStoreButton`, `MacAppStoreOutlineButton` | Mac App Store CTAs | — |
-| ButtonGroup | `ButtonGroup`, `ButtonGroupItem` | Segmented selection, toolbar grouping | Items need unique `id`; manage selection externally |
+| ButtonGroup | `ButtonGroup`, `ButtonGroupItem` | Connected toolbar grouping (subtle selected state) | Items need unique `id`; manage selection externally. Selected style is faint (`bg-bg-secondary`) — for a setting toggle that needs an obvious active state, use `Segmented` instead |
+| Segmented | `Segmented`, `SegmentedItem` | Single-select toggle with a **clear** active state — settings (light/dark, view modes, time ranges). Prefer over `ButtonGroup` when the active segment must stand out | `variant="surface"` (default, active = raised `bg-bg` pill on a gray track) or `variant="brand"` (active = `bg-primary`). Single-select + `disallowEmptySelection` built in; `selectedKeys`/`onSelectionChange` like ButtonGroup; items need unique `id`; `size="sm"\|"md"` |
 
 ---
 
