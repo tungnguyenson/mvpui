@@ -18,13 +18,17 @@ interface PageProps {
 
 export default async function ReferralRoute({ params, searchParams }: PageProps) {
 	const { ctv } = await params;
-	const { brand, form } = await searchParams;
+	const { brand, form, theme } = await searchParams;
 
 	const referrer = getReferrer(ctv);
 	// `?brand=` cho phép xem trước màu — sẽ thay bằng trang cấu hình sau.
 	const brandColor = typeof brand === "string" && HEX_RE.test(brand) ? brand : DEFAULT_BRAND;
 	// `?form=simple` rút gọn biểu mẫu (bỏ công ty ưu tiên + ảnh CCCD); mặc định chi tiết.
 	const variant = form === "simple" ? "simple" : "detailed";
+	// `?theme=dark` đổi khối hero sang nền brand đậm, chữ trắng; mặc định sáng.
+	const heroTheme = theme === "dark" ? "dark" : "light";
 
-	return <ReferralPage referrer={referrer} brand={brandColor} variant={variant} />;
+	return (
+		<ReferralPage referrer={referrer} brand={brandColor} variant={variant} heroTheme={heroTheme} />
+	);
 }

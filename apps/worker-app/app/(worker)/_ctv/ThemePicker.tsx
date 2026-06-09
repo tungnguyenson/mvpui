@@ -1,24 +1,24 @@
 "use client";
 
 import { Card, CardContent, RadioButton, RadioGroup } from "@mvp-ui/ui";
-import { ExternalLink, ListChecks } from "lucide-react";
-import { FORM_VARIANTS, type FormVariant } from "../../data/ctv-referral";
+import { ExternalLink, SunMoon } from "lucide-react";
+import { HERO_THEMES, type HeroTheme } from "../../data/ctv-referral";
 import { SectionHead } from "./SectionHead";
 
-interface FormTypePickerProps {
-	variant: FormVariant;
-	onChange: (variant: FormVariant) => void;
-	/** Link "Xem trang" — mang theo cả màu + kiểu biểu mẫu đang chọn. */
+interface ThemePickerProps {
+	theme: HeroTheme;
+	onChange: (theme: HeroTheme) => void;
+	/** Link "Xem trang" — mang theo cả màu + kiểu biểu mẫu + giao diện đang chọn. */
 	previewHref: string;
 }
 
-/** Chọn kiểu biểu mẫu (Đơn giản / Chi tiết) cho trang đăng ký CTV gửi đi. */
-export function FormTypePicker({ variant, onChange, previewHref }: FormTypePickerProps) {
+/** Chọn giao diện hero (Sáng / Tối) cho trang đăng ký CTV gửi đi. */
+export function ThemePicker({ theme, onChange, previewHref }: ThemePickerProps) {
 	return (
 		<section>
 			<SectionHead
-				icon={<ListChecks />}
-				title="Loại biểu mẫu"
+				icon={<SunMoon />}
+				title="Giao diện header"
 				action={
 					<a
 						href={previewHref}
@@ -34,16 +34,16 @@ export function FormTypePicker({ variant, onChange, previewHref }: FormTypePicke
 			<Card className="shadow-sm">
 				<CardContent className="p-4">
 					<p className="mb-3.5 text-[13px] leading-relaxed text-fg-tertiary">
-						Chọn lượng thông tin người đăng ký cần điền. Biểu mẫu gọn giúp đăng ký nhanh hơn.
+						Chọn tông màu khối đầu trang. Nền tối dùng màu thương hiệu đậm, chữ trắng.
 					</p>
 					<RadioGroup
-						aria-label="Loại biểu mẫu"
+						aria-label="Giao diện hero"
 						size="md"
-						value={variant}
-						onChange={(v) => onChange(v as FormVariant)}
+						value={theme}
+						onChange={(v) => onChange(v as HeroTheme)}
 						className="gap-2.5"
 					>
-						{FORM_VARIANTS.map((opt) => (
+						{HERO_THEMES.map((opt) => (
 							<RadioButton
 								key={opt.id}
 								value={opt.id}

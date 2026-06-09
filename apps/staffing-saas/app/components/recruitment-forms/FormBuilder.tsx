@@ -12,8 +12,20 @@ import {
 	useSensors,
 } from "@dnd-kit/core";
 import { arrayMove, sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { Badge, Button, Dialog, Modal, ModalBody, ModalHeader, ModalOverlay } from "@mvp-ui/ui";
-import { ArrowLeft, Eye, Settings2, Share2 } from "lucide-react";
+import {
+	Badge,
+	Button,
+	Dialog,
+	Modal,
+	ModalBody,
+	ModalHeader,
+	ModalOverlay,
+	Tab,
+	TabList,
+	TabPanel,
+	Tabs,
+} from "@mvp-ui/ui";
+import { ArrowLeft, Eye, Share2 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { SetPageBreadcrumb } from "../_shell/BreadcrumbContext";
@@ -41,6 +53,7 @@ import { FormCanvas } from "./FormCanvas";
 import { FIELD_KINDS } from "./field-registry";
 import type { Field, FieldKind, FormConfig, Section } from "./form-schema";
 import { getForm, saveForm } from "./forms-data";
+import { ResponsesView } from "./ResponsesView";
 import { SharePanel } from "./SharePanel";
 import { STATUS_META } from "./status";
 
@@ -58,6 +71,18 @@ export function FormBuilder({ formId }: FormBuilderProps) {
 	const [selection, setSelection] = useState<Selection>({ kind: "form" });
 	const [activeDrag, setActiveDrag] = useState<string | null>(null);
 	const [shareOpen, setShareOpen] = useState(false);
+	const [tab, setTab] = useState<"build" | "data">("build");
+	const [inspectorTab, setInspectorTab] = useState<"element" | "form">("form");
+
+	/** Chọn 1 trường/phần → nhảy sang tab "Phần tử" để xem cài đặt ngay. */
+	const selectField = (id: string) => {
+		setSelection({ kind: "field", id });
+		setInspectorTab("element");
+	};
+	const selectSection = (id: string) => {
+		setSelection({ kind: "section", id });
+		setInspectorTab("element");
+	};
 
 	useEffect(() => {
 		const f = getForm(formId);
@@ -103,11 +128,6 @@ export function FormBuilder({ formId }: FormBuilderProps) {
 		selection.kind === "field" ? findField(config, selection.id) : undefined;
 	const selectedSection: Section | undefined =
 		selection.kind === "section" ? config.sections.find((s) => s.id === selection.id) : undefined;
-	const inspectorMode: "field" | "section" | "form" = selectedField
-		? "field"
-		: selectedSection
-			? "section"
-			: "form";
 
 	// ── palette add ──
 	const onAddField = (kind: FieldKind) => {
@@ -115,7 +135,7 @@ export function FormBuilder({ formId }: FormBuilderProps) {
 		if (!sectionId) return;
 		const { config: next, field } = addFieldToSection(config, sectionId, kind);
 		update(next);
-		setSelection({ kind: "field", id: field.id });
+		selectField(field.id);
 	};
 
 	// ── dnd ──
@@ -146,7 +166,7 @@ export function FormBuilder({ formId }: FormBuilderProps) {
 			if (!sectionId) return;
 			const { config: next, field } = addFieldToSection(config, sectionId, kind, index);
 			update(next);
-			setSelection({ kind: "field", id: field.id });
+			selectField(field.id);
 			return;
 		}
 
@@ -188,6 +208,23 @@ export function FormBuilder({ formId }: FormBuilderProps) {
 
 	const status = STATUS_META[config.status];
 
+	const inspectorHandlers = {
+		config,
+		field: selectedField,
+		section: selectedSection,
+		onUpdateField: (id: string, patch: Partial<Field>) => update(updateField(config, id, patch)),
+		onDeleteField,
+		onAddOption: (fid: string) => update(addOption(config, fid)),
+		onUpdateOption: (fid: string, oid: string, label: string) =>
+			update(updateOption(config, fid, oid, label)),
+		onRemoveOption: (fid: string, oid: string) => update(removeOption(config, fid, oid)),
+		onUpdateSection: (id: string, patch: Partial<Section>) =>
+			update(updateSection(config, id, patch)),
+		onDeleteSection,
+		canDeleteSection: (id: string) => canRemoveSection(config, id),
+		onUpdateForm: (patch: Partial<FormConfig>) => update({ ...config, ...patch }),
+	};
+
 	return (
 		<div className="flex min-h-[calc(100dvh-3.5rem)] flex-col">
 			<SetPageBreadcrumb
@@ -197,95 +234,116 @@ export function FormBuilder({ formId }: FormBuilderProps) {
 				]}
 			/>
 
-			{/* Toolbar */}
-			<div className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-bg/95 px-4 py-2.5 backdrop-blur">
-				<Link
-					href={APP_ROUTES.recruitmentForms}
-					className="grid size-8 place-items-center rounded-lg text-fg-tertiary hover:bg-bg-secondary hover:text-fg-secondary"
-					aria-label="Quay lại"
-				>
-					<ArrowLeft className="size-4.5" />
-				</Link>
-				<div className="min-w-0 flex-1">
-					<div className="truncate text-sm font-semibold text-fg">{config.title}</div>
-					<div className="truncate font-mono text-[11px] text-fg-tertiary">/f/{config.slug}</div>
-				</div>
-				<Badge color={status.color} size="sm">
-					{status.label}
-				</Badge>
-				<Button
-					color="secondary"
-					size="sm"
-					iconLeading={Settings2}
-					onClick={() => setSelection({ kind: "form" })}
-				>
-					<span className="hidden sm:inline">Cài đặt</span>
-				</Button>
-				<Button color="secondary" size="sm" iconLeading={Eye} onClick={onPreview}>
-					<span className="hidden sm:inline">Xem thử</span>
-				</Button>
-				<Button color="primary" size="sm" iconLeading={Share2} onClick={() => setShareOpen(true)}>
-					<span className="hidden sm:inline">Chia sẻ</span>
-				</Button>
-			</div>
-
-			{/* 3-column workspace */}
-			<DndContext
-				sensors={sensors}
-				collisionDetection={closestCorners}
-				onDragStart={handleDragStart}
-				onDragEnd={handleDragEnd}
+			<Tabs
+				selectedKey={tab}
+				onSelectionChange={(key) => setTab(key === "data" ? "data" : "build")}
+				variant="pill"
+				className="flex flex-1 flex-col"
 			>
-				<div className="grid flex-1 grid-cols-1 lg:grid-cols-[15rem_1fr_20rem]">
-					{/* palette */}
-					<aside className="border-border border-b p-3 lg:border-r lg:border-b-0 lg:overflow-y-auto">
-						<FieldPalette onAdd={onAddField} />
-					</aside>
+				{/* Toolbar */}
+				<div className="sticky top-0 z-20 flex items-center gap-3 border-b border-border bg-bg/95 px-4 py-2 backdrop-blur">
+					<Link
+						href={APP_ROUTES.recruitmentForms}
+						className="grid size-8 shrink-0 place-items-center rounded-lg text-fg-tertiary hover:bg-bg-secondary hover:text-fg-secondary"
+						aria-label="Quay lại"
+					>
+						<ArrowLeft className="size-4.5" />
+					</Link>
+					<div className="min-w-0 flex-1">
+						<div className="flex items-center gap-2">
+							<span className="truncate text-sm font-semibold text-fg">{config.title}</span>
+							<span className="shrink-0">
+								<Badge color={status.color} size="sm">
+									{status.label}
+								</Badge>
+							</span>
+						</div>
+						<div className="truncate font-mono text-[11px] text-fg-tertiary">/f/{config.slug}</div>
+					</div>
 
-					{/* canvas */}
-					<main className="bg-bg-secondary/40 p-4 lg:overflow-y-auto">
-						<FormCanvas
-							config={config}
-							selectedFieldId={selection.kind === "field" ? selection.id : null}
-							activeSectionId={activeSectionId}
-							onSelectField={(id) => setSelection({ kind: "field", id })}
-							onSelectSection={(id) => setSelection({ kind: "section", id })}
-							onDeleteField={onDeleteField}
-							onMoveSection={(from, to) => update(moveSection(config, from, to))}
-							onDeleteSection={onDeleteSection}
-							canDeleteSection={(id) => canRemoveSection(config, id)}
-							onAddSection={() => {
-								const { config: next, sectionId } = addSection(config);
-								update(next);
-								setSelection({ kind: "section", id: sectionId });
-							}}
-						/>
-					</main>
+					<TabList aria-label="Chế độ form" className="shrink-0">
+						<Tab id="build">Cài đặt</Tab>
+						<Tab id="data">Dữ liệu</Tab>
+					</TabList>
 
-					{/* inspector */}
-					<aside className="border-border border-t p-4 lg:border-t-0 lg:border-l lg:overflow-y-auto">
-						<FieldSettingsPanel
-							mode={inspectorMode}
-							config={config}
-							field={selectedField}
-							section={selectedSection}
-							onUpdateField={(id, patch) => update(updateField(config, id, patch))}
-							onDeleteField={onDeleteField}
-							onAddOption={(fid) => update(addOption(config, fid))}
-							onUpdateOption={(fid, oid, label) => update(updateOption(config, fid, oid, label))}
-							onRemoveOption={(fid, oid) => update(removeOption(config, fid, oid))}
-							onUpdateSection={(id, patch) => update(updateSection(config, id, patch))}
-							onDeleteSection={onDeleteSection}
-							canDeleteSection={(id) => canRemoveSection(config, id)}
-							onUpdateForm={(patch) => update({ ...config, ...patch })}
-						/>
-					</aside>
+					<Button color="secondary" size="sm" iconLeading={Eye} onClick={onPreview}>
+						<span className="hidden sm:inline">Xem thử</span>
+					</Button>
+					<Button color="primary" size="sm" iconLeading={Share2} onClick={() => setShareOpen(true)}>
+						<span className="hidden sm:inline">Chia sẻ</span>
+					</Button>
 				</div>
 
-				<DragOverlay>
-					{activeDrag ? <DragChip id={activeDrag} config={config} /> : null}
-				</DragOverlay>
-			</DndContext>
+				{/* Cài đặt: builder 3 cột */}
+				<TabPanel id="build" className="flex flex-1 flex-col">
+					<DndContext
+						sensors={sensors}
+						collisionDetection={closestCorners}
+						onDragStart={handleDragStart}
+						onDragEnd={handleDragEnd}
+					>
+						<div className="grid flex-1 grid-cols-1 lg:grid-cols-[15rem_1fr_20rem]">
+							{/* palette */}
+							<aside className="border-border border-b p-3 lg:border-r lg:border-b-0 lg:overflow-y-auto">
+								<FieldPalette onAdd={onAddField} />
+							</aside>
+
+							{/* canvas */}
+							<main className="bg-bg-secondary/40 p-4 lg:overflow-y-auto">
+								<FormCanvas
+									config={config}
+									selectedFieldId={selection.kind === "field" ? selection.id : null}
+									activeSectionId={activeSectionId}
+									onSelectField={selectField}
+									onSelectSection={selectSection}
+									onSelectForm={() => setInspectorTab("form")}
+									onDeleteField={onDeleteField}
+									onMoveSection={(from, to) => update(moveSection(config, from, to))}
+									onDeleteSection={onDeleteSection}
+									canDeleteSection={(id) => canRemoveSection(config, id)}
+									onAddSection={() => {
+										const { config: next, sectionId } = addSection(config);
+										update(next);
+										selectSection(sectionId);
+									}}
+								/>
+							</main>
+
+							{/* inspector — 2 tab: phần tử đang chọn vs cài đặt form */}
+							<aside className="flex flex-col border-border border-t lg:border-t-0 lg:border-l lg:overflow-hidden">
+								<Tabs
+									selectedKey={inspectorTab}
+									onSelectionChange={(key) =>
+										setInspectorTab(key === "form" ? "form" : "element")
+									}
+									variant="underline"
+									className="flex min-h-0 flex-1 flex-col"
+								>
+									<TabList aria-label="Cài đặt chi tiết" className="shrink-0 px-4 pt-3">
+										<Tab id="element">Phần tử</Tab>
+										<Tab id="form">Form</Tab>
+									</TabList>
+									<TabPanel id="element" className="min-h-0 flex-1 p-4 lg:overflow-y-auto">
+										<FieldSettingsPanel view="element" {...inspectorHandlers} />
+									</TabPanel>
+									<TabPanel id="form" className="min-h-0 flex-1 p-4 lg:overflow-y-auto">
+										<FieldSettingsPanel view="form" {...inspectorHandlers} />
+									</TabPanel>
+								</Tabs>
+							</aside>
+						</div>
+
+						<DragOverlay>
+							{activeDrag ? <DragChip id={activeDrag} config={config} /> : null}
+						</DragOverlay>
+					</DndContext>
+				</TabPanel>
+
+				{/* Dữ liệu: bảng phản hồi */}
+				<TabPanel id="data" className="flex-1">
+					<ResponsesView config={config} />
+				</TabPanel>
+			</Tabs>
 
 			<ModalOverlay isDismissable isOpen={shareOpen} onOpenChange={setShareOpen}>
 				<Modal size="lg">

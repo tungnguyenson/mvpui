@@ -88,8 +88,8 @@ export function createForm(opts?: { title?: string; full?: boolean }): FormConfi
 		description: "",
 		status: "draft",
 		brand: "#7f56d9",
+		heroTheme: "dark",
 		sections: opts?.full ? defaultSections() : minimalSections(),
-		settings: { progressBar: true, heroEnabled: true },
 		success: {
 			title: "Đăng ký thành công!",
 			message: "Cảm ơn bạn. Hồ sơ đã được gửi — đội ngũ sẽ liên hệ trong vòng 24 giờ làm việc.",

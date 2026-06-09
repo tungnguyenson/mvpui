@@ -3,7 +3,16 @@
 import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { ChevronDown, ChevronUp, GripVertical, Lock, Plus, Trash2 } from "lucide-react";
+import {
+	ChevronDown,
+	ChevronUp,
+	GripVertical,
+	Lock,
+	Pencil,
+	Plus,
+	ShieldCheck,
+	Trash2,
+} from "lucide-react";
 import { FIELD_KINDS, sectionIcon } from "./field-registry";
 import type { Field, FormConfig, Section } from "./form-schema";
 
@@ -18,12 +27,15 @@ interface FormCanvasProps {
 	onDeleteSection: (id: string) => void;
 	canDeleteSection: (id: string) => boolean;
 	onAddSection: () => void;
+	onSelectForm: () => void;
 }
 
 export function FormCanvas(props: FormCanvasProps) {
-	const { config, onMoveSection, onAddSection } = props;
+	const { config, onMoveSection, onAddSection, onSelectForm } = props;
 	return (
 		<div className="mx-auto flex max-w-2xl flex-col gap-4">
+			{/* Hero luôn hiện trong canvas; progress chỉ hiện ở trang điền (public). */}
+			<HeroPreview config={config} onClick={onSelectForm} />
 			{config.sections.map((section, i) => (
 				<SectionBlock
 					key={section.id}
@@ -56,6 +68,7 @@ interface SectionBlockProps extends FormCanvasProps {
 }
 
 function SectionBlock({
+	config,
 	section,
 	index,
 	total,
@@ -85,7 +98,13 @@ function SectionBlock({
 					onClick={() => onSelectSection(section.id)}
 					className="flex min-w-0 flex-1 items-center gap-2.5 text-left"
 				>
-					<span className="grid size-7 shrink-0 place-items-center rounded-lg bg-bg-tertiary text-fg-brand">
+					<span
+						className="grid size-7 shrink-0 place-items-center rounded-lg"
+						style={{
+							background: `color-mix(in srgb, ${config.brand}, transparent 86%)`,
+							color: config.brand,
+						}}
+					>
 						<Icon className="size-4" />
 					</span>
 					<span className="min-w-0 flex-1">
@@ -165,8 +184,8 @@ function FieldRow({
 			ref={setNodeRef}
 			style={style}
 			className={`flex items-center gap-2 rounded-lg border px-2.5 py-2 ${
-				selected ? "border-border-brand bg-bg-secondary" : "border-border bg-bg"
-			} ${isDragging ? "z-10 opacity-80 shadow-md" : ""}`}
+				selected ? "border-border-brand" : "border-border"
+			} ${field.locked || selected ? "bg-bg-secondary" : "bg-bg"} ${isDragging ? "z-10 opacity-80 shadow-md" : ""}`}
 		>
 			<button
 				type="button"
@@ -223,6 +242,55 @@ function IconBtn({
 			className="grid size-7 place-items-center rounded-md text-fg-quaternary transition-colors hover:bg-bg-secondary hover:text-fg-secondary disabled:pointer-events-none disabled:opacity-30"
 		>
 			{children}
+		</button>
+	);
+}
+
+/** Xem trước khối hero trong canvas — khớp hero thật (gradient brand đậm, chữ
+ * trắng). Bấm → mở cài đặt form (nơi bật/tắt + sửa tiêu đề). */
+function HeroPreview({ config, onClick }: { config: FormConfig; onClick: () => void }) {
+	const dark = config.heroTheme === "dark";
+	const bg = dark
+		? `linear-gradient(155deg, ${config.brand} 0%, color-mix(in srgb, ${config.brand}, #000 48%) 100%)`
+		: `linear-gradient(180deg, color-mix(in srgb, ${config.brand}, #fff 88%) 0%, #fff 100%)`;
+	const tagStyle = dark
+		? { background: "rgba(255,255,255,0.16)", color: "#fff" }
+		: { background: `color-mix(in srgb, ${config.brand}, #fff 86%)`, color: config.brand };
+	const textCls = dark ? "text-white" : "text-fg";
+	const subCls = dark ? "text-white/80" : "text-fg-secondary";
+	const footCls = dark ? "text-white/85" : "text-fg-tertiary";
+	const logo = dark ? "/logo-dark.png" : "/logo-light.png";
+
+	return (
+		<button
+			type="button"
+			onClick={onClick}
+			className={`group relative overflow-hidden rounded-2xl border px-5 py-5 text-left shadow-sm ${textCls} ${dark ? "border-transparent" : "border-border"}`}
+			style={{ background: bg }}
+		>
+			<div className="flex items-center justify-between gap-3">
+				{/* biome-ignore lint/performance/noImgElement: logo tĩnh nhỏ */}
+				<img src={logo} alt="viec.co" className="h-5 w-auto" />
+				<span className="inline-flex items-center gap-1.5">
+					<Pencil
+						className={`size-3 opacity-0 transition-opacity group-hover:opacity-100 ${footCls}`}
+					/>
+					<span
+						className="inline-block rounded-full px-2.5 py-1 text-[10px] font-semibold"
+						style={tagStyle}
+					>
+						Tuyển dụng việc làm
+					</span>
+				</span>
+			</div>
+			<h2 className="mt-3 text-xl font-bold leading-snug">{config.title || "Tiêu đề form"}</h2>
+			{config.description && (
+				<p className={`mt-1 max-w-md text-sm ${subCls}`}>{config.description}</p>
+			)}
+			<span className={`mt-3 inline-flex items-center gap-1.5 text-xs font-semibold ${footCls}`}>
+				<ShieldCheck className="size-3.5" />
+				Thông tin của bạn được bảo mật
+			</span>
 		</button>
 	);
 }

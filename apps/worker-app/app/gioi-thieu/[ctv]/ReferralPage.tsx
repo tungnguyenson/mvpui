@@ -101,12 +101,15 @@ interface ReferralPageProps {
 	brand?: string;
 	/** "simple" bỏ mục Công ty ưu tiên + ảnh CCCD; mặc định "detailed". */
 	variant?: "simple" | "detailed";
+	/** Giao diện khối hero: "light" (mặc định) hoặc "dark" (nền brand đậm). */
+	heroTheme?: "light" | "dark";
 }
 
 export function ReferralPage({
 	referrer,
 	brand = DEFAULT_BRAND,
 	variant = "detailed",
+	heroTheme = "light",
 }: ReferralPageProps) {
 	const storageKey = `viec_referral_draft_${referrer.phone}`;
 	const isSimple = variant === "simple";
@@ -256,14 +259,14 @@ export function ReferralPage({
 
 	if (done) {
 		return (
-			<div className="ref-stage" style={rootStyle}>
+			<div className="ref-stage" data-hero={heroTheme} style={rootStyle}>
 				<SuccessScreen f={f} province={province} companies={companies} referrer={referrer} />
 			</div>
 		);
 	}
 
 	return (
-		<div className="ref-stage" style={rootStyle}>
+		<div className="ref-stage" data-hero={heroTheme} style={rootStyle}>
 			<div className="device">
 				<div className="layout">
 					{/* ── HERO PANE ── */}
@@ -272,7 +275,11 @@ export function ReferralPage({
 							<div className="grid-bg" />
 							<div className="brandbar">
 								{/* biome-ignore lint/performance/noImgElement: ảnh logo tĩnh nhỏ, không cần next/image */}
-								<img className="logo-img" src="/viec-logo-light.png" alt="viec.co" />
+								<img
+									className="logo-img"
+									src={heroTheme === "dark" ? "/viec-logo.png" : "/viec-logo-light.png"}
+									alt="viec.co"
+								/>
 								<span className="tag">Tuyển dụng việc làm phổ thông</span>
 							</div>
 							<div className="referrer">

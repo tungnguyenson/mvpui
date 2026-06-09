@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, QRCode, toast } from "@mvp-ui/ui";
-import { Check, Copy, ExternalLink, Link2, ScanLine } from "lucide-react";
+import { Check, Copy, ExternalLink, Link2, Pipette, ScanLine } from "lucide-react";
 import { useEffect, useState } from "react";
 import type { FormConfig } from "./form-schema";
 
@@ -109,12 +109,23 @@ export function SharePanel({ config, onBrandChange }: SharePanelProps) {
 							}`}
 						/>
 					))}
-					<label className="relative size-7 cursor-pointer overflow-hidden rounded-full border border-border">
+					<label
+						className="relative grid size-7 cursor-pointer place-items-center rounded-full border border-border"
+						style={{ background: config.brand }}
+						title="Màu tuỳ chỉnh"
+						aria-label="Chọn màu tuỳ chỉnh"
+					>
+						<span
+							className="pointer-events-none grid size-4 place-items-center rounded-full text-white"
+							style={{ background: "rgba(0,0,0,0.35)" }}
+						>
+							<Pipette className="size-2.5" />
+						</span>
 						<input
 							type="color"
 							value={config.brand}
 							onChange={(e) => onBrandChange(e.target.value)}
-							className="absolute inset-0 size-[200%] -translate-x-1/4 -translate-y-1/4 cursor-pointer border-0 p-0"
+							className="absolute inset-0 cursor-pointer opacity-0"
 						/>
 					</label>
 				</div>

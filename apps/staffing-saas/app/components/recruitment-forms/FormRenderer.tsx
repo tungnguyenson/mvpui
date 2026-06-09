@@ -51,7 +51,7 @@ export function FormRenderer({ config, preview }: FormRendererProps) {
 
 	if (done) {
 		return (
-			<div className="ref-stage" style={rootStyle}>
+			<div className="ref-stage" data-hero={config.heroTheme} style={rootStyle}>
 				<SuccessScreen config={config} values={fill.values} provinceValue={fill.provinceValue} />
 			</div>
 		);
@@ -60,7 +60,7 @@ export function FormRenderer({ config, preview }: FormRendererProps) {
 	const hasErrors = Object.keys(fill.errors).length > 0;
 
 	return (
-		<div className="ref-stage" style={rootStyle}>
+		<div className="ref-stage" data-hero={config.heroTheme} style={rootStyle}>
 			{preview && (
 				<div className="preview-flag">
 					<Eye />
@@ -69,35 +69,37 @@ export function FormRenderer({ config, preview }: FormRendererProps) {
 			)}
 			<div className="device">
 				<div className="layout">
-					{config.settings.heroEnabled && (
-						<div className="hero-pane">
-							<div className="hero">
-								<div className="grid-bg" />
-								<div className="brandbar">
-									<span className="tag">Tuyển dụng việc làm</span>
-								</div>
-								<h1>{config.title}</h1>
-								{config.description && <p className="lede">{config.description}</p>}
-								<div className="hero-foot">
-									<ShieldCheck />
-									Thông tin của bạn được bảo mật
-								</div>
+					<div className="hero-pane">
+						<div className="hero">
+							<div className="grid-bg" />
+							<div className="brandbar">
+								{/* biome-ignore lint/performance/noImgElement: logo tĩnh nhỏ, không cần next/image */}
+								<img
+									className="logo-img"
+									src={config.heroTheme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
+									alt="viec.co"
+								/>
+								<span className="tag">Tuyển dụng việc làm</span>
+							</div>
+							<h1>{config.title}</h1>
+							{config.description && <p className="lede">{config.description}</p>}
+							<div className="hero-foot">
+								<ShieldCheck />
+								Thông tin của bạn được bảo mật
 							</div>
 						</div>
-					)}
+					</div>
 
 					<div className="form-pane">
-						{config.settings.progressBar && (
-							<div className="progress-wrap">
-								<div className="row">
-									<span className="lbl">Hoàn thành hồ sơ</span>
-									<span className="pct">{fill.progress}%</span>
-								</div>
-								<div className="progress-track">
-									<div className="progress-fill" style={{ width: `${fill.progress}%` }} />
-								</div>
+						<div className="progress-wrap">
+							<div className="row">
+								<span className="lbl">Hoàn thành hồ sơ</span>
+								<span className="pct">{fill.progress}%</span>
 							</div>
-						)}
+							<div className="progress-track">
+								<div className="progress-fill" style={{ width: `${fill.progress}%` }} />
+							</div>
+						</div>
 
 						<div className="body">
 							{config.sections.map((section, i) => {

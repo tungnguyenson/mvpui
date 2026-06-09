@@ -1340,3 +1340,35 @@
 		padding-right: 30px;
 	}
 }
+
+/* ── Hero DARK — chỉ khi [data-hero="dark"]. Mặc định = light (phía trên).
+   Nền = gradient --bp → tối, chữ trắng, accent vàng. Card .referrer giữ nền
+   trắng nên vẫn nổi trên nền tối. */
+.ref-stage[data-hero="dark"] .hero {
+	background: linear-gradient(155deg, var(--bp) 0%, color-mix(in srgb, var(--bp), #000 48%) 100%);
+	color: #fff;
+}
+.ref-stage[data-hero="dark"] .hero .grid-bg {
+	background-image:
+		linear-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+	mask-image: radial-gradient(ellipse at 70% 0%, #000 25%, transparent 80%);
+}
+.ref-stage[data-hero="dark"] .brandbar .tag {
+	color: #fff;
+	background: rgba(255, 255, 255, 0.16);
+	border-color: rgba(255, 255, 255, 0.24);
+}
+.ref-stage[data-hero="dark"] .hero h1 {
+	color: #fff;
+}
+.ref-stage[data-hero="dark"] .hero h1 .hl {
+	color: #ffe08a;
+	border-bottom-color: rgba(255, 224, 138, 0.5);
+}
+.ref-stage[data-hero="dark"] .hero .lede {
+	color: rgba(255, 255, 255, 0.82);
+}
+.ref-stage[data-hero="dark"] .hero .hero-foot {
+	color: rgba(255, 255, 255, 0.85);
+}

@@ -75,10 +75,7 @@ export interface Section {
 	fields: Field[];
 }
 
-export interface FormSettings {
-	progressBar: boolean;
-	heroEnabled: boolean;
-}
+export type HeroTheme = "light" | "dark";
 
 export interface SuccessConfig {
 	title: string;
@@ -93,8 +90,8 @@ export interface FormConfig {
 	status: FormStatus;
 	/** --bp hex. */
 	brand: string;
+	heroTheme: HeroTheme;
 	sections: Section[];
-	settings: FormSettings;
 	success: SuccessConfig;
 	responseCount: number;
 	createdAt: string;

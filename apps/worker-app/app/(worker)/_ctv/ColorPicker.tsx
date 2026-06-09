@@ -1,7 +1,7 @@
 "use client";
 
-import { Check, ExternalLink, Palette } from "lucide-react";
 import { Card, CardContent } from "@mvp-ui/ui";
+import { Check, ExternalLink, Palette } from "lucide-react";
 import { colorName, FORM_COLORS } from "../../data/ctv-referral";
 import { MiniForm } from "./MiniForm";
 import { SectionHead } from "./SectionHead";

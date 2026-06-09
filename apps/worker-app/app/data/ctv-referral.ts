@@ -274,8 +274,29 @@ export const FORM_VARIANTS: FormVariantOption[] = [
 
 export const DEFAULT_FORM_VARIANT: FormVariant = FORM_VARIANTS[0]?.id ?? "detailed";
 
-/** Link xem trước trang giới thiệu theo màu + kiểu biểu mẫu CTV đang chọn. */
-export function buildPreviewHref(color: string, variant: FormVariant): string {
-	const params = new URLSearchParams({ brand: color, form: variant });
+/** Giao diện khối hero trang giới thiệu — sáng (mặc định) hoặc tối. */
+export type HeroTheme = "light" | "dark";
+
+export interface HeroThemeOption {
+	id: HeroTheme;
+	name: string;
+	hint: string;
+}
+
+/** Phần tử đầu là mặc định (giữ hành vi hiện tại = sáng). */
+export const HERO_THEMES: HeroThemeOption[] = [
+	{ id: "light", name: "Sáng", hint: "Nền sáng, chữ tối — nhẹ nhàng, dễ đọc ngoài trời." },
+	{ id: "dark", name: "Tối", hint: "Nền màu thương hiệu đậm, chữ trắng — nổi bật, sang hơn." },
+];
+
+export const DEFAULT_HERO_THEME: HeroTheme = HERO_THEMES[0]?.id ?? "light";
+
+/** Link xem trước trang giới thiệu theo màu + kiểu biểu mẫu + giao diện hero. */
+export function buildPreviewHref(
+	color: string,
+	variant: FormVariant,
+	theme: HeroTheme = DEFAULT_HERO_THEME
+): string {
+	const params = new URLSearchParams({ brand: color, form: variant, theme });
 	return `/gioi-thieu/${CTV.slug}?${params.toString()}`;
 }

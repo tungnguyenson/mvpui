@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Button, ButtonGroup, ButtonGroupItem, Card, CardContent, QRCode, toast } from "@mvp-ui/ui";
 import {
 	Check,
 	ChevronRight,
@@ -14,13 +14,15 @@ import {
 	Trophy,
 } from "lucide-react";
 import Link from "next/link";
-import { Button, ButtonGroup, ButtonGroupItem, Card, CardContent, QRCode, toast } from "@mvp-ui/ui";
+import { useState } from "react";
 import { buildPreviewHref, CTV, EARNINGS, money } from "../../data/ctv-referral";
 import { ColorPicker } from "./ColorPicker";
 import { FormTypePicker } from "./FormTypePicker";
 import { downloadPosterPng, downloadQrPng } from "./qr-export";
 import { ScreenHeader } from "./ScreenHeader";
+import { ThemePicker } from "./ThemePicker";
 import { useFormColor } from "./useFormColor";
+import { useFormTheme } from "./useFormTheme";
 import { useFormVariant } from "./useFormVariant";
 
 /** Tuỳ chọn QR cho hiển thị trên màn — module dày, đen navy, ECC H. */
@@ -94,10 +96,11 @@ async function nativeShareOr(fallbackLabel: string): Promise<void> {
 export function ShareScreen() {
 	const [color, setColor] = useFormColor();
 	const [variant, setVariant] = useFormVariant();
+	const [theme, setTheme] = useFormTheme();
 	const [mode, setMode] = useState<"qr" | "poster">("qr");
 	const [copied, setCopied] = useState(false);
 
-	const previewHref = buildPreviewHref(color, variant);
+	const previewHref = buildPreviewHref(color, variant, theme);
 
 	const copyLink = async () => {
 		try {
@@ -254,6 +257,9 @@ export function ShareScreen() {
 				<div className="contents lg:flex lg:flex-col lg:gap-3.5">
 					{/* Form type picker */}
 					<FormTypePicker variant={variant} onChange={setVariant} previewHref={previewHref} />
+
+					{/* Hero theme picker */}
+					<ThemePicker theme={theme} onChange={setTheme} previewHref={previewHref} />
 
 					{/* Color picker */}
 					<ColorPicker color={color} onChange={setColor} previewHref={previewHref} />

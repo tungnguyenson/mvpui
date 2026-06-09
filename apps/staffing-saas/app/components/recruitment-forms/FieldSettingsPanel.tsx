@@ -1,7 +1,16 @@
 "use client";
 
-import { Button, ButtonGroup, ButtonGroupItem, Input, TextArea, Toggle } from "@mvp-ui/ui";
-import { Plus, Trash2 } from "lucide-react";
+import {
+	Button,
+	Input,
+	Segmented,
+	SegmentedItem,
+	Select,
+	SelectItem,
+	TextArea,
+	Toggle,
+} from "@mvp-ui/ui";
+import { MousePointerClick, Pipette, Plus, Trash2 } from "lucide-react";
 import { controlCandidates, controlValues } from "./conditional";
 import { FIELD_KINDS, SECTION_ICON_KEYS, sectionIcon } from "./field-registry";
 import type { Field, FieldOption, FormConfig, FormStatus, Section } from "./form-schema";
@@ -9,10 +18,10 @@ import { STATUS_META, STATUS_ORDER } from "./status";
 
 const BRAND_SWATCHES = ["#7f56d9", "#C2660C", "#1570EF", "#039855", "#DD2590", "#0E7490"];
 
-type Mode = "field" | "section" | "form";
+type InspectorView = "element" | "form";
 
 interface InspectorProps {
-	mode: Mode;
+	view: InspectorView;
 	config: FormConfig;
 	field?: Field | undefined;
 	section?: Section | undefined;
@@ -28,11 +37,24 @@ interface InspectorProps {
 }
 
 export function FieldSettingsPanel(props: InspectorProps) {
-	if (props.mode === "field" && props.field)
-		return <FieldInspector {...props} field={props.field} />;
-	if (props.mode === "section" && props.section)
-		return <SectionInspector {...props} section={props.section} />;
-	return <FormInspector {...props} />;
+	if (props.view === "form") return <FormInspector {...props} />;
+	if (props.field) return <FieldInspector {...props} field={props.field} />;
+	if (props.section) return <SectionInspector {...props} section={props.section} />;
+	return <EmptyState />;
+}
+
+function EmptyState() {
+	return (
+		<div className="flex h-full flex-col items-center justify-center gap-2 px-6 py-12 text-center">
+			<div className="grid size-10 place-items-center rounded-full bg-bg-secondary text-fg-quaternary">
+				<MousePointerClick className="size-5" />
+			</div>
+			<p className="text-sm font-medium text-fg-secondary">Chưa chọn phần tử</p>
+			<p className="text-xs text-fg-tertiary">
+				Bấm một trường hoặc phần ở canvas để chỉnh sửa. Cài đặt form ở tab “Form”.
+			</p>
+		</div>
+	);
 }
 
 function Group({ title, children }: { title: string; children: React.ReactNode }) {
@@ -152,7 +174,9 @@ function ConditionalEditor({
 }) {
 	const candidates = controlCandidates(config, field.id);
 	const on = !!field.showWhen;
-	const ctrl = field.showWhen ? candidates.find((c) => c.id === field.showWhen?.fieldId) : undefined;
+	const ctrl = field.showWhen
+		? candidates.find((c) => c.id === field.showWhen?.fieldId)
+		: undefined;
 	const values = ctrl ? controlValues(ctrl) : [];
 
 	return (
@@ -189,7 +213,9 @@ function ConditionalEditor({
 						onChange={(e) => {
 							const nf = candidates.find((c) => c.id === e.target.value);
 							const fv = nf ? controlValues(nf)[0] : undefined;
-							onUpdate(field.id, { showWhen: { fieldId: e.target.value, equals: fv?.value ?? "" } });
+							onUpdate(field.id, {
+								showWhen: { fieldId: e.target.value, equals: fv?.value ?? "" },
+							});
 						}}
 					>
 						{candidates.map((c) => (
@@ -337,6 +363,12 @@ function FormInspector({ config, onUpdateForm }: InspectorProps) {
 				value={config.title}
 				onChange={(e) => onUpdateForm({ title: e.target.value })}
 			/>
+			<TextArea
+				label="Mô tả ngắn (hiện ở hero)"
+				value={config.description ?? ""}
+				rows={2}
+				onChange={(v) => onUpdateForm({ description: v })}
+			/>
 			<Input
 				label="Đường dẫn (slug)"
 				value={config.slug}
@@ -345,30 +377,22 @@ function FormInspector({ config, onUpdateForm }: InspectorProps) {
 				}
 				hint={`/f/${config.slug}`}
 			/>
-			<TextArea
-				label="Mô tả ngắn (hiện ở hero)"
-				value={config.description ?? ""}
-				rows={2}
-				onChange={(v) => onUpdateForm({ description: v })}
-			/>
 
-			<Group title="Trạng thái">
-				<ButtonGroup
-					size="sm"
-					selectedKeys={new Set([config.status])}
-					disallowEmptySelection
-					onSelectionChange={(keys) => {
-						const next = [...keys][0] as FormStatus | undefined;
-						if (next && STATUS_ORDER.includes(next)) onUpdateForm({ status: next });
-					}}
-				>
-					{STATUS_ORDER.map((s) => (
-						<ButtonGroupItem key={s} id={s}>
-							{STATUS_META[s].label}
-						</ButtonGroupItem>
-					))}
-				</ButtonGroup>
-			</Group>
+			<Select
+				label="Trạng thái"
+				aria-label="Trạng thái form"
+				selectedKey={config.status}
+				onSelectionChange={(key) => {
+					const next = String(key) as FormStatus;
+					if (STATUS_ORDER.includes(next)) onUpdateForm({ status: next });
+				}}
+			>
+				{STATUS_ORDER.map((s) => (
+					<SelectItem key={s} id={s}>
+						{STATUS_META[s].label}
+					</SelectItem>
+				))}
+			</Select>
 
 			<Group title="Màu thương hiệu">
 				<div className="flex flex-wrap items-center gap-2">
@@ -386,28 +410,40 @@ function FormInspector({ config, onUpdateForm }: InspectorProps) {
 							}`}
 						/>
 					))}
-					<label className="relative size-7 cursor-pointer overflow-hidden rounded-full border border-border">
+					<label
+						className="relative grid size-7 cursor-pointer place-items-center rounded-full border border-border"
+						style={{ background: config.brand }}
+						title="Màu tuỳ chỉnh"
+						aria-label="Chọn màu tuỳ chỉnh"
+					>
+						<span
+							className="pointer-events-none grid size-4 place-items-center rounded-full text-white"
+							style={{ background: "rgba(0,0,0,0.35)" }}
+						>
+							<Pipette className="size-2.5" />
+						</span>
 						<input
 							type="color"
 							value={config.brand}
 							onChange={(e) => onUpdateForm({ brand: e.target.value })}
-							className="absolute inset-0 size-[200%] -translate-x-1/4 -translate-y-1/4 cursor-pointer border-0 p-0"
+							className="absolute inset-0 cursor-pointer opacity-0"
 						/>
 					</label>
 				</div>
 			</Group>
 
-			<Group title="Hiển thị">
-				<Toggle
-					label="Hiện khối hero"
-					isSelected={config.settings.heroEnabled}
-					onChange={(v) => onUpdateForm({ settings: { ...config.settings, heroEnabled: v } })}
-				/>
-				<Toggle
-					label="Thanh tiến độ"
-					isSelected={config.settings.progressBar}
-					onChange={(v) => onUpdateForm({ settings: { ...config.settings, progressBar: v } })}
-				/>
+			<Group title="Giao diện header">
+				<Segmented
+					aria-label="Giao diện header"
+					selectedKeys={new Set([config.heroTheme])}
+					onSelectionChange={(keys) => {
+						const next = String([...keys][0] ?? "");
+						if (next === "light" || next === "dark") onUpdateForm({ heroTheme: next });
+					}}
+				>
+					<SegmentedItem id="light">Sáng</SegmentedItem>
+					<SegmentedItem id="dark">Tối</SegmentedItem>
+				</Segmented>
 			</Group>
 		</div>
 	);

@@ -14,25 +14,25 @@ const COLOR_KEY = "viec_ctv_formcolor";
  * Khi nối backend: thay localStorage bằng API CTV profile setting.
  */
 export function useFormColor(): readonly [string, (hex: string) => void] {
-  const [color, setColorState] = useState(DEFAULT_FORM_COLOR);
+	const [color, setColorState] = useState(DEFAULT_FORM_COLOR);
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(COLOR_KEY);
-      if (saved) setColorState(saved);
-    } catch {
-      // localStorage không khả dụng — giữ màu mặc định.
-    }
-  }, []);
+	useEffect(() => {
+		try {
+			const saved = localStorage.getItem(COLOR_KEY);
+			if (saved) setColorState(saved);
+		} catch {
+			// localStorage không khả dụng — giữ màu mặc định.
+		}
+	}, []);
 
-  const setColor = useCallback((hex: string) => {
-    setColorState(hex);
-    try {
-      localStorage.setItem(COLOR_KEY, hex);
-    } catch {
-      // bỏ qua lỗi ghi.
-    }
-  }, []);
+	const setColor = useCallback((hex: string) => {
+		setColorState(hex);
+		try {
+			localStorage.setItem(COLOR_KEY, hex);
+		} catch {
+			// bỏ qua lỗi ghi.
+		}
+	}, []);
 
-  return [color, setColor] as const;
+	return [color, setColor] as const;
 }
