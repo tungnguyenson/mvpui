@@ -8,6 +8,7 @@ import { getAvatarFor, getInitials } from "../_shared/assets";
 import {
   SOURCE_LABELS,
   STAGE_LABELS,
+  getCandidateAvatar,
   getCandidateById,
 } from "./candidates-data";
 import { CandidateDetailTabs } from "./CandidateDetailTabs";
@@ -68,7 +69,10 @@ export function CandidatesDetailPage({ id }: CandidatesDetailPageProps) {
                     ? "blocked"
                     : null
               }
-              src={getAvatarFor(record.fullName, record.id)}
+              src={
+                getCandidateAvatar(record.id) ??
+                getAvatarFor(record.fullName, record.id, record.gender)
+              }
               alt={record.fullName}
               initials={getInitials(record.fullName)}
             />

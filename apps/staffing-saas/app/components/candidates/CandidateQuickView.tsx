@@ -30,6 +30,7 @@ import {
   DOC_STATE_LABELS,
   SOURCE_LABELS,
   STAGE_LABELS,
+  getCandidateAvatar,
 } from "./candidates-data";
 
 interface CandidateQuickViewProps {
@@ -106,7 +107,10 @@ export function CandidateQuickView({
                     ? "blocked"
                     : null
               }
-              src={getAvatarFor(candidate.fullName, candidate.id)}
+              src={
+                getCandidateAvatar(candidate.id) ??
+                getAvatarFor(candidate.fullName, candidate.id, candidate.gender)
+              }
               alt={candidate.fullName}
               initials={getInitials(candidate.fullName)}
             />

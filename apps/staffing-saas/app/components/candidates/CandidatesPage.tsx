@@ -22,7 +22,11 @@ import { useMemo, useState } from "react";
 import { getAvatarFor, getInitials } from "../_shared/assets";
 import { AppPageHeader } from "../_shell/AppPageHeader";
 import { PageScaffold } from "../_shell/PageScaffold";
-import { type DocumentState, SOURCE_LABELS } from "./candidates-data";
+import {
+	type DocumentState,
+	SOURCE_LABELS,
+	getCandidateAvatar,
+} from "./candidates-data";
 import { CandidateQuickView } from "./CandidateQuickView";
 import {
 	groupShiftsByCustomer,
@@ -302,7 +306,10 @@ function LeadRow({
 				<div className="flex items-center gap-3 text-left">
 					<AvatarProfilePhoto
 						size="sm"
-						src={getAvatarFor(lead.fullName, lead.id)}
+						src={
+							getCandidateAvatar(lead.id) ??
+							getAvatarFor(lead.fullName, lead.id, lead.gender)
+						}
 						alt={lead.fullName}
 						initials={getInitials(lead.fullName)}
 					/>

@@ -136,6 +136,9 @@ export function inferGender(name: string): Gender {
   return "unknown";
 }
 
+// Gender-classified via montage QA of all 126 source photos (see
+// reference-asian-avatar-source memory note). avatar-053/058/104 were dropped as
+// gender-ambiguous; avatar-126 is the only .png.
 const MALE_AVATARS = [
   "/avatars/avatar-002.jpg",
   "/avatars/avatar-007.jpg",
@@ -147,6 +150,43 @@ const MALE_AVATARS = [
   "/avatars/avatar-022.jpg",
   "/avatars/avatar-023.jpg",
   "/avatars/avatar-026.jpg",
+  "/avatars/avatar-033.jpg",
+  "/avatars/avatar-036.jpg",
+  "/avatars/avatar-038.jpg",
+  "/avatars/avatar-039.jpg",
+  "/avatars/avatar-042.jpg",
+  "/avatars/avatar-045.jpg",
+  "/avatars/avatar-048.jpg",
+  "/avatars/avatar-051.jpg",
+  "/avatars/avatar-054.jpg",
+  "/avatars/avatar-057.jpg",
+  "/avatars/avatar-060.jpg",
+  "/avatars/avatar-063.jpg",
+  "/avatars/avatar-064.jpg",
+  "/avatars/avatar-066.jpg",
+  "/avatars/avatar-069.jpg",
+  "/avatars/avatar-072.jpg",
+  "/avatars/avatar-074.jpg",
+  "/avatars/avatar-075.jpg",
+  "/avatars/avatar-078.jpg",
+  "/avatars/avatar-081.jpg",
+  "/avatars/avatar-084.jpg",
+  "/avatars/avatar-087.jpg",
+  "/avatars/avatar-090.jpg",
+  "/avatars/avatar-093.jpg",
+  "/avatars/avatar-096.jpg",
+  "/avatars/avatar-099.jpg",
+  "/avatars/avatar-102.jpg",
+  "/avatars/avatar-105.jpg",
+  "/avatars/avatar-107.jpg",
+  "/avatars/avatar-108.jpg",
+  "/avatars/avatar-111.jpg",
+  "/avatars/avatar-112.jpg",
+  "/avatars/avatar-114.jpg",
+  "/avatars/avatar-117.jpg",
+  "/avatars/avatar-120.jpg",
+  "/avatars/avatar-123.jpg",
+  "/avatars/avatar-126.png",
 ];
 
 const FEMALE_AVATARS = [
@@ -170,6 +210,62 @@ const FEMALE_AVATARS = [
   "/avatars/avatar-028.jpg",
   "/avatars/avatar-029.jpg",
   "/avatars/avatar-030.jpg",
+  "/avatars/avatar-031.jpg",
+  "/avatars/avatar-032.jpg",
+  "/avatars/avatar-034.jpg",
+  "/avatars/avatar-035.jpg",
+  "/avatars/avatar-037.jpg",
+  "/avatars/avatar-040.jpg",
+  "/avatars/avatar-041.jpg",
+  "/avatars/avatar-043.jpg",
+  "/avatars/avatar-044.jpg",
+  "/avatars/avatar-046.jpg",
+  "/avatars/avatar-047.jpg",
+  "/avatars/avatar-049.jpg",
+  "/avatars/avatar-050.jpg",
+  "/avatars/avatar-052.jpg",
+  "/avatars/avatar-055.jpg",
+  "/avatars/avatar-056.jpg",
+  "/avatars/avatar-059.jpg",
+  "/avatars/avatar-061.jpg",
+  "/avatars/avatar-062.jpg",
+  "/avatars/avatar-065.jpg",
+  "/avatars/avatar-067.jpg",
+  "/avatars/avatar-068.jpg",
+  "/avatars/avatar-070.jpg",
+  "/avatars/avatar-071.jpg",
+  "/avatars/avatar-073.jpg",
+  "/avatars/avatar-076.jpg",
+  "/avatars/avatar-077.jpg",
+  "/avatars/avatar-079.jpg",
+  "/avatars/avatar-080.jpg",
+  "/avatars/avatar-082.jpg",
+  "/avatars/avatar-083.jpg",
+  "/avatars/avatar-085.jpg",
+  "/avatars/avatar-086.jpg",
+  "/avatars/avatar-088.jpg",
+  "/avatars/avatar-089.jpg",
+  "/avatars/avatar-091.jpg",
+  "/avatars/avatar-092.jpg",
+  "/avatars/avatar-094.jpg",
+  "/avatars/avatar-095.jpg",
+  "/avatars/avatar-097.jpg",
+  "/avatars/avatar-098.jpg",
+  "/avatars/avatar-100.jpg",
+  "/avatars/avatar-101.jpg",
+  "/avatars/avatar-103.jpg",
+  "/avatars/avatar-106.jpg",
+  "/avatars/avatar-109.jpg",
+  "/avatars/avatar-110.jpg",
+  "/avatars/avatar-113.jpg",
+  "/avatars/avatar-115.jpg",
+  "/avatars/avatar-116.jpg",
+  "/avatars/avatar-118.jpg",
+  "/avatars/avatar-119.jpg",
+  "/avatars/avatar-121.jpg",
+  "/avatars/avatar-122.jpg",
+  "/avatars/avatar-124.jpg",
+  "/avatars/avatar-125.jpg",
 ];
 
 function hashSeed(seed: string): number {
@@ -180,18 +276,72 @@ function hashSeed(seed: string): number {
   return Math.abs(h);
 }
 
-export function getAvatarFor(name?: string, id?: string): string | undefined {
+function poolFor(gender: Gender): readonly string[] {
+  if (gender === "male") return MALE_AVATARS;
+  if (gender === "female") return FEMALE_AVATARS;
+  return [...MALE_AVATARS, ...FEMALE_AVATARS];
+}
+
+/**
+ * Stateless, hash-based avatar pick. Stable per seed and hydration-safe, but two
+ * distinct seeds can collide on the same image (modulo of independent hashes).
+ * For list views where repeats are noticeable, prefer {@link assignAvatars}.
+ * Pass an explicit `gender` when the record carries one — more reliable than the
+ * name-based {@link inferGender} guess.
+ */
+export function getAvatarFor(
+  name?: string,
+  id?: string,
+  gender?: Gender,
+): string | undefined {
   if (!name) return undefined;
   const seed = id ?? name;
-  const gender = inferGender(name);
-  const pool =
-    gender === "male"
-      ? MALE_AVATARS
-      : gender === "female"
-        ? FEMALE_AVATARS
-        : [...MALE_AVATARS, ...FEMALE_AVATARS];
+  const pool = poolFor(gender ?? inferGender(name));
   if (pool.length === 0) return undefined;
   return pool[hashSeed(seed) % pool.length];
+}
+
+export interface AvatarSeed {
+  id?: string;
+  name?: string;
+  gender?: Gender;
+}
+
+/**
+ * Assign a UNIQUE avatar to every item in an ordered list, walking each gender
+ * pool in order and only cycling once it is exhausted. Guarantees no repeats
+ * until a pool runs out (47 male / 76 female slots).
+ *
+ * Pass the FULL, unfiltered dataset so each id keeps its avatar across filtered
+ * or sorted views. Assignment is deterministic by list order, so it is
+ * hydration-safe when computed at module scope from a static array.
+ */
+export function assignAvatars<T>(
+  items: readonly T[],
+  select: (item: T) => AvatarSeed,
+): Map<string, string> {
+  const combined = [...MALE_AVATARS, ...FEMALE_AVATARS];
+  const map = new Map<string, string>();
+  let mi = 0;
+  let fi = 0;
+  let ui = 0;
+  for (const item of items) {
+    const { id, name, gender } = select(item);
+    const key = id ?? name;
+    if (!key || map.has(key)) continue;
+    const g = gender ?? inferGender(name ?? "");
+    if (g === "male") {
+      map.set(key, MALE_AVATARS[mi % MALE_AVATARS.length]!);
+      mi += 1;
+    } else if (g === "female") {
+      map.set(key, FEMALE_AVATARS[fi % FEMALE_AVATARS.length]!);
+      fi += 1;
+    } else if (combined.length > 0) {
+      map.set(key, combined[ui % combined.length]!);
+      ui += 1;
+    }
+  }
+  return map;
 }
 
 export interface CustomerBrand {

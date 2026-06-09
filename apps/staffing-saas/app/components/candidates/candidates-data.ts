@@ -1,3 +1,5 @@
+import { assignAvatars } from "../_shared/assets";
+
 export type CandidateStage =
   | "new"
   | "contact"
@@ -1138,6 +1140,21 @@ export const CANDIDATES: CandidateRecord[] = [
     notes: [],
   },
 ];
+
+/**
+ * Stable, collision-free avatar per candidate. Built once over the full
+ * CANDIDATES list (unfiltered) so each id keeps its avatar across tabs/filters
+ * and no two candidates share a photo until a gender pool is exhausted.
+ */
+const CANDIDATE_AVATARS = assignAvatars(CANDIDATES, (c) => ({
+  id: c.id,
+  name: c.fullName,
+  gender: c.gender,
+}));
+
+export function getCandidateAvatar(id: string): string | undefined {
+  return CANDIDATE_AVATARS.get(id);
+}
 
 export function getCandidateById(id: string): CandidateRecord | undefined {
   return CANDIDATES.find((c) => c.id === id);

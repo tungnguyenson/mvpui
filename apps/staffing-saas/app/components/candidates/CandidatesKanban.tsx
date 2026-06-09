@@ -8,6 +8,7 @@ import {
   STAGE_ORDER,
   TERMINAL_STAGES,
   fmtSource,
+  getCandidateAvatar,
 } from "./candidates-data";
 
 interface CandidatesKanbanProps {
@@ -59,7 +60,10 @@ function StageColumn({
                         ? "blocked"
                         : null
                   }
-                  src={getAvatarFor(candidate.fullName, candidate.id)}
+                  src={
+                    getCandidateAvatar(candidate.id) ??
+                    getAvatarFor(candidate.fullName, candidate.id, candidate.gender)
+                  }
                   alt={candidate.fullName}
                   initials={getInitials(candidate.fullName)}
                 />
