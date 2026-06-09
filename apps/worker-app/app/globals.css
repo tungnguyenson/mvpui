@@ -9,27 +9,31 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* --------------------------------------------------------------------------
-   Consumer brand-token override — Untitled UI purple → indigo/violet.
+   Consumer brand-token override — Untitled UI purple → worker orange.
 
-   Worker app picks a distinct, energetic indigo so it reads as its own
-   product, separate from the staffing-saas navy. Redefining the --brand-*
-   ramp re-skins the whole @mvp-ui/ui surface (bg-primary, focus rings,
-   fg-brand, info-*) without touching the library. This block comes after the
-   imports, so its :root wins by cascade order.
+   The worker group's brand is #F5A337 (warm orange). It anchors at --brand-500
+   so it reads as the brand hue everywhere it shows literally: focus rings
+   (--color-ring), tag accents, and light surfaces. Because #F5A337 is bright,
+   white text on it fails contrast — so actionable fills use the deeper
+   same-hue --brand-600 (primary buttons, ~3.4:1 white text like a standard
+   orange button) and --brand-700 (hover, fg-brand text, ~5:1 on white, AA).
+   Redefining the --brand-* ramp re-skins the whole @mvp-ui/ui surface
+   (bg-primary, rings, fg-brand, info-*) without touching the library. This
+   block comes after the imports, so its :root wins by cascade order.
    -------------------------------------------------------------------------- */
 :root {
-  --brand-25: #f5f6ff;
-  --brand-50: #eef0ff;
-  --brand-100: #e0e3ff;
-  --brand-200: #c7ccfe;
-  --brand-300: #a5acfb;
-  --brand-400: #8389f7;
-  --brand-500: #6366f1;
-  --brand-600: #4f46e5;
-  --brand-700: #4338ca;
-  --brand-800: #3730a3;
-  --brand-900: #2e2a78;
-  --brand-950: #1e1b4b;
+  --brand-25: #fffbf3;
+  --brand-50: #fef6e8;
+  --brand-100: #fdeccb;
+  --brand-200: #fbd9a8;
+  --brand-300: #f8c480;
+  --brand-400: #f6b156;
+  --brand-500: #f5a337; /* worker brand anchor */
+  --brand-600: #d2740f;
+  --brand-700: #a85a0d;
+  --brand-800: #87470f;
+  --brand-900: #6e3b11;
+  --brand-950: #3f2107;
 }
 
 @layer base {

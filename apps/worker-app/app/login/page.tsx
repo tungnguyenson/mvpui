@@ -62,9 +62,9 @@ function LoginContent() {
               size="lg"
               value={QR_PAYLOAD}
               options={{
-                dotsOptions: { color: "#3730a3", type: "rounded" },
+                dotsOptions: { color: "#87470f", type: "rounded" },
                 backgroundOptions: { color: "#ffffff" },
-                cornersSquareOptions: { color: "#4f46e5", type: "extra-rounded" },
+                cornersSquareOptions: { color: "#d2740f", type: "extra-rounded" },
               }}
             />
             <GradientScan />

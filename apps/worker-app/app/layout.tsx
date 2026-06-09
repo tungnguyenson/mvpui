@@ -13,7 +13,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
-  themeColor: "#4f46e5",
+  themeColor: "#d2740f",
 };
 
 const APPEARANCE_STORAGE_KEY = "worker-app:appearance";

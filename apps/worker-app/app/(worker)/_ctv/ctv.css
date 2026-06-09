@@ -33,7 +33,7 @@
 
   /* Re-declare every brand-derived --color-* alias here so it RECOMPUTES
      against the scoped --brand-* above. Theme.css declares these at :root, so
-     their var(--brand-*) resolves at :root (indigo) and inherits as a fixed
+     their var(--brand-*) resolves at :root (the app brand) and inherits as a fixed
      value — overriding --brand-* on a descendant alone does NOT re-skin them.
      Mirrors the tokens that reference --brand-* in @mvp-ui/tokens/theme.css. */
   --color-brand-25: var(--brand-25);
