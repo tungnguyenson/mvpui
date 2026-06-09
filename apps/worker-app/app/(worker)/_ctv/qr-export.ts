@@ -143,7 +143,7 @@ export async function downloadPosterPng(
 	}
 
 	const [logo, avatar, qrBlob] = await Promise.all([
-		loadImage("/viec-logo.png"),
+		loadImage("/logo-dark.png"),
 		loadImage(ctv.avatar),
 		new QRCodeStyling({
 			width: 380,

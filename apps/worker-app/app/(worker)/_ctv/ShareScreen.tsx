@@ -324,7 +324,7 @@ function SharePoster({ brand }: { brand: string }) {
 			<div className="pgrid" aria-hidden />
 			<div className="ptop">
 				{/* biome-ignore lint/performance/noImgElement: poster trang trí */}
-				<img className="plogo" src="/viec-logo.png" alt="viec.co" />
+				<img className="plogo" src="/logo-dark.png" alt="viec.co" />
 				<div className="pav">
 					{/* biome-ignore lint/performance/noImgElement: avatar poster */}
 					<img src={CTV.avatar} alt={CTV.name} />

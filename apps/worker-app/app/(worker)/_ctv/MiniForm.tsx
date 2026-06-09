@@ -9,7 +9,7 @@ export function MiniForm() {
 		<div className="mini-form">
 			<div className="mf-hero">
 				{/* biome-ignore lint/performance/noImgElement: thumbnail trang trí cố định */}
-				<img className="mf-logo" src="/viec-logo.png" alt="" />
+				<img className="mf-logo" src="/logo-dark.png" alt="" />
 				<div className="mf-ref">
 					<span className="mf-av">
 						{/* biome-ignore lint/performance/noImgElement: avatar nhỏ trang trí */}

@@ -277,7 +277,7 @@ export function ReferralPage({
 								{/* biome-ignore lint/performance/noImgElement: ảnh logo tĩnh nhỏ, không cần next/image */}
 								<img
 									className="logo-img"
-									src={heroTheme === "dark" ? "/viec-logo.png" : "/viec-logo-light.png"}
+									src={heroTheme === "dark" ? "/logo-dark.png" : "/logo-light.png"}
 									alt="viec.co"
 								/>
 								<span className="tag">Tuyển dụng việc làm phổ thông</span>
