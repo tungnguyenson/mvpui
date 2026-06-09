@@ -104,6 +104,13 @@ function GenderIcon({ gender }: { gender: "male" | "female" }) {
 	);
 }
 
+/** Solid brand chips keyed to each platform's logo color (mode-independent). */
+const SOCIAL_BADGE_CLASS: Record<"facebook" | "zalo" | "tiktok", string> = {
+	facebook: "bg-[#1877F2] text-white ring-[#1877F2]", // dark-ok: Facebook brand hex
+	zalo: "bg-[#0068FF] text-white ring-[#0068FF]", // dark-ok: Zalo brand hex
+	tiktok: "bg-[#161823] text-white ring-[#161823]", // dark-ok: TikTok brand near-black
+};
+
 function SourceCell({ lead }: { lead: SourcingLead }) {
 	if (lead.source === "referral") {
 		return (
@@ -125,7 +132,7 @@ function SourceCell({ lead }: { lead: SourcingLead }) {
 		);
 	}
 	return (
-		<Badge color="gray" type="pill-color" size="sm">
+		<Badge type="pill-color" size="sm" className={SOCIAL_BADGE_CLASS[lead.source]}>
 			{SOURCE_LABELS[lead.source]}
 		</Badge>
 	);

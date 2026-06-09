@@ -70,6 +70,8 @@ const DEFAULT_F: FormState = {
 	consent18: false,
 };
 
+type SectionKey = "info" | "area" | "companies" | "wish" | "finish";
+
 const JOBTYPE_ICONS = { clock: Clock, briefcase: Briefcase } as const;
 
 const TOAST_MS = 3200;
@@ -97,10 +99,23 @@ const REQUIRED_KEYS = [
 interface ReferralPageProps {
 	referrer: Referrer;
 	brand?: string;
+	/** "simple" bỏ mục Công ty ưu tiên + ảnh CCCD; mặc định "detailed". */
+	variant?: "simple" | "detailed";
 }
 
-export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPageProps) {
+export function ReferralPage({
+	referrer,
+	brand = DEFAULT_BRAND,
+	variant = "detailed",
+}: ReferralPageProps) {
 	const storageKey = `viec_referral_draft_${referrer.phone}`;
+	const isSimple = variant === "simple";
+
+	// Số thứ tự mục hiển thị động — biểu mẫu gọn bỏ mục "Công ty ưu tiên".
+	const sectionKeys: SectionKey[] = isSimple
+		? ["info", "area", "wish", "finish"]
+		: ["info", "area", "companies", "wish", "finish"];
+	const stepNo = (key: SectionKey) => String(sectionKeys.indexOf(key) + 1).padStart(2, "0");
 
 	const [f, setF] = useState<FormState>(DEFAULT_F);
 	const [restored, setRestored] = useState(false);
@@ -171,7 +186,7 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 	else if (!phoneValid) errs.phone = "Số điện thoại chưa đúng (VD: 0912345678)";
 	if (!f.province) errs.province = "Chọn tỉnh / thành phố";
 	if (f.province && f.districts.length === 0) errs.districts = "Chọn ít nhất 1 quận / huyện";
-	if (f.companies.length === 0) errs.companies = "Chọn ít nhất 1 công ty";
+	if (!isSimple && f.companies.length === 0) errs.companies = "Chọn ít nhất 1 công ty";
 	if (f.shifts.length === 0) errs.shifts = "Chọn ít nhất 1 ca làm";
 	if (f.jobtypes.length === 0) errs.jobtypes = "Chọn ít nhất 1 dạng việc";
 	if (!f.source) errs.source = "Cho biết bạn biết đến qua đâu";
@@ -179,8 +194,10 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 
 	const show = (k: string) => (touched[k] || submitted) && errs[k];
 
-	const completed = REQUIRED_KEYS.filter((k) => !errs[k]).length;
-	const pct = Math.round((completed / REQUIRED_KEYS.length) * 100);
+	// Biểu mẫu gọn không tính mục "Công ty ưu tiên" vào tiến độ / bắt buộc.
+	const requiredKeys = isSimple ? REQUIRED_KEYS.filter((k) => k !== "companies") : REQUIRED_KEYS;
+	const completed = requiredKeys.filter((k) => !errs[k]).length;
+	const pct = Math.round((completed / requiredKeys.length) * 100);
 
 	const flash = (msg: string) => {
 		setToast(msg);
@@ -224,7 +241,7 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 		setSubmitted(true);
 		if (Object.keys(errs).length > 0) {
 			setShakeKey((k) => k + 1);
-			scrollToField(REQUIRED_KEYS.find((k) => errs[k]));
+			scrollToField(requiredKeys.find((k) => errs[k]));
 			return;
 		}
 		try {
@@ -357,7 +374,7 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 										<User />
 									</span>
 									<h2>Thông tin của bạn</h2>
-									<span className="step">01</span>
+									<span className="step">{stepNo("info")}</span>
 								</div>
 
 								<div className="field" data-field="name">
@@ -414,7 +431,7 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 										<MapPin />
 									</span>
 									<h2>Khu vực muốn làm việc</h2>
-									<span className="step">02</span>
+									<span className="step">{stepNo("area")}</span>
 								</div>
 
 								<div className="field" data-field="province">
@@ -472,77 +489,79 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 								)}
 							</div>
 
-							{/* SECTION 3 */}
-							<div className="section">
-								<div className="section-head">
-									<span className="ic">
-										<Star />
-									</span>
-									<h2>Công ty ưu tiên</h2>
-									<span className="step">03</span>
-								</div>
-								<div className="field" data-field="companies">
-									<Lab req note={`${f.companies.length}/${MAX_COMPANIES}`}>
-										{province ? `Đang tuyển nhiều nhất tại ${province.name}` : "Công ty ưu tiên"}
-									</Lab>
-									{!f.province ? (
-										<div className="region-empty">
-											<Info />
-											Chọn khu vực ở trên trước — chúng tôi sẽ gợi ý các công ty đang tuyển nhiều
-											nhất gần bạn (30 ngày gần đây).
-										</div>
-									) : (
-										<>
-											<div className="opt-list">
-												{companies.map((c) => {
-													const on = f.companies.includes(c.id);
-													const full = !on && f.companies.length >= MAX_COMPANIES;
-													return (
-														<button
-															type="button"
-															key={c.id}
-															className={`opt${on ? " on" : ""}${full ? " disabled" : ""}`}
-															onClick={() => !full && toggleIn("companies", c.id, MAX_COMPANIES)}
-															aria-pressed={on}
-															disabled={full}
-														>
-															<span className="logo-mono" style={{ background: c.color }}>
-																{c.abbr}
-															</span>
-															<div className="otext">
-																<div className="ot">
-																	{c.name}
-																	{c.hot && (
-																		<span className="hot-badge">
-																			<Flame />
-																			Tuyển gấp
-																		</span>
-																	)}
-																</div>
-																<div className="os">
-																	<span>{c.ind}</span>
-																	<span className="jobs-badge">
-																		<Users />
-																		{c.jobs} vị trí
-																	</span>
-																</div>
-															</div>
-															<span className="check">
-																<Check />
-															</span>
-														</button>
-													);
-												})}
+							{/* SECTION 3 — Công ty ưu tiên: chỉ hiện ở biểu mẫu chi tiết */}
+							{!isSimple && (
+								<div className="section">
+									<div className="section-head">
+										<span className="ic">
+											<Star />
+										</span>
+										<h2>Công ty ưu tiên</h2>
+										<span className="step">{stepNo("companies")}</span>
+									</div>
+									<div className="field" data-field="companies">
+										<Lab req note={`${f.companies.length}/${MAX_COMPANIES}`}>
+											{province ? `Đang tuyển nhiều nhất tại ${province.name}` : "Công ty ưu tiên"}
+										</Lab>
+										{!f.province ? (
+											<div className="region-empty">
+												<Info />
+												Chọn khu vực ở trên trước — chúng tôi sẽ gợi ý các công ty đang tuyển nhiều
+												nhất gần bạn (30 ngày gần đây).
 											</div>
-											{show("companies") ? (
-												<ErrText msg={errs.companies} />
-											) : (
-												<p className="hint">Chọn tối đa 3 công ty bạn muốn ưu tiên ứng tuyển.</p>
-											)}
-										</>
-									)}
+										) : (
+											<>
+												<div className="opt-list">
+													{companies.map((c) => {
+														const on = f.companies.includes(c.id);
+														const full = !on && f.companies.length >= MAX_COMPANIES;
+														return (
+															<button
+																type="button"
+																key={c.id}
+																className={`opt${on ? " on" : ""}${full ? " disabled" : ""}`}
+																onClick={() => !full && toggleIn("companies", c.id, MAX_COMPANIES)}
+																aria-pressed={on}
+																disabled={full}
+															>
+																<span className="logo-mono" style={{ background: c.color }}>
+																	{c.abbr}
+																</span>
+																<div className="otext">
+																	<div className="ot">
+																		{c.name}
+																		{c.hot && (
+																			<span className="hot-badge">
+																				<Flame />
+																				Tuyển gấp
+																			</span>
+																		)}
+																	</div>
+																	<div className="os">
+																		<span>{c.ind}</span>
+																		<span className="jobs-badge">
+																			<Users />
+																			{c.jobs} vị trí
+																		</span>
+																	</div>
+																</div>
+																<span className="check">
+																	<Check />
+																</span>
+															</button>
+														);
+													})}
+												</div>
+												{show("companies") ? (
+													<ErrText msg={errs.companies} />
+												) : (
+													<p className="hint">Chọn tối đa 3 công ty bạn muốn ưu tiên ứng tuyển.</p>
+												)}
+											</>
+										)}
+									</div>
 								</div>
-							</div>
+							)}
 
 							{/* SECTION 4 */}
 							<div className="section">
@@ -551,7 +570,7 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 										<SlidersHorizontal />
 									</span>
 									<h2>Mong muốn công việc</h2>
-									<span className="step">04</span>
+									<span className="step">{stepNo("wish")}</span>
 								</div>
 
 								<div className="field" data-field="shifts">
@@ -611,7 +630,7 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 										<ClipboardCheck />
 									</span>
 									<h2>Hoàn tất hồ sơ</h2>
-									<span className="step">05</span>
+									<span className="step">{stepNo("finish")}</span>
 								</div>
 
 								<div className="field" data-field="source">
@@ -631,24 +650,27 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 									{show("source") && <ErrText msg={errs.source} />}
 								</div>
 
-								<div className="field">
-									<Lab note="Không bắt buộc">Ảnh căn cước công dân</Lab>
-									<div className="upload-grid">
-										<UploadBox
-											label="Mặt trước"
-											value={f.cccdFront}
-											onChange={(v) => set("cccdFront", v)}
-										/>
-										<UploadBox
-											label="Mặt sau"
-											value={f.cccdBack}
-											onChange={(v) => set("cccdBack", v)}
-										/>
+								{/* Ảnh CCCD: chỉ ở biểu mẫu chi tiết */}
+								{!isSimple && (
+									<div className="field">
+										<Lab note="Không bắt buộc">Ảnh căn cước công dân</Lab>
+										<div className="upload-grid">
+											<UploadBox
+												label="Mặt trước"
+												value={f.cccdFront}
+												onChange={(v) => set("cccdFront", v)}
+											/>
+											<UploadBox
+												label="Mặt sau"
+												value={f.cccdBack}
+												onChange={(v) => set("cccdBack", v)}
+											/>
+										</div>
+										<p className="hint">
+											Có thể bổ sung sau khi được liên hệ — giúp xác minh hồ sơ nhanh hơn.
+										</p>
 									</div>
-									<p className="hint">
-										Có thể bổ sung sau khi được liên hệ — giúp xác minh hồ sơ nhanh hơn.
-									</p>
-								</div>
+								)}
 
 								<div className="field">
 									<Lab note="Không bắt buộc">Ngày sớm nhất có thể đi làm</Lab>

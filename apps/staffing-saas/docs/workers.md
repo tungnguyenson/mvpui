@@ -7,7 +7,7 @@ Worker = cộng tác viên (CTV). The CTV is the gig worker who fulfills shifts.
 | Route | Purpose |
 |---|---|
 | `/workers` | List page, tab + search |
-| `/workers/[id]` | Detail page with snapshot panels |
+| `/workers/[id]` | Detail page — 6-tab profile (`?tab=<id>`) |
 
 ## Entity shape
 
@@ -62,6 +62,47 @@ interface WorkerShiftHistory {
 }
 ```
 
+### Extended profile (detail-page tabs)
+
+All optional, additive — populated per worker for the routeless detail tabs (synthesized from the legacy worker-profile admin; see [workers-detail-redesign.md](./workers-detail-redesign.md)).
+
+```ts
+interface WorkerRecord {
+  // ...core fields above...
+  identity?: WorkerIdentity;              // CCCD/CMND + eKYC checklist
+  residence?: WorkerResidence;            // tỉnh/huyện/xã/địa chỉ
+  bankAccount?: WorkerBankAccount;        // loại TK, ngân hàng, số TK, chủ TK, verified
+  tax?: WorkerTaxInfo;                    // MST TNCN + cam kết thuế 2026
+  socialInsurance?: WorkerSocialInsurance;// mã BHXH (null = chưa có)
+  emergencyContact?: WorkerEmergencyContact;
+  paymentMethod?: "cash" | "bank";
+  jobs?: WorkerJob[];                     // kind: current | applying | done
+  cancellations?: WorkerCancellation[];   // lịch sử hủy ca + mức phạt
+  changeLog?: WorkerChangeLogEntry[];     // nhật ký thay đổi hồ sơ
+}
+
+interface WorkerIdentity {
+  nationalId: string; fullNameOnId: string; dob: string;
+  gender: "Nam" | "Nữ"; issuedDate: string; expiryDate: string;
+  issuedPlace: string; permanentAddress: string;
+  ekyc: { service: boolean; fraudCheck: boolean; logicCheck: boolean; ocr: boolean };
+}
+interface WorkerBankAccount {
+  ownerType: "Chính chủ" | "Không chính chủ";
+  bankName: string; bankBin: string; accountNumber: string; accountHolder: string;
+  verified: boolean; verifiedBy?: string;
+}
+interface WorkerTaxInfo {
+  taxId: string;                          // or "Chưa có MST"
+  taxStatus: "Đã kiểm tra" | "Chưa kiểm tra";
+  commitment2026: "Đã ký" | "Chưa ký";
+}
+interface WorkerJob {
+  id: string; kind: "current" | "applying" | "done";
+  period: string; company: string; position: string; hours: string;
+}
+```
+
 ### Status labels
 
 | Status | Label | Color |
@@ -96,19 +137,20 @@ Avatar (with status overlay) · name · status badge · "{district}, {city} • 
 - Tổng số ca: {totalShifts}
 - Batch gần nhất: {payment.batchId}
 
-### Section: Hồ sơ worker
-Phone · Rating statement · Verification status · Violations summary · Latest payment.
+### Tabs (`?tab=<id>`, underline)
 
-### Section: Liên kết nghiệp vụ (3 cards)
-- **Xác thực** → `/worker-verifications/{id}` — shows `verification.status`
-- **Vi phạm** → `/worker-violations/{id}` — shows "{totalCases} case"
-- **Thanh toán** → `/worker-payment-batches/{payment.batchId.toLowerCase()}` — shows batch ID
+Routeless concerns are built into tabs; concerns owning a `worker-*` route are surfaced as summary + link-out (see [workers-detail-redesign.md](./workers-detail-redesign.md) for the full old→new mapping).
 
-### Section: Snapshot (3 columns)
-Detail breakdown of verification (SĐT, CCCD/CMND, MST), violations (totalCases, latestLevel, latestNote), payment (batch, amount, status).
+| Tab (id) | Content |
+|---|---|
+| **Tổng quan** (`overview`) | Contact info · vận hành snapshot (xác thực / vi phạm / thanh toán) · "Liên kết nghiệp vụ" cards → `/worker-verifications/{id}`, `/worker-violations/{id}`, `/worker-payment-batches/{batchId.toLowerCase()}`, `/worker-social-insurance` |
+| **Hồ sơ & CCCD** (`identity`) | `identity` OCR fields · eKYC 4-check badges · ID/portrait image placeholders · link `/worker-verifications/{id}` |
+| **Địa chỉ & ngân hàng** (`profile`) | `residence` · `bankAccount` (+ VietQR `QRCode`) · `emergencyContact` |
+| **Công việc** (`jobs`) | `jobs` grouped Đang làm / Đang ứng tuyển / Đã làm · `recentShifts` history |
+| **Thanh toán & thuế** (`finance`) | `paymentMethod` (tiền mặt / TK) · `tax` (MST + cam kết 2026) · link `/worker-payment-batches`, `/worker-social-insurance` |
+| **Nhật ký** (`activity`) | Violations summary → `/worker-violations/{id}` · `cancellations` · `changeLog` timeline |
 
-### Section: Lịch sử ca gần đây
-For each `WorkerShiftHistory`: shift name, customer, status badge, schedule, shift ID, payout.
+Implemented as RSC [WorkerDetailPage](../app/components/workers/WorkerDetailPage.tsx) (header + metrics) + `"use client"` island [WorkerDetailTabs](../app/components/workers/WorkerDetailTabs.tsx).
 
 ## Modals / drawers
 
