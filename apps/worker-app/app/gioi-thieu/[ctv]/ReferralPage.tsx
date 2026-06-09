@@ -255,7 +255,7 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 							<div className="grid-bg" />
 							<div className="brandbar">
 								{/* biome-ignore lint/performance/noImgElement: ảnh logo tĩnh nhỏ, không cần next/image */}
-								<img className="logo-img" src="/gioi-thieu/viec-logo.png" alt="viec.co" />
+								<img className="logo-img" src="/viec-logo-light.png" alt="viec.co" />
 								<span className="tag">Tuyển dụng việc làm phổ thông</span>
 							</div>
 							<div className="referrer">
@@ -301,9 +301,7 @@ export function ReferralPage({ referrer, brand = DEFAULT_BRAND }: ReferralPagePr
 								</div>
 							</div>
 							<h1>
-								Tìm việc gần nhà,
-								<br />
-								<span className="hl">đăng ký chỉ 2 phút</span>
+								Tìm việc gần nhà, <span className="hl">đăng ký chỉ 2 phút</span>
 							</h1>
 							<p className="lede">
 								Để lại thông tin, đội ngũ viec.co sẽ liên hệ và xếp việc phù hợp nhất với bạn.
