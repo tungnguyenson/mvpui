@@ -1,3 +1,23 @@
 @import "tailwindcss";
 @import "@mvp-ui/tokens/theme.css";
 @source "./**/*.{ts,tsx}";
+
+/* Tailwind v4 tree-shakes unused @theme tokens out of :root, dropping most of
+   the brand scale (components use semantic aliases, not raw brand-*). Charts
+   (@mvp-ui/charts CHART_COLORS) and consumers reference var(--color-brand-*)
+   directly, so emit the full scale explicitly — author CSS is passed through
+   untouched. Maps to the raw --brand-* values from @mvp-ui/tokens. */
+:root {
+  --color-brand-25: var(--brand-25);
+  --color-brand-50: var(--brand-50);
+  --color-brand-100: var(--brand-100);
+  --color-brand-200: var(--brand-200);
+  --color-brand-300: var(--brand-300);
+  --color-brand-400: var(--brand-400);
+  --color-brand-500: var(--brand-500);
+  --color-brand-600: var(--brand-600);
+  --color-brand-700: var(--brand-700);
+  --color-brand-800: var(--brand-800);
+  --color-brand-900: var(--brand-900);
+  --color-brand-950: var(--brand-950);
+}
